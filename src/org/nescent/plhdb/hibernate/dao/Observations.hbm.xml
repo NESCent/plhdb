@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="org.nescent.plhdb.hibernate.dao.Observations" table="observations" schema="plhdb">
+        <comment>Observations and their type, as well as parent term of the type, cast here as the 'category' of the type.</comment>
+        <composite-id name="id" class="org.nescent.plhdb.hibernate.dao.ObservationsId">
+            <key-property name="observationOid" type="java.lang.Integer">
+                <column name="observation_oid" />
+            </key-property>
+            
+        </composite-id>
+        <property name="timeOfObservation" type="timestamp">
+                <column name="time_of_observation" length="8" />
+            </property>
+            <property name="timeError" type="java.lang.Double">
+                <column name="time_error" precision="8" scale="0" />
+            </property>
+            <property name="eventType" type="string">
+                <column name="event_type" length="64" />
+            </property>
+            <property name="eventCode" type="string">
+                <column name="event_code" length="8" />
+            </property>
+            <property name="eventTypeParent" type="string">
+                <column name="event_type_parent" length="64" />
+            </property>
+            <property name="eventTypeNamespace" type="string">
+                <column name="event_type_namespace" length="32" />
+            </property>
+            <property name="individualOid" type="java.lang.Integer">
+                <column name="individual_oid" />
+            </property>
+    </class>
+</hibernate-mapping>

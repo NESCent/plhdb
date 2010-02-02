@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Observation" table="observation" schema="plhdb">
+        <comment>An observation for or of an individual. An observation may start a period during which an individual has a certain property (such as disease) or capacity (such as
+        fertility), or may mark the beginning or end of the period over which an individual has been part of the study, or may represent a singular event (such as birth, or
+        death).</comment>
+        <id name="observationOid" type="int">
+            <column name="observation_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.observation_observation_oid_seq</param>
+</generator>
+        </id>
+        <many-to-one name="individual" class="org.nescent.plhdb.hibernate.dao.Individual" fetch="select">
+            <column name="individual_oid" not-null="true">
+                <comment>The individual for which the observation was made.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="cvterm" class="org.nescent.plhdb.hibernate.dao.Cvterm" fetch="select">
+            <column name="type_oid" not-null="true">
+                <comment>The type of the event, such as birth, or death, or feeding.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="distribution" class="org.nescent.plhdb.hibernate.dao.Cvterm" fetch="select">
+            <column name="prob_type_oid">
+                <comment>The type of the birthday distribution.</comment>
+            </column>
+        </many-to-one>
+       <property name="minBoundary" type="timestamp">
+            <column name="min_boundary" length="8">
+            </column>
+        </property>
+        <property name="maxBoundary" type="timestamp">
+            <column name="max_boundary" length="8" >
+                </column>
+        </property>
+        <property name="timeOfObservation" type="timestamp">
+            <column name="time_of_observation" length="8" not-null="true">
+                <comment>The time or date when the observation was made.</comment>
+            </column>
+        </property>
+        <property name="timeError" type="java.lang.Double">
+            <column name="time_error" precision="8" scale="0">
+                <comment>The error with which the time is being stated, meaning that the actual time may have been between the recorded time minus the error to the recorded time
+                plus the error. The unit of error will depend on the study, but should be uniform within a study, for example (fraction of) years, or days.</comment>
+            </column>
+        </property>
+        <set name="recordingperiodsForStartOid" inverse="true">
+            <key>
+                <column name="start_oid" not-null="true">
+                    <comment>The observation that starts the recording period.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Recordingperiod" />
+        </set>
+        <set name="recordingperiodsForEndOid" inverse="true">
+            <key>
+                <column name="end_oid">
+                    <comment>The observation that ends the period.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Recordingperiod" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Recordingperiod" table="recordingperiod" schema="plhdb">
+        <comment>A period of time created by an observation that starts the period and one that ends it. The combination of starting and ending observation and type is unique. A
+        period of time may be continuous, such as one during with an individual has a certain property (for example, disease) or a capacity (for example, fertility), or it may be
+        implicitly discontinuous, such as the total observation period if it has intervening gaps.</comment>
+        <id name="recordingperiodOid" type="int">
+            <column name="recordingperiod_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.recordingperiod_recordingperiod_oid_seq</param>
+</generator>
+        </id>
+        <many-to-one name="observationByStartOid" class="org.nescent.plhdb.hibernate.dao.Observation" fetch="select">
+            <column name="start_oid" not-null="true">
+                <comment>The observation that starts the recording period.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="cvterm" class="org.nescent.plhdb.hibernate.dao.Cvterm" fetch="select">
+            <column name="type_oid" not-null="true">
+                <comment>The type of the recording period, such as the property (for example, a disease) or the capacity (for example, fertility) that the individual had during
+                the period.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="observationByEndOid" class="org.nescent.plhdb.hibernate.dao.Observation" fetch="select">
+            <column name="end_oid">
+                <comment>The observation that ends the period.</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

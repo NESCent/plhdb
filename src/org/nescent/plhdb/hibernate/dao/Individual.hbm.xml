@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Individual" table="individual" schema="plhdb">
+        <comment>The individuals that are the subject of observation, such as the animals in an animal life history study. At present, animals can be the subject of only one
+        study; in the future this restriction may need to be lifted. Also, birth groups are recorded directly as an attribute, and hence are denormalized, but at present it is
+        unclear which attributes other than a name a birth group would need to have.</comment>
+        <id name="individualOid" type="int">
+            <column name="individual_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.individual_individual_oid_seq</param>
+</generator>
+        </id>
+        <many-to-one name="study" class="org.nescent.plhdb.hibernate.dao.Study" fetch="select">
+            <column name="study_oid" not-null="true">
+                <comment>The study in which this individual was observed.</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="128">
+                <comment>The (long) name of the individual, which must be unique within a study if provided.</comment>
+            </column>
+        </property>
+        <property name="individualId" type="string">
+            <column name="id" length="16" not-null="true">
+                <comment>The ID or codename or barcode of the individual, which must be unique within the study.</comment>
+            </column>
+        </property>
+        <property name="sex" type="java.lang.Character">
+            <column name="sex" length="1">
+                <comment>The gender of the individual. Allowed values are M, F, and U, for male, female, and unknown, respectively. Null values are allowed, meaning that the sex
+                has not been determined.</comment>
+            </column>
+        </property>
+        <property name="birthgroup" type="string">
+            <column name="birthgroup" length="32">
+                <comment>Where applicable, the name or code or ID of the group within which the individual was born. May not apply to a study.</comment>
+            </column>
+        </property>
+        <property name="birthgroupCertainty" type="java.lang.Character">
+            <column name="birthgroup_certainty" length="1">
+                <comment>Whether the birth group assignment is certain (C) or uncertain (U).</comment>
+            </column>
+        </property>
+        <property name="isFirstBorn" type="java.lang.Character">
+            <column name="is_first_born" length="1">
+                <comment>Whether the individual is the first born or first offspring from the maternal parent. Values are Y, N, and U, for Yes, No, and Unknown, respectively. Null
+                value is allowed and means that the attribute does not apply.</comment>
+            </column>
+        </property>
+        <set name="observations" inverse="true">
+            <key>
+                <column name="individual_oid" not-null="true">
+                    <comment>The individual for which the observation was made.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Observation" />
+        </set>
+        <set name="individualRelationshipsForChildOid" inverse="true">
+            <key>
+                <column name="child_oid" not-null="true">
+                    <comment>The offspring individual in the relationship.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.IndividualRelationship" />
+        </set>
+        <set name="individualRelationshipsForParentOid" inverse="true">
+            <key>
+                <column name="parent_oid" not-null="true">
+                    <comment>The parental individual in the relationship.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.IndividualRelationship" />
+        </set>
+    </class>
+</hibernate-mapping>

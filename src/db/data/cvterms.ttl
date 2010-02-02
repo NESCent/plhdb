@@ -1,0 +1,103 @@
+# ######################################################################
+# The controlled vocabulary terms for the Primate Life Histories
+# Database in Turtle format.
+#
+# Copyright (C) 2007, Hilmar Lapp, hlapp at gmx.net
+# Copyright (C) 2007, National Evolutionary Synthesis Center (NESCent)
+#
+# This file is licensed under the Creative Commons Share-Alike License
+# 3.0. See http://creativecommons.org/licenses/by-sa/3.0/ for more
+# information about the license terms.
+# ######################################################################
+
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix :     <#> .
+
+# ######################################################################
+# types of events (observations)
+# ######################################################################
+
+# two categories of event types: 
+:start_of_recording a rdfs:Class ;
+                    rdfs:label "start of recording" ;
+                    :namespace "event types" .
+:end_of_recording   a rdfs:Class ;
+                    rdfs:label "end of recording" ;
+                    :namespace "event types" .
+:singular_event     a rdfs:Class ;
+                    rdfs:label "singular event" ;
+                    :namespace "event types" .
+
+# types of observations that represent a singular event rather
+# than the start or end of a period
+:date_of_birth a :singular_event ;
+       rdfs:label "date of birth" ;
+       :namespace "event types" ;
+       :code "DOB" .
+
+# types of observations that start a recording period
+:birth a :start_of_recording ;
+       rdfs:label "birth" ;
+       :namespace "event types" ;
+       :code "B" .
+:immigration_into_population a :start_of_recording ;
+       rdfs:label "immigration into population" ;
+       :namespace "event types" ;
+       :code "I" .
+:confirmed_identification a :start_of_recording ;
+       rdfs:label "confirmed identification" ;
+       :namespace "event types" ;
+       :code "C" .
+:beginning_of_observation a :start_of_recording ;
+       rdfs:label "beginning of observation" ;
+       :namespace "event types" ;
+       :code "O" .
+
+# types of observations that end a recording period
+:death a :end_of_recording ;
+       rdfs:label "death" ;
+       :namespace "event types" ;
+       :code "D" .
+:emigration_from_population a :end_of_recording ;
+       rdfs:label "emigration from population" ;
+       :namespace "event types" ;
+       :code "E" .
+:permanent_disappearance a :end_of_recording ;
+       rdfs:label "permanent disappearance" ;
+       :namespace "event types" ;
+       :code "P" .
+:end_of_observation a :end_of_recording ;
+       rdfs:label "end of observation" ;
+       :namespace "event types" ;
+       :code "O" .
+
+# ######################################################################
+# types of recording periods
+# ######################################################################
+
+:total_observation_period a rdfs:Class ;
+                          rdfs:label "total observation period" ;
+                          :namespace "period types" .
+:female_fertility_period a rdfs:Class ;
+                         rdfs:label "female fertility period" ;
+                         :namespace "period types" .
+
+# ######################################################################
+# types of probability
+# ######################################################################
+
+:probability_distribution a rdfs:Class ;
+                          rdfs:label "probability distribution" ;
+                          :namespace "probility types" .
+
+:normal_distribution a :probability_distribution ;
+       rdfs:label "normal distribution" ;
+       :namespace "probability types" ;
+       :code "N" .
+:uniform_distribution a :probability_distribution ;
+       rdfs:label "uniform distribution" ;
+       :namespace "probability types" ;
+       :code "U" .

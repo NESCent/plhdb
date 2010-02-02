@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.CvtermRelationship" table="cvterm_relationship" schema="plhdb">
+        <comment>Relationships between ontology terms as subject, predicate, object triples. This triple table is slightly simplified as only one relationship type (predicate) is
+        allowed between a given subject/object pair (though different pairs can have different predicates).</comment>
+        <id name="cvtermRelationshipOid" type="int">
+            <column name="cvterm_relationship_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.cvterm_relationship_cvterm_relationship_oid_seq</param>
+</generator>
+        </id>
+        <many-to-one name="cvtermByPredicateOid" class="org.nescent.plhdb.hibernate.dao.Cvterm" fetch="select">
+            <column name="predicate_oid" not-null="true">
+                <comment>The predicate term of the relationship.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="cvtermByObjectOid" class="org.nescent.plhdb.hibernate.dao.Cvterm" fetch="select">
+            <column name="object_oid" not-null="true">
+                <comment>The object term of the relationship.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="cvtermBySubjectOid" class="org.nescent.plhdb.hibernate.dao.Cvterm" fetch="select">
+            <column name="subject_oid" not-null="true">
+                <comment>The subject term of the relationship.</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

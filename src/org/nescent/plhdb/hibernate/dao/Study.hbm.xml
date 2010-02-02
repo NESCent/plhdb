@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Study" table="study" schema="plhdb">
+        <comment>The study within which the individuals have been observed. At present, the same taxon and the same site applies to all individuals within the study.</comment>
+        <id name="studyOid" type="int">
+            <column name="study_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.study_study_oid_seq</param>
+</generator>
+        </id>
+        <many-to-one name="taxon" class="org.nescent.plhdb.hibernate.dao.Taxon" fetch="select">
+            <column name="taxon_oid" not-null="true">
+                <comment>The taxon for the individuals that were or are being observed in this study.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="site" class="org.nescent.plhdb.hibernate.dao.Site" fetch="select">
+            <column name="site_oid" not-null="true">
+                <comment>The site where this study was or is being conducted, and where hence the individuals have been observed.</comment>
+            </column>
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="name" length="32" unique="true">
+                <comment>The name of the study. This may be a descriptive or an encoded and must be unique if provided.</comment>
+            </column>
+        </property>
+        <property name="studyId" type="string">
+            <column name="id" length="12" not-null="true" unique="true">
+                <comment>A short identifier commonly used to refer to the study. This need not be a number, but must be unique, and is required.</comment>
+            </column>
+        </property>
+        <property name="owners" type="string">
+            <column name="owners" length="128">
+                <comment>The owners of the observational data that this study gave rise to. This may be a single person, an organization, or a (comma-delimited) list of
+                such.</comment>
+            </column>
+        </property>
+        <set name="individuals" inverse="true">
+            <key>
+                <column name="study_oid" not-null="true">
+                    <comment>The study in which this individual was observed.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Individual" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.IndividualRelationship" table="individual_relationship" schema="plhdb">
+        <comment>Parental relationships between individuals.</comment>
+        <id name="individualRelationshipOid" type="int">
+            <column name="individual_relationship_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.individual_relationship_individual_relationship_oid_seq</param>
+</generator>
+        </id>
+        <many-to-one name="individualByChildOid" class="org.nescent.plhdb.hibernate.dao.Individual" fetch="select">
+            <column name="child_oid" not-null="true">
+                <comment>The offspring individual in the relationship.</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="individualByParentOid" class="org.nescent.plhdb.hibernate.dao.Individual" fetch="select">
+            <column name="parent_oid" not-null="true">
+                <comment>The parental individual in the relationship.</comment>
+            </column>
+        </many-to-one>
+        <property name="reltype" type="string">
+            <column name="reltype" length="16" not-null="true">
+                <comment>The nature of the relationship, currently either 'maternal parent' or 'paternal parent'.</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

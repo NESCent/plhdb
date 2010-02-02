@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="org.nescent.plhdb.hibernate.dao.Recordingperiods" table="recordingperiods" schema="plhdb">
+        <comment>Recording periods with start and end observations, types of those observations, and the type of the period. The end observation (and its attributes) may be
+        null.</comment>
+        <composite-id name="id" class="org.nescent.plhdb.hibernate.dao.RecordingperiodsId">
+            <key-property name="individualOid" type="java.lang.Integer">
+                <column name="individual_oid" />
+            </key-property>
+            <key-property name="startObservationOid" type="java.lang.Integer">
+                <column name="start_observation_oid" />
+            </key-property>
+            
+        </composite-id>
+        <property name="startTime" type="timestamp">
+                <column name="start_time" length="8" />
+            </property>
+            <property name="startTimeError" type="java.lang.Double">
+                <column name="start_time_error" precision="8" scale="0" />
+            </property>
+            <property name="startEventType" type="string">
+                <column name="start_event_type" length="64" />
+            </property>
+            <property name="startEventCode" type="string">
+                <column name="start_event_code" length="8" />
+            </property>
+            <property name="startEventTypeNamespace" type="string">
+                <column name="start_event_type_namespace" length="32" />
+            </property>
+            <property name="endObservationOid" type="java.lang.Integer">
+                <column name="end_observation_oid" />
+            </property>
+            <property name="endTime" type="timestamp">
+                <column name="end_time" length="8" />
+            </property>
+            <property name="endTimeError" type="java.lang.Double">
+                <column name="end_time_error" precision="8" scale="0" />
+            </property>
+            <property name="endEventType" type="string">
+                <column name="end_event_type" length="64" />
+            </property>
+            <property name="endEventCode" type="string">
+                <column name="end_event_code" length="8" />
+            </property>
+            <property name="endEventTypeNamespace" type="string">
+                <column name="end_event_type_namespace" length="32" />
+            </property>
+            <property name="periodType" type="string">
+                <column name="period_type" length="64" />
+            </property>
+    </class>
+</hibernate-mapping>

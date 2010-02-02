@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+	<class
+		name="org.nescent.plhdb.hibernate.dao.Femalefertilityinterval"
+		table="femalefertilityinterval" schema="public">
+		<comment>
+			PLHD API: Observed fertility interval of a female animal.
+		</comment>
+		<id name="intervalOid" type="int">
+			<column name="interval_oid" />
+			<generator class="select">
+                <param name="key">startdate</param>
+                <param name="key">starttype</param>
+                <param name="key">animid</param>
+        	</generator>
+		</id>
+		<property name="studyid" type="string">
+			<column name="studyid" />
+		</property>
+		<property name="animOid" type="int">
+			<column name="anim_oid" />
+		</property>
+		<property name="animid" type="string">
+			<column name="animid" length="16" />
+		</property>
+		<property name="startdate" type="timestamp">
+			<column name="startdate" length="8" />
+		</property>
+		<property name="starttype" type="string">
+			<column name="starttype" length="64" />
+		</property>
+		<property name="stopdate" type="timestamp">
+			<column name="stopdate" length="8" />
+		</property>
+		<property name="stoptype" type="string">
+			<column name="stoptype" length="64" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,1 +1,62 @@
-This is a placeholder for the PLHDB codebase.
+Primate Life Histories Online Database
+
+Introduction
+
+Primate Life Histories is an online database project with database and web interface to archive, manage, search and download individual-based life history data that have been collected from wild primate populations.
+
+Installation:
+1. check out source code to a desired location
+2. Install required jar files (see Technology)
+3. Create a postgresql database by running the sql scripts under the src/db.sql folder
+4. Create a user with access to the database
+5. Compile java classes and generate web application war file
+	The web-application is built using Apache Ant. You must have ant installed in
+	order to build it. On MacOSX, installing the Developer package (which includes
+	the C compiler) will also install ant in /Developer/Java/Ant/bin/ant.
+
+	Properties need to be specified with the '-D' option:
+	* project.version: the application version
+	* hibernate.database: the hibernate database URL 
+	* hibernate.username: the hibernate database user name  
+	* hibernate.password: the hibernate database password 
+
+	please use the database user account you created in step 4.    
+6. Copy the war file generated in step 5 to Tomcat or Jboss deploy folder
+7. Start Tomcat (restart is not necessary for Jboss)
+8. The web application should be visible now at http://your.domain.name:8080/plhdb
+
+
+Technology
+
+    * Database: PostgreSQL 8.3
+    * Database ORM : Hibernate
+    * Programming Language: java
+    * Web Framework: Sping
+    * Other Libraries
+          o c3p0 Database Connection Pooling
+          o struts
+          o dojo
+
+Source Code
+
+Source code is available on [TBD] under a GPL v3  license.
+
+Credits
+    * Concept, content, and scientific requirements: the Evolutionary Ecology of Primate Life Histories Working Group, Susan C Alberts (Duke University, PI), Karen B Strier (University of Wisconsin-Madison, PI)
+    * Database and application programming: Hilmar Lapp (NESCent), Xianhua Liu (NESCent) 
+
+Publications
+
+Contact
+
+    * The website is maintained by the National Evolutionary Synthesis Center (NESCent).
+      2024 W. Main Street, Suite A200
+      Durham, NC 27705-4667
+      Tel: (919) 668-4551
+      Fax: (919) 668-9198
+    * Send email to
+      leading scientists of the working group (plhdb-admin@nescent.org)
+      report bugs or request technical help (plhdb-bug@nescent.org)
+
+
+Released under the GPL v3 license (included)

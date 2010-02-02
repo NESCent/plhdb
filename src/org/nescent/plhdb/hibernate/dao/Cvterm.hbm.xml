@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Cvterm" table="cvterm" schema="plhdb">
+        <comment>Controlled vocabulary and ontology terms. For simplicity, the name of the vocabulary or ontology is in the column namespace (and hence not normalized). Also,
+        terms may have a short code (which need not be unique).</comment>
+        <id name="cvtermOid" type="int">
+            <column name="cvterm_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.cvterm_cvterm_oid_seq</param>
+</generator>
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="64" not-null="true">
+                <comment>Name of the term. Must be unique within a namespace.</comment>
+            </column>
+        </property>
+        <property name="code" type="string">
+            <column name="code" length="8">
+                <comment>An optional code for the name, often only a single letter or number. Note that this need not be unique within a namespace.</comment>
+            </column>
+        </property>
+        <property name="identifier" type="string">
+            <column name="identifier" length="16" unique="true">
+                <comment>Identifier (in OBO speak called primary dbxref) of the term. If provided, must be unique among all terms.</comment>
+            </column>
+        </property>
+        <property name="namespace" type="string">
+            <column name="namespace" length="32" not-null="true">
+                <comment>The name of the controlled vocabulary or ontology to which a term belongs.</comment>
+            </column>
+        </property>
+        <set name="recordingperiods" inverse="true">
+            <key>
+                <column name="type_oid" not-null="true">
+                    <comment>The type of the recording period, such as the property (for example, a disease) or the capacity (for example, fertility) that the individual had
+                    during the period.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Recordingperiod" />
+        </set>
+        <set name="cvtermRelationshipsForSubjectOid" inverse="true">
+            <key>
+                <column name="subject_oid" not-null="true">
+                    <comment>The subject term of the relationship.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.CvtermRelationship" />
+        </set>
+        <set name="cvtermRelationshipsForObjectOid" inverse="true">
+            <key>
+                <column name="object_oid" not-null="true">
+                    <comment>The object term of the relationship.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.CvtermRelationship" />
+        </set>
+        <set name="observations" inverse="true">
+            <key>
+                <column name="type_oid" not-null="true">
+                    <comment>The type of the event, such as birth, or death, or feeding.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Observation" />
+        </set>
+        <set name="cvtermRelationshipsForPredicateOid" inverse="true">
+            <key>
+                <column name="predicate_oid" not-null="true">
+                    <comment>The predicate term of the relationship.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.CvtermRelationship" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.UserAccount" table="account" schema="auth">
+        <id name="userAccountOid" type="int">
+            <column name="user_oid" />
+<generator class="sequence">
+<param name="sequence">auth.user_user_oid_seq</param>
+</generator>
+        </id>
+        <property name="firstName" type="string">
+            <column name="first_name" length="64" not-null="true" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="last_name" length="64" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" not-null="true" />
+        </property>
+        <property name="admin" type="boolean">
+            <column name="admin" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="64" not-null="true" />
+        </property>
+        <property name="createDate" type="date">
+            <column name="create_date" length="4" />
+        </property>
+        <property name="enableDisableStatus" type="string">
+            <column name="enable_disable_status" length="1" not-null="true" />
+        </property>
+        <set name="permissions" inverse="true">
+            <key>
+                <column name="user_oid" not-null="true" />
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Permission" />
+        </set>
+    </class>
+</hibernate-mapping>

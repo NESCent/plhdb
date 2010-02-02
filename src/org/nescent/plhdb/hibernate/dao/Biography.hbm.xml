@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="org.nescent.plhdb.hibernate.dao.Biography" table="biography" schema="public">
+        <comment>PLHD API: Biography of an animal.</comment>
+        <id name="animOid" type="int">
+            <column name="anim_oid" />
+            <generator class="select">
+			<param name="key">studyid</param>
+			<param name="key">animid</param>
+		</generator>
+        </id>
+        <property name="studyid" type="string">
+                <column name="studyid" length="12" />
+        </property>
+        <property name="animid" type="string">
+               <column name="animid" length="16" />
+        </property>
+        <property name="animname" type="string">
+                <column name="animname" length="128" />
+            </property>
+            <property name="birthgroup" type="string">
+                <column name="birthgroup" length="32" />
+            </property>
+            <property name="bgqual" type="java.lang.Character">
+                <column name="bgqual" length="1" />
+            </property>
+            <property name="sex" type="java.lang.Character">
+                <column name="sex" length="1" />
+            </property>
+            <property name="momid" type="string">
+                <column name="momid" length="16" />
+            </property>
+            <property name="firstborn" type="java.lang.Character">
+                <column name="firstborn" length="1" />
+            </property>
+            <property name="birthdate" type="timestamp">
+                <column name="birthdate" length="8" />
+            </property>
+           
+             <property name="bddist" type="string" >
+            <column name="bddist" length="8">
+            </column>
+        </property>
+       <property name="bdmin" type="timestamp">
+            <column name="bdmin" length="8">
+            </column>
+        </property>
+        <property name="bdmax" type="timestamp">
+            <column name="bdmax" length="8" >
+                </column>
+        </property>
+        
+            <property name="entrydate" type="timestamp">
+                <column name="entrydate" length="8" />
+            </property>
+            <property name="entrytype" type="string">
+                <column name="entrytype" length="8" />
+            </property>
+            <property name="departdate" type="timestamp">
+                <column name="departdate" length="8" />
+            </property>
+            <property name="departdateerror" type="java.lang.Double">
+                <column name="departdateerror" precision="8" scale="0" />
+            </property>
+            <property name="departtype" type="string">
+                <column name="departtype" length="8" />
+            </property>
+    </class>
+</hibernate-mapping>

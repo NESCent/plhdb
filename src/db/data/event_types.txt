@@ -1,0 +1,14 @@
+namespace	name	code	is-a
+event types	start of recording		
+event types	end of recording		
+event types	date of birth	DOB	start of recording
+event types	birth	B	start of recording
+event types	immigration into population	I	start of recording
+event types	confirmed identification	C	start of recording
+event types	beginning of observation	O	start of recording
+event types	death	D	end of recording
+event types	emigration from population	E	end of recording
+event types	permanent disappearance	P	end of recording
+event types	end of observation	O	end of recording
+period types	total observation period		
+period types	female fertility period		

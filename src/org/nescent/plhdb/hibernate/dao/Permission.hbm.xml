@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Permission" table="permission" schema="auth">
+        <id name="permissionOid" type="int">
+            <column name="permission_oid" />
+<generator class="sequence">
+<param name="sequence">auth.permission_permission_oid_seq</param>
+</generator>
+        </id>
+        <property name="access" type="string">
+            <column name="access" length="20" not-null="true" />
+        </property>
+        <property name="study" type="string">
+            <column name="study" length="64" not-null="true" />
+        </property>
+        <many-to-one name="userAccount" class="org.nescent.plhdb.hibernate.dao.UserAccount" fetch="select">
+            <column name="user_oid" not-null="true" />
+        </many-to-one>
+    </class>
+</hibernate-mapping>

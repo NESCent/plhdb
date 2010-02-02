@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.password">@password@</property>
+        <property name="hibernate.connection.username">@username@</property>
+        <property name="hibernate.connection.url">@database@</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+       
+        <property name="hibernate.c3p0.acquire_increment">1</property> 
+		<property name="hibernate.c3p0.idle_test_period">120</property>
+		<property name="hibernate.c3p0.max_size">20</property> 
+		<property name="hibernate.c3p0.max_statements">50</property> 
+		<property name="hibernate.c3p0.min_size">0</property> 
+		<property name="hibernate.c3p0.timeout">30</property> 
+		<property name="hibernate.c3p0.propertyCycle">5</property>
+		
+		<!--
+		<property name="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
+		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		<property name="hibernate.current_session_context_class">Thread</property>
+		-->
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Biography.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Individual.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/IndividualRelationship.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Recordingperiods.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Observations.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Cvterm.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Observation.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Site.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Taxon.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Recordingperiod.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Femalefertilityinterval.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/UserAccount.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Permission.hbm.xml" />
+	    <mapping resource="org/nescent/plhdb/hibernate/dao/Studyinfo.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/IndividualRelationships.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/CvtermRelationship.hbm.xml" />
+        <mapping resource="org/nescent/plhdb/hibernate/dao/Study.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

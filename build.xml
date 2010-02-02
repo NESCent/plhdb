@@ -1,0 +1,371 @@
+<?xml version="1.0"?>
+<project name="plhdb" basedir="." default="war">
+
+	
+	<!-- Give user a chance to override without editing this file
+         (and without typing -D each time it compiles it) -->
+    <property file="build.properties" />
+    
+
+    <!-- Generic project properties -->
+    <property name="project.fullname" value="Primary Life History Database"/>
+    <property name="project.version" value="0.5.0"/>
+    <property name="project.name" value="plhdb"/>
+
+    <!-- hibernate connection settings -->
+    <property name="hibernate.password" value=""/>
+    <property name="hibernate.username" value=""/>
+	<property name="hibernate.database" value=""/>
+	
+    <!-- Miscellaneous settings -->
+    <property name="year" value="2007-2010"/>
+    <property name="debug" value="on"/>
+    <property name="optimize" value="off"/>
+    <property name="deprecation" value="on"/>
+
+    <!--
+       ========================================================================
+         Set the properties related to the source tree
+       ========================================================================
+    -->
+    <!-- Source locations for the build -->
+    <property name="src.dir" value="src"/>
+    <property name="web.dir" value="WebRoot"/>
+    <property name="webinf.dir" value="${web.dir}/WEB-INF"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="build.dir" value="build"/>
+
+
+    <!--
+       ========================================================================
+         Set the properties related to the build area
+       ========================================================================
+    -->
+    <!-- Destination locations for the build (relative to the basedir as -->
+    <!-- specified in the basedir attribute of the project tag)          -->
+    <property name="out.dir" value="${build.dir}"/>
+    <property name="out.config.dir" value="${out.dir}/config"/>
+    <property name="out.dist.dir" value="${out.dir}/dist"/>
+    <property name="out.lib.dir" value="${out.dir}/lib"/>
+    <property name="out.classes.dir" value="${out.dir}/classes"/>
+    <property name="out.doc.dir" value="${out.dir}/doc"/>
+    <property name="out.javadoc.dir" value="${out.doc.dir}/javadoc"/>
+
+
+    <!-- Names of deliverables -->
+
+    <property name="final.war.name" value="${out.dir}/${project.name}.war"/>
+
+    <!-- The full sources of plhdb in a zip file -->
+    <property name="final.src.name" value="${out.dir}/${project.name}-src.zip"/>
+
+    <!-- The plhdb documentation in a zip file -->
+    <property name="final.doc.name" value="${out.dir}/${project.name}-doc.zip"/>
+
+    <!--
+       ========================================================================
+         Useful file patterns for targets
+       ========================================================================
+    -->
+    <!-- All source files of the projet. These source files will be copied
+         to the destination source directory in the prepare task -->
+    <patternset id="all.src.files">
+
+        <!-- All java files -->
+        <include name="**/*.java"/>
+
+        <!-- All doc files -->
+        <include name="**/package.html"/>
+        <include name="**/overview.html"/>
+
+        <!-- All conf files (including test files) -->
+        <include name="**/*.txt"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+		
+    </patternset>
+
+    <!-- All non java files in the src directory -->
+    <patternset id="all.nonjava.files">
+        <include name="**/*.txt"/>
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+    </patternset>
+
+    <!-- The classpath to use for compilation (and JavaDoc generation) -->
+    <path id="my.classpath">
+      <pathelement path="${java.class.path}"/>
+      <fileset dir="${lib.dir}" includes="**/*.jar"/>
+      <fileset dir="${webinf.dir}/lib">
+        <include name="hibernate*.jar"/>
+        <include name="spring*.jar"/>
+      </fileset>
+    </path>
+
+ 	<!--
+       ========================================================================
+         Initialize the build. Must be called by all targets
+       ========================================================================
+    -->
+    <target name="init">
+
+        <!-- So that we can use the ${TSTAMP}, ${DSTAMP}, ... time stamps
+             in targets, if need be -->
+        <tstamp>
+          <format property="plhdb.deploy_time" 
+                  pattern="MM/dd/yyyy hh:mm aa"
+                  unit="hour"/>
+    	</tstamp>
+    	<echo message="---- ${project.fullname} ${project.version} -----"/>
+        <echo message=""/>
+        <echo message="java.home = ${java.home}"/>
+        <echo message="user.home = ${user.home}"/>
+        <echo message="basedir = ${basedir}"/>
+        <echo message="source dir = ${src.dir}"/>
+        <echo message="out dir = ${out.dir}"/>
+        <echo message="database = ${hibernate.database}"/>
+        <echo message="user = ${hibernate.username}"/>
+        <echo message="password = ${hibernate.password}"/>
+        <echo message=""/>
+        <!-- Filters -->
+        <filter token="version" value="${project.version}"/>
+        <filter token="year" value="${year}"/>
+    </target>
+	<!--
+       ========================================================================
+         Help on usage. List available targets
+       ========================================================================
+    -->
+    <target name="usage" depends="init"
+            description="usage information on targets and properties">
+
+        <echo message=""/>
+        <echo message="${project.fullname} build file"/>
+        <echo message="------------------------------------------------------"/>
+        <echo message=""/>
+        <echo message=" Available targets are:"/>
+        <echo message=""/>
+        <echo message=" war    --> generates the war file (default)"/>
+        <echo message=" clean  --> cleans up the build directory"/>
+        <echo message=" source --> generates source zip of the project"/>
+        <echo message=" doc    --> generates the docs (javadoc, ...)"/>
+        <echo message=""/>
+    	<echo message=" Important properties:"/>
+    	<echo message=""/>
+        <echo message=" hibernate.username --> username for hibernate connection in the hibernate.cfg.xml configuration file"/>
+        <echo message=" hibernate.password --> password for hibernate connection in the hibernate.cfg.xml configuration file"/>
+    	<echo message=" hibernate.database --> database url for hibernate connection in the hibernate.cfg.xml configuration file"/>
+        <echo message=" project.version --> the version of the application"/>
+        <echo message=""/>
+        <echo message=" Targets for running the tests:"/>
+        <echo message=""/>
+        <echo message=""/>
+
+    </target>
+
+    <!--
+       ========================================================================
+         Compiles the source directory
+       ========================================================================
+    -->
+    <!-- Preparation target for the compile target -->
+    <target name="prepare-compile" depends="init">
+      <mkdir dir="${out.classes.dir}"/>
+    </target>
+
+    <!-- Run the java compilation -->
+    <target name="compile" depends="prepare-compile"
+            description="compile Java source files">
+      <javac srcdir="${src.dir}"
+             destdir="${out.classes.dir}"
+             debug="${debug}"
+             deprecation="${deprecation}"
+             optimize="${optimize}"
+             includeAntRuntime="false" 
+             >
+            
+			 <classpath><path refid="my.classpath"/></classpath>
+        </javac>
+
+        <!-- Copies non java files that need to be in the classes directory -->
+        <copy todir="${out.classes.dir}">
+            <fileset dir="${src.dir}">
+                <patternset refid="all.nonjava.files"/>
+            </fileset>
+        </copy>
+
+    </target>
+
+    <!--
+       ========================================================================
+         Generates source zip of the project
+       ========================================================================
+    -->
+    <target name="source" depends="init"
+            description="generates source zip of the project">
+
+        <zip zipfile="${final.src.name}" basedir=".">
+
+            <exclude name="${out.dir}/**"/>
+            <exclude name="**/*.log"/>
+            <exclude name="**/*.bak"/>
+            <exclude name="**/*.class"/>
+            <exclude name="${build.dir}/build.properties"/>
+
+        </zip>
+
+    </target>
+ 	<!--
+       ========================================================================
+         Generate the javadoc
+       ========================================================================
+    -->
+    <!-- Preparation target for the javadoc target -->
+    <target name="prepare-javadoc" depends="init">
+
+        <mkdir dir="${out.javadoc.dir}"/>
+
+    </target>
+
+    <!-- Generate the javadoc for the current Servlet API -->
+    <target name="javadoc" depends="prepare-javadoc">
+
+        <javadoc
+            sourcepath="${src.dir}"
+            packagenames="org.nescent.plhdb.*"
+            destdir="${out.javadoc.dir}"
+            author="true"
+            public="true"
+            version="true"
+            use="true"
+            windowtitle="${project.fullname} ${project.version} for Servlet @servlet.api@ API"
+            doctitle="${project.fullname} ${project.version} for Servlet @servlet.api@ API"
+            bottom="Copyright &amp;copy; ${year} Apache Software Foundation. All Rights Reserved.">
+
+            <!-- use all java source files, assumung that all files we
+                 need to compile are nameed .java -->
+            <include name="**/*.java"/>
+
+            <classpath><path refid="my.classpath"/></classpath>
+
+        </javadoc>
+
+    </target>
+    
+    <!--
+       ========================================================================
+         Generate the full documentation
+       ========================================================================
+    -->
+    <!-- Preparation target for the doc target -->
+    <target name="prepare-doc" depends="javadoc">
+
+        <mkdir dir="${out.doc.dir}"/>
+
+    </target>
+
+    <!-- Generate the documentation -->
+    <target name="doc" depends="prepare-doc"
+            description="generates the docs (javadoc, ...)">
+
+        <!-- Create the zipped documentation -->
+        <zip zipfile="${final.doc.name}" basedir="${out.doc.dir}"/>
+
+    </target>
+    <!--
+       ========================================================================
+         Remove all build generated files
+       ========================================================================
+    -->
+    <target name="clean" depends="init"
+            description="cleans up the build directory and removes .log files">
+
+        <!-- Remove the out directory -->
+        <delete dir="${out.dir}"/>
+
+        <!-- Delete log files -->
+        <delete>
+            <fileset dir=".">
+                <include name="**/*.log"/>
+            </fileset>
+        </delete>
+
+    </target>
+     <!--
+       ========================================================================
+         Create the runtime war file
+       ========================================================================
+    -->
+
+    <!-- Generate the war file -->
+    <target name="war" depends="compile" 
+            description="generates the war file (default)">
+
+    	<!-- copy config file -->
+    	<copy file="WebRoot/config/plhdb.conf.example" 
+              tofile="WebRoot/config/plhdb.conf" 
+              overwrite="yes">
+          <filterset>
+            <filter token="version" value="${project.version}"/>
+            <filter token="deploy_date" value="${plhdb.deploy_time}"/>	
+          </filterset>
+        </copy>
+    	<!-- copy hibernate configuration file -->
+        <copy file="src/hibernate.cfg.xml.template" 
+              tofile="${out.classes.dir}/hibernate.cfg.xml" 
+              overwrite="yes">
+          <filterset>
+            <filter token="password" value="${hibernate.password}"/>
+            <filter token="username" value="${hibernate.username}"/>
+          	<filter token="database" value="${hibernate.database}"/>
+          </filterset>
+        </copy>
+
+    	<war destfile="${final.war.name}" webxml="${webinf.dir}/web.xml">
+          <lib dir="${webinf.dir}/lib" />
+          <classes dir="${out.classes.dir}" />
+          <fileset dir="${web.dir}">
+            <exclude name="WEB-INF/web.xml"/>
+            <exclude name="WEB-INF/lib/**/*.*"/>
+            <exclude name="WEB-INF/classes/**/*.*"/>
+            <exclude name="config/*.example"/>
+            <exclude name="config/*.new"/>
+          </fileset>
+        </war>
+		
+    </target>
+
+   <!-- Generate the war file -->
+    <target name="war_only" depends="init"  
+            description="generates the war file without compiling the source">
+
+    	<!-- copy config file -->
+    	<copy file="WebRoot/config/plhdb.conf.example" 
+              tofile="WebRoot/config/plhdb.conf" 
+              overwrite="yes">
+          <filterset>
+            <filter token="version" value="${project.version}"/>
+            <filter token="deploy_date" value="${plhdb.deploy_time}"/>	
+          </filterset>
+        </copy>
+
+
+    	<war destfile="${final.war.name}" webxml="${webinf.dir}/web.xml">
+          <lib dir="${webinf.dir}/lib" />
+          <classes dir="${out.classes.dir}" />
+          <fileset dir="${web.dir}">
+            <exclude name="WEB-INF/web.xml"/>
+            <exclude name="WEB-INF/lib/**/*.*"/>
+            <exclude name="WEB-INF/classes/**/*.*"/>
+            <exclude name="config/*.example"/>
+            <exclude name="config/*.new"/>
+          </fileset>
+        </war>
+		
+    </target>
+    
+    <!-- Rebuild application (war file) from scratch -->
+    <target name="rebuild" depends="clean,war"
+            description="rebuild .war file from scratch"/>
+
+</project>

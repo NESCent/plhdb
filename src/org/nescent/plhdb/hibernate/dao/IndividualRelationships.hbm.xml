@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="org.nescent.plhdb.hibernate.dao.IndividualRelationships" table="individual_relationships" schema="plhdb">
+        <comment>Parent and child individuals connected by a certain relationship type.</comment>
+        <composite-id name="id" class="org.nescent.plhdb.hibernate.dao.IndividualRelationshipsId">
+            <key-property name="parentOid" type="java.lang.Integer">
+                <column name="parent_oid" />
+            </key-property>
+            <key-property name="parentName" type="string">
+                <column name="parent_name" length="128" />
+            </key-property>
+            <key-property name="parentId" type="string">
+                <column name="parent_id" length="16" />
+            </key-property>
+            <key-property name="childOid" type="java.lang.Integer">
+                <column name="child_oid" />
+            </key-property>
+            <key-property name="childName" type="string">
+                <column name="child_name" length="128" />
+            </key-property>
+            <key-property name="childId" type="string">
+                <column name="child_id" length="16" />
+            </key-property>
+            <key-property name="reltype" type="string">
+                <column name="reltype" length="16" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

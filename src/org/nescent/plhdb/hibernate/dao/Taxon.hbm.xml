@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Taxon" table="taxon" schema="plhdb">
+        <comment>The taxon of the individuals (animals, plants, etc) being studied. For now, this is a very simplified taxon model with no identification of the taxonomy being
+        used, and there can be only two names, one scientific and one common.</comment>
+        <id name="taxonOid" type="int">
+            <column name="taxon_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.taxon_taxon_oid_seq</param>
+</generator>
+        </id>
+        <property name="scientificName" type="string">
+            <column name="scientific_name" length="128" not-null="true" unique="true">
+                <comment>The scientific name for the taxon, using for example the NCBI or the ITIS taxonomies.</comment>
+            </column>
+        </property>
+        <property name="commonName" type="string">
+            <column name="common_name" length="64" unique="true">
+                <comment>The common name for the taxon. This need not be the most common or generally accepted name, but the common name used within the study.</comment>
+            </column>
+        </property>
+        <set name="studies" inverse="true">
+            <key>
+                <column name="taxon_oid" not-null="true">
+                    <comment>The taxon for the individuals that were or are being observed in this study.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Study" />
+        </set>
+    </class>
+</hibernate-mapping>

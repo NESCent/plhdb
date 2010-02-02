@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping default-cascade="save-update">
+    <class name="org.nescent.plhdb.hibernate.dao.Site" table="site" schema="plhdb">
+        <comment>The site where the study was or is being conducted. For now, geographic coordinates are designated to the entire site, not individually to observations (though
+        that would seem desirable over the long term). It would also seem desirable to record the geographic area of the site as a polygon, rather than as a single
+        point.</comment>
+        <id name="siteOid" type="int">
+            <column name="site_oid" />
+<generator class="sequence">
+<param name="sequence">plhdb.site_site_oid_seq</param>
+</generator>
+        </id>
+        <property name="name" type="string">
+            <column name="name" length="64" not-null="true" unique="true">
+                <comment>The name of the site, which must be unique. This may be a short or a long name, depending on what the study uses.</comment>
+            </column>
+        </property>
+        <property name="latitude" type="big_decimal">
+            <column name="latitude" precision="7" scale="3">
+                <comment>The decimal latitude coordinate of the site, using positive and negative sign to indicate N and S, respectively.</comment>
+            </column>
+        </property>
+        <property name="longitude" type="big_decimal">
+            <column name="longitude" precision="7" scale="3">
+                <comment>The decimal longitude coordinate of the site, using positive and negative sign to indicate E and W, respectively.</comment>
+            </column>
+        </property>
+        <property name="geodeticDatum" type="string">
+            <column name="geodetic_datum" length="12">
+                <comment>The geodetic system on which the geo-coordinates are based. For geo-coordinates measured between 1984 and 2010, this will typically be WGS84 and is the
+                default value.</comment>
+            </column>
+        </property>
+        <set name="studies" inverse="true">
+            <key>
+                <column name="site_oid" not-null="true">
+                    <comment>The site where this study was or is being conducted, and where hence the individuals have been observed.</comment>
+                </column>
+            </key>
+            <one-to-many class="org.nescent.plhdb.hibernate.dao.Study" />
+        </set>
+    </class>
+</hibernate-mapping>

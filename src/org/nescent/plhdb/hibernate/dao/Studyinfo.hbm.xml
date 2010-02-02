@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1 -->
+<hibernate-mapping>
+    <class name="org.nescent.plhdb.hibernate.dao.Studyinfo" table="studyinfo" schema="public">
+        <comment>PLHD API: Information about the studies.</comment>
+        <id name="studyId" type="string">
+        	<column name="studyid" length="12" />
+        </id>
+        <property name="commonname" type="string">
+                <column name="commonname" length="64" />
+            </property>
+            <property name="sciname" type="string">
+                <column name="sciname" length="128" />
+            </property>
+            <property name="siteid" type="string">
+                <column name="siteid" length="64" />
+            </property>
+            <property name="owners" type="string">
+                <column name="owners" length="128" />
+            </property>
+            <property name="latitude" type="big_decimal">
+                <column name="latitude" precision="7" scale="3" />
+            </property>
+            <property name="longitude" type="big_decimal">
+                <column name="longitude" precision="7" scale="3" />
+            </property>
+    </class>
+</hibernate-mapping>

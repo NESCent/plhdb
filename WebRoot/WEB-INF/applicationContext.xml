@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+
+	<bean id="hibernateSession"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocation">
+			<value>/WEB-INF/classes/hibernate.cfg.xml</value>
+		</property>
+	</bean>
+	
+	
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+            	<prop key="**/login.go">LoginController</prop>
+            	<prop key="**/edit.go">EditController</prop>
+            	<prop key="**/add/study.go">AddStudyController</prop>
+            	<prop key="**/add/individual.go">AddIndividualController</prop>
+            	<prop key="**/save/study.go">SaveStudyController</prop>
+            	<prop key="**/save/biography.go">SaveBiographyController</prop>
+            	<prop key="**/save/fertilities.go">SaveFertilitiesViewController</prop>
+            	<prop key="**/delete/study.go">DeleteStudyController</prop>
+            	<prop key="**/delete/individual.go">DeleteBiographyController</prop>
+            	<prop key="**/delete/fertility.go">DeleteFertilityController</prop>
+            	<prop key="**/search/biography.go">SearchBiographyController</prop>
+            	<prop key="**/search/fertility.go">SearchFertilityController</prop>
+            	<prop key="**/remove/biography.go">RemoveBiographyController</prop>
+            	<prop key="**/reset/password.go">ResetPasswordController</prop>
+            	<prop key="**/change/password.go">SavePasswordController</prop>
+            	<prop key="**/view/users.go">ViewUsersController</prop>
+            	<prop key="**/edit/user.go">EditUserController</prop>
+            	<prop key="**/save/user.go">SaveUserController</prop>
+            	<prop key="**/add/user.go">AddUserController</prop>
+            	<prop key="**/delete/user.go">DeleteUserController</prop>
+		       	<prop key="/help/">helpController</prop>
+		       	
+            </props>
+        </property>
+    </bean>
+
+    <bean id="helpController" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
+	 <bean id="EditController"  class="org.nescent.plhdb.spring.EditController" />
+	 <bean id="AddStudyController"  class="org.nescent.plhdb.spring.AddStudyController" />
+	 <bean id="SaveStudyController"  class="org.nescent.plhdb.spring.SaveStudyController" />
+	 <bean id="AddIndividualController"  class="org.nescent.plhdb.spring.AddIndividualController" />
+	 <bean id="SaveBiographyController"  class="org.nescent.plhdb.spring.SaveBiographyController" />
+	 <bean id="RemoveBiographyController"  class="org.nescent.plhdb.spring.RemoveBiographyController" />
+	 <bean id="SaveFertilitiesViewController"  class="org.nescent.plhdb.spring.SaveFertilitiesViewController" />
+	 <bean id="DeleteStudyController"  class="org.nescent.plhdb.spring.DeleteStudyController" />
+	 <bean id="DeleteBiographyController"  class="org.nescent.plhdb.spring.DeleteBiographyController" />
+	 <bean id="DeleteFertilityController"  class="org.nescent.plhdb.spring.DeleteFertilityController" />
+    <bean id="ResetPasswordController"  class="org.nescent.plhdb.spring.ResetPasswordController" />
+    <bean id="SavePasswordController"  class="org.nescent.plhdb.spring.SavePasswordController" />
+    <bean id="LoginController"  class="org.nescent.plhdb.spring.LoginController" />
+    <bean id="ViewUsersController"  class="org.nescent.plhdb.spring.ViewUsersController" />
+    <bean id="EditUserController"  class="org.nescent.plhdb.spring.EditUserController" />
+     <bean id="SaveUserController"  class="org.nescent.plhdb.spring.SaveUserController" />
+     <bean id="AddUserController"  class="org.nescent.plhdb.spring.AddUserController" />
+     <bean id="DeleteUserController"  class="org.nescent.plhdb.spring.DeleteUserController" />
+     
+    <bean id="SearchBiographyController"
+          class="org.nescent.plhdb.spring.SearchBiographyController">
+        <property name="formView" value="searchData"/>
+        <property name="commandName"><value>searchData</value></property>
+        <property name="commandClass"><value>org.nescent.plhdb.util.SearchBiographyForm</value></property>
+    </bean>
+    
+    <bean id="SearchFertilityController"
+          class="org.nescent.plhdb.spring.SearchFertilityController">
+        <property name="formView" value="searchFertility"/>
+        <property name="commandName"><value>searchFertility</value></property>
+        <property name="commandClass"><value>org.nescent.plhdb.util.SearchFertilityForm</value></property>
+    </bean>
+     
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.JstlView</value>
+		</property>
+
+	    <property name="prefix" value="/jsp/" />
+    	<property name="suffix" value=".jsp" />
+	</bean>
+
+
+
+</beans>
