@@ -12,7 +12,7 @@ NoCache.nocache(response);
 function deleteUser(id){
     if (confirm("Do you really want to delete the user?")) { 
 	if (confirm("Before deleting the user, please make sure it really should be deleted. Do you still want to delete the user?")){
-	    var url="/delete/user.go?id="+id;
+	    var url="/plhdb/delete/user.go?id="+id;
 	    window.location.href=url;
 	}
     }
@@ -52,7 +52,7 @@ function deleteUser(id){
 		
 			<table>
 			<tr>
-				<td class="abutton"><a href="/edit/user.go?id=<c:out value='${user.userAccountOid}' />">Edit</a></td>
+				<td class="abutton"><a href="/plhdb/edit/user.go?id=<c:out value='${user.userAccountOid}' />">Edit</a></td>
 				<td class="abutton"><a href="javascript: deleteUser('<c:out value='${user.userAccountOid}' />')">Delete</a></td>
 			</tr>
 			</table>

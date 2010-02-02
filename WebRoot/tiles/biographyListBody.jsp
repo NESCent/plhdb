@@ -75,7 +75,7 @@ function headerClicked(field){
 }
 
 </script>
-<form action="/search/biography.go" method="post" name="searchBiographyForm">
+<form action="/plhdb/search/biography.go" method="post" name="searchBiographyForm">
 <input type='hidden' name='show_studyid' value='<%= form.getShow_studyid()==null?"":form.getShow_studyid() %>' />
 <input type='hidden' name='show_animname' value='<%= form.getShow_animname()==null?"":form.getShow_animname() %>' />
 <input type='hidden' name='show_birthgroup' value='<%= form.getShow_birthgroup()==null?"":form.getShow_birthgroup() %>' />

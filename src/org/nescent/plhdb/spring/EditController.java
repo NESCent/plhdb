@@ -12,39 +12,39 @@ import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.util.PrepareModel;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import java.security.AccessControlException;
 
 public class EditController implements Controller {
 
-	private static Logger log;
+    private static Logger log;
 
-	@SuppressWarnings("unused")
-	private static Logger log() {
-		if (log == null) {
-			log = Logger.getLogger(EditController.class);
-		}
-		return log;
+    @SuppressWarnings("unused")
+    private static Logger log() {
+	if (log == null) {
+	    log = Logger.getLogger(EditController.class);
 	}
+	return log;
+    }
 
-	@SuppressWarnings("unchecked")
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) {
-		String study_id = nullIfEmpty(request.getParameter("studyid"));
-		String individual_id = nullIfEmpty(request.getParameter("individual"));
+    @SuppressWarnings("unchecked")
+    public ModelAndView handleRequest(HttpServletRequest request,
+	    HttpServletResponse response) {
+	String study_id = nullIfEmpty(request.getParameter("studyid"));
+	String individual_id = nullIfEmpty(request.getParameter("individual"));
 
-		PermissionManager manager = (PermissionManager) request.getSession()
-				.getAttribute("permission_manager");
-		if (manager == null) {
-			throw new java.security.AccessControlException(
-					"You have not logged in.");
-		}
-		Map<String, Object> models = PrepareModel.prepare(study_id,
-				individual_id, manager);
-		Session session = HibernateSessionFactory.getSession();
-
-		return new ModelAndView("editData", models);
+	PermissionManager manager = (PermissionManager) request.getSession()
+		.getAttribute("permission_manager");
+	if (manager == null) {
+	    throw new  java.security.AccessControlException("You have not logged in.");
 	}
+	Map<String, Object> models = PrepareModel.prepare(study_id,
+		individual_id, manager);
+	Session session = HibernateSessionFactory.getSession();
+	
+	return new ModelAndView("editData", models);
+    }
 
-	private String nullIfEmpty(String s) {
-		return (s != null && s.trim().equals("")) ? null : s;
-	}
+    private String nullIfEmpty(String s) {
+	return (s != null && s.trim().equals("")) ? null : s;
+    }
 }

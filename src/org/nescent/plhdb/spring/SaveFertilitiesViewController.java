@@ -82,7 +82,7 @@ public class SaveFertilitiesViewController implements Controller {
 	@SuppressWarnings("unchecked")
 	public void saveFertilityView(String individual_id, Fertility fertility,
 			Session session) {
-
+		
 		String fertility_id = fertility.getId();
 		String startdate = fertility.getStartDate();
 		String stopdate = fertility.getStopDate();

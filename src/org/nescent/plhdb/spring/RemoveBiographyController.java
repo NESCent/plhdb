@@ -17,97 +17,98 @@ import org.nescent.plhdb.hibernate.dao.Biography;
 import org.nescent.plhdb.util.PrepareModel;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import java.security.AccessControlException;
+
 
 public class RemoveBiographyController implements Controller {
 
-	private static Logger log;
+    private static Logger log;
 
-	private static Logger log() {
-		if (log == null) {
-			log = Logger.getLogger(RemoveBiographyController.class);
-		}
-		return log;
+    private static Logger log() {
+	if (log == null) {
+	    log = Logger.getLogger(RemoveBiographyController.class);
+	}
+	return log;
+    }
+
+    @SuppressWarnings("unchecked")
+    public ModelAndView handleRequest(HttpServletRequest request,
+	    HttpServletResponse response){
+	PermissionManager manager = (PermissionManager) request.getSession()
+		.getAttribute("permission_manager");
+	if (manager == null) {
+	    throw new java.security.AccessControlException("You have not logged in.");
+	}
+	String animoid = nullIfEmpty(request.getParameter("animoid"));
+
+	if (animoid == null || animoid.trim().equals("")) {
+	    throw new IllegalArgumentException("No individual oid specified.");
 	}
 
-	@SuppressWarnings("unchecked")
-	public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) {
-		PermissionManager manager = (PermissionManager) request.getSession()
-				.getAttribute("permission_manager");
-		if (manager == null) {
-			throw new java.security.AccessControlException(
-					"You have not logged in.");
-		}
-		String animoid = nullIfEmpty(request.getParameter("animoid"));
+	Session session = HibernateSessionFactory.getSession();
+	Transaction tx = session.beginTransaction();
 
-		if (animoid == null || animoid.trim().equals("")) {
-			throw new IllegalArgumentException("No individual oid specified.");
-		}
+	try {
 
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
+	    Biography biography = (Biography) session.get(
 
-		try {
+	    "org.nescent.plhdb.hibernate.dao.Biography", Integer
 
-			Biography biography = (Biography) session.get(
+	    .parseInt(animoid));
 
-			"org.nescent.plhdb.hibernate.dao.Biography", Integer
+	    if (biography == null) {
 
-			.parseInt(animoid));
+		throw new IllegalArgumentException(
 
-			if (biography == null) {
+		"failed to retrieve the biography with id: " + animoid);
 
-				throw new IllegalArgumentException(
+	    }
 
-				"failed to retrieve the biography with id: " + animoid);
+	    String animid = biography.getAnimid();
 
-			}
+	    String studyid = biography.getStudyid();
 
-			String animid = biography.getAnimid();
+	    String sql = "FROM Biography where studyid= :studyid AND momid= :momid";
 
-			String studyid = biography.getStudyid();
+	    Query q = session.createQuery(sql);
 
-			String sql = "FROM Biography where studyid= :studyid AND momid= :momid";
+	    q.setString("studyid", studyid);
 
-			Query q = session.createQuery(sql);
+	    q.setString("momid", animid);
 
-			q.setString("studyid", studyid);
+	    List list = q.list();
 
-			q.setString("momid", animid);
+	    session.delete(biography);
 
-			List list = q.list();
+	    session.flush();
+	    for (int i = 0; i < list.size(); i++) {
 
-			session.delete(biography);
+		Biography b = (Biography) list.get(i);
+		session.refresh(b);
+		b.setMomid(animid);
+		session.update(b);
+	    }
 
-			session.flush();
-			for (int i = 0; i < list.size(); i++) {
+	    session.flush();
+	    tx.commit();
 
-				Biography b = (Biography) list.get(i);
-				session.refresh(b);
-				b.setMomid(animid);
-				session.update(b);
-			}
+	    Map<String, Object> models = PrepareModel.prepare(biography
+		    .getStudyid(), null, manager);
 
-			session.flush();
-			tx.commit();
-
-			Map<String, Object> models = PrepareModel.prepare(biography
-					.getStudyid(), null, manager);
-
-			models.put("tab", "study");
-			return new ModelAndView("editData", models);
-		} catch (HibernateException he) {
-			log().error("failed to remove the biography with id: " + animoid,
-					he);
-			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+	    models.put("tab", "study");
+	    return new ModelAndView("editData", models);
+	} catch (HibernateException he) {
+	    log().error("failed to remove the biography with id: " + animoid,
+		    he);
+	    throw he;
+	} finally {
+	    if (!tx.wasCommitted())
+		tx.rollback();
 	}
+    }
 
-	private String nullIfEmpty(String s) {
-		return (s != null && s.trim().equals("")) ? null : s;
-	}
+    private String nullIfEmpty(String s) {
+	return (s != null && s.trim().equals("")) ? null : s;
+    }
 
 }

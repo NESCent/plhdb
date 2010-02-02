@@ -2,7 +2,7 @@
 String message = (String)request.getSession().getAttribute("Message");
 %>
     
-<form name="resetpassword"  action="/reset/password.go" method="post"  >    
+<form name="resetpassword"  action="/plhdb/reset/password.go" method="post"  >    
        
    
     <h2>Change Password</h2>

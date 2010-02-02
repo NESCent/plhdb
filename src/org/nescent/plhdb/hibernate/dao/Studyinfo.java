@@ -1,6 +1,8 @@
 package org.nescent.plhdb.hibernate.dao;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 // Generated Dec 12, 2007 11:49:54 AM by Hibernate Tools 3.2.0.CR1
 
@@ -9,76 +11,82 @@ import java.math.BigDecimal;
  */
 @SuppressWarnings("unchecked")
 public class Studyinfo implements java.io.Serializable {
+      
+    private String studyId;
+    private String commonname;
+    private String sciname;
+    private String siteid;
+    private String owners;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+    
+    
+    public Studyinfo() {
+    }
 
-	private String studyId;
-	private String commonname;
-	private String sciname;
-	private String siteid;
-	private String owners;
-	private BigDecimal latitude;
-	private BigDecimal longitude;
+    public Studyinfo(String id) {
+	this.studyId = id;
+    }
+    
+    
 
-	public Studyinfo() {
-	}
+    public void setStudyId(String studyId) {
+        this.studyId = studyId;
+    }
 
-	public Studyinfo(String id) {
-		this.studyId = id;
-	}
+    public String getStudyId() {
+        return studyId;
+    }
 
-	public void setStudyId(String studyId) {
-		this.studyId = studyId;
-	}
+    
 
-	public String getStudyId() {
-		return studyId;
-	}
+    public String getCommonname() {
+	return this.commonname;
+    }
 
-	public String getCommonname() {
-		return this.commonname;
-	}
+    public void setCommonname(String commonname) {
+	this.commonname = commonname;
+    }
 
-	public void setCommonname(String commonname) {
-		this.commonname = commonname;
-	}
+    public String getSciname() {
+	return this.sciname;
+    }
 
-	public String getSciname() {
-		return this.sciname;
-	}
+    public void setSciname(String sciname) {
+	this.sciname = sciname;
+    }
 
-	public void setSciname(String sciname) {
-		this.sciname = sciname;
-	}
+    public String getSiteid() {
+	return this.siteid;
+    }
 
-	public String getSiteid() {
-		return this.siteid;
-	}
+    public void setSiteid(String siteid) {
+	this.siteid = siteid;
+    }
 
-	public void setSiteid(String siteid) {
-		this.siteid = siteid;
-	}
+    public String getOwners() {
+	return this.owners;
+    }
 
-	public String getOwners() {
-		return this.owners;
-	}
+    public void setOwners(String owners) {
+	this.owners = owners;
+    }
 
-	public void setOwners(String owners) {
-		this.owners = owners;
-	}
+    public BigDecimal getLatitude() {
+	return this.latitude;
+    }
 
-	public BigDecimal getLatitude() {
-		return this.latitude;
-	}
+    public void setLatitude(BigDecimal latitude) {
+	this.latitude = latitude;
+    }
 
-	public void setLatitude(BigDecimal latitude) {
-		this.latitude = latitude;
-	}
+    public BigDecimal getLongitude() {
+	return this.longitude;
+    }
 
-	public BigDecimal getLongitude() {
-		return this.longitude;
-	}
+    public void setLongitude(BigDecimal longitude) {
+	this.longitude = longitude;
+    }
 
-	public void setLongitude(BigDecimal longitude) {
-		this.longitude = longitude;
-	}
 
 }

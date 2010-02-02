@@ -8,33 +8,32 @@ import java.util.Date;
 @SuppressWarnings("unchecked")
 public class Biography implements java.io.Serializable {
 
-	private int animOid;
-	private String animname;
-	private String birthgroup;
-	private Character bgqual;
-	private Character sex;
-	private String momid;
-	private Character firstborn;
-	private Date birthdate;
-	private Date entrydate;
-	private String entrytype;
-	private Date departdate;
-	private Double departdateerror;
-	private String departtype;
-	private String studyid;
-	private String animid;
-	private Date bdmin;
-	private Date bdmax;
-	private String bddist;
+    private int animOid;
+    private String animname;
+    private String birthgroup;
+    private Character bgqual;
+    private Character sex;
+    private String momid;
+    private Character firstborn;
+    private Date birthdate;
+    private Date entrydate;
+    private String entrytype;
+    private Date departdate;
+    private Double departdateerror;
+    private String departtype;
+    private String studyid;
+    private String animid;
+    private Date bdmin;
+    private Date bdmax;
+    private String bddist;
+    public Biography() {
+    }
 
-	public Biography() {
-	}
+    public Biography(int animOid) {
+	this.animOid = animOid;
+    }
 
-	public Biography(int animOid) {
-		this.animOid = animOid;
-	}
-
-	public Date getBdmin() {
+    public Date getBdmin() {
 		return bdmin;
 	}
 
@@ -59,123 +58,123 @@ public class Biography implements java.io.Serializable {
 	}
 
 	public int getAnimOid() {
-		return animOid;
-	}
+	return animOid;
+    }
 
-	public void setAnimOid(int animOid) {
-		this.animOid = animOid;
-	}
+    public void setAnimOid(int animOid) {
+	this.animOid = animOid;
+    }
 
-	public String getStudyid() {
-		return studyid;
-	}
+    public String getStudyid() {
+	return studyid;
+    }
 
-	public void setStudyid(String studyid) {
-		this.studyid = studyid;
-	}
+    public void setStudyid(String studyid) {
+	this.studyid = studyid;
+    }
 
-	public String getAnimid() {
-		return this.animid;
-	}
+    public String getAnimid() {
+	return this.animid;
+    }
 
-	public void setAnimid(String animid) {
-		this.animid = animid;
-	}
+    public void setAnimid(String animid) {
+	this.animid = animid;
+    }
 
-	public String getAnimname() {
-		return this.animname;
-	}
+    public String getAnimname() {
+	return this.animname;
+    }
 
-	public void setAnimname(String animname) {
-		this.animname = animname;
-	}
+    public void setAnimname(String animname) {
+	this.animname = animname;
+    }
 
-	public String getBirthgroup() {
-		return this.birthgroup;
-	}
+    public String getBirthgroup() {
+	return this.birthgroup;
+    }
 
-	public void setBirthgroup(String birthgroup) {
-		this.birthgroup = birthgroup;
-	}
+    public void setBirthgroup(String birthgroup) {
+	this.birthgroup = birthgroup;
+    }
 
-	public Character getBgqual() {
-		return this.bgqual;
-	}
+    public Character getBgqual() {
+	return this.bgqual;
+    }
 
-	public void setBgqual(Character bgqual) {
-		this.bgqual = bgqual;
-	}
+    public void setBgqual(Character bgqual) {
+	this.bgqual = bgqual;
+    }
 
-	public Character getSex() {
-		return this.sex;
-	}
+    public Character getSex() {
+	return this.sex;
+    }
 
-	public void setSex(Character sex) {
-		this.sex = sex;
-	}
+    public void setSex(Character sex) {
+	this.sex = sex;
+    }
 
-	public String getMomid() {
-		return this.momid;
-	}
+    public String getMomid() {
+	return this.momid;
+    }
 
-	public void setMomid(String momid) {
-		this.momid = momid;
-	}
+    public void setMomid(String momid) {
+	this.momid = momid;
+    }
 
-	public Character getFirstborn() {
-		return this.firstborn;
-	}
+    public Character getFirstborn() {
+	return this.firstborn;
+    }
 
-	public void setFirstborn(Character firstborn) {
-		this.firstborn = firstborn;
-	}
+    public void setFirstborn(Character firstborn) {
+	this.firstborn = firstborn;
+    }
 
-	public Date getBirthdate() {
-		return this.birthdate;
-	}
+    public Date getBirthdate() {
+	return this.birthdate;
+    }
 
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate;
-	}
+    public void setBirthdate(Date birthdate) {
+	this.birthdate = birthdate;
+    }
 
-	public Date getEntrydate() {
-		return this.entrydate;
-	}
+    public Date getEntrydate() {
+	return this.entrydate;
+    }
 
-	public void setEntrydate(Date entrydate) {
-		this.entrydate = entrydate;
-	}
+    public void setEntrydate(Date entrydate) {
+	this.entrydate = entrydate;
+    }
 
-	public String getEntrytype() {
-		return this.entrytype;
-	}
+    public String getEntrytype() {
+	return this.entrytype;
+    }
 
-	public void setEntrytype(String entrytype) {
-		this.entrytype = entrytype;
-	}
+    public void setEntrytype(String entrytype) {
+	this.entrytype = entrytype;
+    }
 
-	public Date getDepartdate() {
-		return this.departdate;
-	}
+    public Date getDepartdate() {
+	return this.departdate;
+    }
 
-	public void setDepartdate(Date departdate) {
-		this.departdate = departdate;
-	}
+    public void setDepartdate(Date departdate) {
+	this.departdate = departdate;
+    }
 
-	public Double getDepartdateerror() {
-		return this.departdateerror;
-	}
+    public Double getDepartdateerror() {
+	return this.departdateerror;
+    }
 
-	public void setDepartdateerror(Double departdateerror) {
-		this.departdateerror = departdateerror;
-	}
+    public void setDepartdateerror(Double departdateerror) {
+	this.departdateerror = departdateerror;
+    }
 
-	public String getDeparttype() {
-		return this.departtype;
-	}
+    public String getDeparttype() {
+	return this.departtype;
+    }
 
-	public void setDeparttype(String departtype) {
-		this.departtype = departtype;
-	}
+    public void setDeparttype(String departtype) {
+	this.departtype = departtype;
+    }
 
 }

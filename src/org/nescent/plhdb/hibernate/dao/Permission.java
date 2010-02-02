@@ -7,44 +7,44 @@ package org.nescent.plhdb.hibernate.dao;
  */
 public class Permission implements java.io.Serializable {
 
-	private int permissionOid;
-	private String access;
-	private String study;
-	private UserAccount userAccount;
+    private int permissionOid;
+    private String access;
+    private String study;
+    private UserAccount userAccount;
 
-	public Permission() {
-	}
+    public Permission() {
+    }
 
-	public String getAccess() {
-		return access;
-	}
+    public String getAccess() {
+	return access;
+    }
 
-	public void setAccess(String access) {
-		this.access = access;
-	}
+    public void setAccess(String access) {
+	this.access = access;
+    }
 
-	public String getStudy() {
-		return study;
-	}
+    public String getStudy() {
+	return study;
+    }
 
-	public void setStudy(String study) {
-		this.study = study;
-	}
+    public void setStudy(String study) {
+	this.study = study;
+    }
 
-	public UserAccount getUserAccount() {
-		return userAccount;
-	}
+    public UserAccount getUserAccount() {
+	return userAccount;
+    }
 
-	public void setUserAccount(UserAccount userAccount) {
-		this.userAccount = userAccount;
-	}
+    public void setUserAccount(UserAccount userAccount) {
+	this.userAccount = userAccount;
+    }
 
-	public int getPermissionOid() {
-		return permissionOid;
-	}
+    public int getPermissionOid() {
+	return permissionOid;
+    }
 
-	public void setPermissionOid(int permissionOid) {
-		this.permissionOid = permissionOid;
-	}
+    public void setPermissionOid(int permissionOid) {
+	this.permissionOid = permissionOid;
+    }
 
 }

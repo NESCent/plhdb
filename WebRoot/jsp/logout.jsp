@@ -25,7 +25,7 @@ request.setAttribute("active_menu","home");
 		request.getSession().setAttribute(attrName,null);
 	}
     try{
-    	response.sendRedirect("/jsp/home.jsp");
+    	response.sendRedirect("home.jsp");
     }catch(Exception e){
     	out.write(e.getMessage());
     }

@@ -7,53 +7,53 @@ package org.nescent.plhdb.hibernate.dao;
  */
 public class IndividualRelationship implements java.io.Serializable {
 
-	private int individualRelationshipOid;
-	private Individual individualByChildOid;
-	private Individual individualByParentOid;
-	private String reltype;
+    private int individualRelationshipOid;
+    private Individual individualByChildOid;
+    private Individual individualByParentOid;
+    private String reltype;
 
-	public IndividualRelationship() {
-	}
+    public IndividualRelationship() {
+    }
 
-	public IndividualRelationship(int individualRelationshipOid,
-			Individual individualByChildOid, Individual individualByParentOid,
-			String reltype) {
-		this.individualRelationshipOid = individualRelationshipOid;
-		this.individualByChildOid = individualByChildOid;
-		this.individualByParentOid = individualByParentOid;
-		this.reltype = reltype;
-	}
+    public IndividualRelationship(int individualRelationshipOid,
+	    Individual individualByChildOid, Individual individualByParentOid,
+	    String reltype) {
+	this.individualRelationshipOid = individualRelationshipOid;
+	this.individualByChildOid = individualByChildOid;
+	this.individualByParentOid = individualByParentOid;
+	this.reltype = reltype;
+    }
 
-	public int getIndividualRelationshipOid() {
-		return this.individualRelationshipOid;
-	}
+    public int getIndividualRelationshipOid() {
+	return this.individualRelationshipOid;
+    }
 
-	public void setIndividualRelationshipOid(int individualRelationshipOid) {
-		this.individualRelationshipOid = individualRelationshipOid;
-	}
+    public void setIndividualRelationshipOid(int individualRelationshipOid) {
+	this.individualRelationshipOid = individualRelationshipOid;
+    }
 
-	public Individual getIndividualByChildOid() {
-		return this.individualByChildOid;
-	}
+    public Individual getIndividualByChildOid() {
+	return this.individualByChildOid;
+    }
 
-	public void setIndividualByChildOid(Individual individualByChildOid) {
-		this.individualByChildOid = individualByChildOid;
-	}
+    public void setIndividualByChildOid(Individual individualByChildOid) {
+	this.individualByChildOid = individualByChildOid;
+    }
 
-	public Individual getIndividualByParentOid() {
-		return this.individualByParentOid;
-	}
+    public Individual getIndividualByParentOid() {
+	return this.individualByParentOid;
+    }
 
-	public void setIndividualByParentOid(Individual individualByParentOid) {
-		this.individualByParentOid = individualByParentOid;
-	}
+    public void setIndividualByParentOid(Individual individualByParentOid) {
+	this.individualByParentOid = individualByParentOid;
+    }
 
-	public String getReltype() {
-		return this.reltype;
-	}
+    public String getReltype() {
+	return this.reltype;
+    }
 
-	public void setReltype(String reltype) {
-		this.reltype = reltype;
-	}
+    public void setReltype(String reltype) {
+	this.reltype = reltype;
+    }
 
 }

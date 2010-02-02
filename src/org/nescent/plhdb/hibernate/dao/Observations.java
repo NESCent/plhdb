@@ -9,83 +9,82 @@ import java.util.Date;
  */
 public class Observations implements java.io.Serializable {
 
-	private ObservationsId id;
-	private Date timeOfObservation;
-	private Double timeError;
-	private String eventType;
-	private String eventCode;
-	private String eventTypeParent;
-	private String eventTypeNamespace;
-	private Integer individualOid;
+    private ObservationsId id;
+    private Date timeOfObservation;
+    private Double timeError;
+    private String eventType;
+    private String eventCode;
+    private String eventTypeParent;
+    private String eventTypeNamespace;
+    private Integer individualOid;
 
-	public Observations() {
-	}
+    public Observations() {
+    }
 
-	public Observations(ObservationsId id) {
-		this.id = id;
-	}
+    public Observations(ObservationsId id) {
+	this.id = id;
+    }
 
-	public ObservationsId getId() {
-		return this.id;
-	}
+    public ObservationsId getId() {
+	return this.id;
+    }
 
-	public void setId(ObservationsId id) {
-		this.id = id;
-	}
+    public void setId(ObservationsId id) {
+	this.id = id;
+    }
+    public Date getTimeOfObservation() {
+	return this.timeOfObservation;
+    }
 
-	public Date getTimeOfObservation() {
-		return this.timeOfObservation;
-	}
+    public void setTimeOfObservation(Date timeOfObservation) {
+	this.timeOfObservation = timeOfObservation;
+    }
 
-	public void setTimeOfObservation(Date timeOfObservation) {
-		this.timeOfObservation = timeOfObservation;
-	}
+    public Double getTimeError() {
+	return this.timeError;
+    }
 
-	public Double getTimeError() {
-		return this.timeError;
-	}
+    public void setTimeError(Double timeError) {
+	this.timeError = timeError;
+    }
 
-	public void setTimeError(Double timeError) {
-		this.timeError = timeError;
-	}
+    public String getEventType() {
+	return this.eventType;
+    }
 
-	public String getEventType() {
-		return this.eventType;
-	}
+    public void setEventType(String eventType) {
+	this.eventType = eventType;
+    }
 
-	public void setEventType(String eventType) {
-		this.eventType = eventType;
-	}
+    public String getEventCode() {
+	return this.eventCode;
+    }
 
-	public String getEventCode() {
-		return this.eventCode;
-	}
+    public void setEventCode(String eventCode) {
+	this.eventCode = eventCode;
+    }
 
-	public void setEventCode(String eventCode) {
-		this.eventCode = eventCode;
-	}
+    public String getEventTypeParent() {
+	return this.eventTypeParent;
+    }
 
-	public String getEventTypeParent() {
-		return this.eventTypeParent;
-	}
+    public void setEventTypeParent(String eventTypeParent) {
+	this.eventTypeParent = eventTypeParent;
+    }
 
-	public void setEventTypeParent(String eventTypeParent) {
-		this.eventTypeParent = eventTypeParent;
-	}
+    public String getEventTypeNamespace() {
+	return this.eventTypeNamespace;
+    }
 
-	public String getEventTypeNamespace() {
-		return this.eventTypeNamespace;
-	}
+    public void setEventTypeNamespace(String eventTypeNamespace) {
+	this.eventTypeNamespace = eventTypeNamespace;
+    }
 
-	public void setEventTypeNamespace(String eventTypeNamespace) {
-		this.eventTypeNamespace = eventTypeNamespace;
-	}
+    public Integer getIndividualOid() {
+	return this.individualOid;
+    }
 
-	public Integer getIndividualOid() {
-		return this.individualOid;
-	}
-
-	public void setIndividualOid(Integer individualOid) {
-		this.individualOid = individualOid;
-	}
+    public void setIndividualOid(Integer individualOid) {
+	this.individualOid = individualOid;
+    }
 }

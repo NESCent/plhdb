@@ -33,13 +33,11 @@ font-weight: bold; }
 #loader { 
 	padding:0;
 	margin:0;
-	/*
 	position:absolute; 
 	top:180px; left:0px;  
 	width:100%;
 	height:100%;  
-	*/
-    background:#fafafa; 
+	background:#fafafa; 
 	z-index:999;
 	vertical-align:center; 
     text-align: center;
@@ -259,7 +257,7 @@ function entryDateTooClicked(){
 function deleteData(dataEntity, id, studyid){
     if (confirm("Do you really want to delete the "+ dataEntity+"?")){ 
 	if(confirm("You asked to delete the "+ dataEntity+" record. Please confirm that the record should be deleted. This operation cannot be undone.")){
-	    var url="/delete/" + dataEntity +".go?studyid"+"="+studyid+"&"+dataEntity+"="+id;
+	    var url="/plhdb/delete/" + dataEntity +".go?studyid"+"="+studyid+"&"+dataEntity+"="+id;
 	    window.location.href=url;
 	}
     }
@@ -267,7 +265,7 @@ function deleteData(dataEntity, id, studyid){
 function removeBiography(id,studyid){
     if (confirm("You asked to remove a biography record. This will cause the biography and all fertility interval records of the animal to be deleted from the database, but the animal's offspring will retain it as the mother. Please confirm that the biography is to be removed.")){
 	if(confirm("Please confirm again that the biography really should be removed. This operation cannot be undone.")) {
-	    var url="/remove/biography.go?studyid"+"="+studyid+"&animoid="+id;
+	    var url="/plhdb/remove/biography.go?studyid"+"="+studyid+"&animoid="+id;
 	    window.location.href=url;
 	}
     }
@@ -275,7 +273,7 @@ function removeBiography(id,studyid){
 function deleteFertilityData(dataEntity,animOid,id,studyid){
     if (confirm("Do you really want to delete the fertility record?")){
 	if(confirm("You asked to delete a fertility interval. Please confirm that the fertility interval should be deleted. This operation cannot be undone.")){
-	    var url="/delete/fertility.go?studyid"+"="+studyid+"&animOid="+animOid+"&fertility="+id;
+	    var url="/plhdb/delete/fertility.go?studyid"+"="+studyid+"&animOid="+animOid+"&fertility="+id;
 	    window.location.href=url;
 	}
     }
@@ -603,7 +601,7 @@ dojo.addOnLoad(function() {
         				<span id="selected"><c:out value='${study.studyId}' />(<c:out value='${study.sciname}' />)</span>
         				</c:when>
         				<c:otherwise>
-        					<a href="/edit.go?studyid=<c:out value='${study.studyId}' />"><c:out value='${study.studyId}' />(<c:out value='${study.sciname}' />)</a>
+        					<a href="/plhdb/edit.go?studyid=<c:out value='${study.studyId}' />"><c:out value='${study.studyId}' />(<c:out value='${study.sciname}' />)</a>
         					</c:otherwise>
         						</c:choose>
         					</td></tr>
@@ -621,7 +619,7 @@ dojo.addOnLoad(function() {
 					<span id="selected"><c:out value='${individual.animid}' /></span>
 				</c:when>
 				<c:otherwise>
-					<a href="/edit.go?studyid=<c:out value='${currentStudy.studyId}' />&individual=<c:out value='${individual.animOid}' />"><c:out value='${individual.animid}' /></a>
+					<a href="/plhdb/edit.go?studyid=<c:out value='${currentStudy.studyId}' />&individual=<c:out value='${individual.animOid}' />"><c:out value='${individual.animid}' /></a>
 				</c:otherwise>
 				</c:choose>
 			    </td></tr>
@@ -640,7 +638,7 @@ dojo.addOnLoad(function() {
 				</c:otherwise>
 			</c:choose>
 				<c:if test='${currentStudy!=null}'>
-				<form action="/save/study.go" method="post" name="study_form">
+				<form action="/plhdb/save/study.go" method="post" name="study_form">
 				
 				<input type="hidden" name="studyName" value="<c:out value='' />" />
 				<input type="hidden" name="studyid" value="<c:out value='${currentStudy.studyId}' />" />
@@ -691,7 +689,7 @@ dojo.addOnLoad(function() {
 			</c:choose>
 				
 			<c:if test='${currentIndividual!=null}'>
-				<form action="/save/biography.go" method="post" name="biography_form">
+				<form action="/plhdb/save/biography.go" method="post" name="biography_form">
 				<input type="hidden" name="studyid" value="<c:out value='${currentStudy.studyId}' />" />
 				<input type="hidden" name="individual_id" value="<c:out value='${currentIndividual.animOid}' />" />
 				<table>
@@ -872,7 +870,7 @@ dojo.addOnLoad(function() {
 					</c:choose>
 					
 						<c:if test='${currentIndividual!=null}'>
-						<form action="/save/fertilities.go" method="post" name="fertility_form">
+						<form action="/plhdb/save/fertilities.go" method="post" name="fertility_form">
 						    <input type="hidden" name="studyid" value="<c:out value='${currentStudy.studyId}' />" />
 						<input type="hidden" name="individual_id" value="<c:out value='${currentIndividual.animOid}' />" />
 						<table id="fertility_table">
@@ -940,7 +938,7 @@ dojo.addOnLoad(function() {
 	</div><!-- Layoutcontainer -->
 	
 	<div id="addstudy_dialog" dojoType="dijit.Dialog" title="Add Study" style="display:none;">
-	<form action="/add/study.go" name="addstudy_form" method="post">
+	<form action="/plhdb/add/study.go" name="addstudy_form" method="post">
 	<table>
 		<tr><td class="TdField">Study Name</td><td class="TdValue"><input name="studyName" type="text" value=""  onkeypress="return handleEnter(this, event)"/></td></tr>
 		<tr><td class="TdField required">Study ID</td><td class="TdValue"><input name="studyId" type="text" value=""  onkeypress="return handleEnter(this, event)"/></td></tr>
@@ -967,7 +965,7 @@ dojo.addOnLoad(function() {
 	
 	<div id="addindividual_dialog" dojoType="dijit.Dialog" title="Add Individual" style="display:none;">
 	
-		<form action="/add/individual.go" name="addindividual_form" method="post">
+		<form action="/plhdb/add/individual.go" name="addindividual_form" method="post">
 		<input type="hidden" name="studyid" value="<c:out value='${currentStudy.studyId}' />" />
 			<table>
 			<tr><td class="TdField required">Study</td><td class="TdValue">

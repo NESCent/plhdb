@@ -107,7 +107,7 @@ function addAccess(){
 </script>
 
 <h2>User </h2>
-<form method="post" action="/save/user.go" name="user_form" >
+<form method="post" action="/plhdb/save/user.go" name="user_form" >
 <input type="hidden" name="user" value="-1" />
 <table><tr>
 <td class="TdField">Last Name</td><td class="TdValue"><input type="text" name="lastName" value="" /></td></tr><tr>

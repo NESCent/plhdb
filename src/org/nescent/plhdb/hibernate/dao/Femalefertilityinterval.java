@@ -9,77 +9,64 @@ import java.util.Date;
  */
 public class Femalefertilityinterval implements java.io.Serializable {
 
-	private String animid;
-	private int animOid;
-	private int intervalOid;
-	private Date startdate;
-	private String starttype;
-	private Date stopdate;
-	private String stoptype;
-	private String studyid;
-
-	public String getStudyid() {
-		return studyid;
-	}
-
-	public void setStudyid(String studyid) {
-		this.studyid = studyid;
-	}
-
-	public String getAnimid() {
-		return animid;
-	}
-
-	public void setAnimid(String animid) {
-		this.animid = animid;
-	}
-
-	public int getAnimOid() {
-		return animOid;
-	}
-
-	public void setAnimOid(int animOid) {
-		this.animOid = animOid;
-	}
-
-	public int getIntervalOid() {
-		return intervalOid;
-	}
-
-	public void setIntervalOid(int intervalOid) {
-		this.intervalOid = intervalOid;
-	}
-
-	public Date getStartdate() {
-		return startdate;
-	}
-
-	public void setStartdate(Date startdate) {
-		this.startdate = startdate;
-	}
-
-	public String getStarttype() {
-		return starttype;
-	}
-
-	public void setStarttype(String starttype) {
-		this.starttype = starttype;
-	}
-
-	public Date getStopdate() {
-		return stopdate;
-	}
-
-	public void setStopdate(Date stopdate) {
-		this.stopdate = stopdate;
-	}
-
-	public String getStoptype() {
-		return stoptype;
-	}
-
-	public void setStoptype(String stoptype) {
-		this.stoptype = stoptype;
-	}
-
+    private String animid;
+    private int animOid;
+    private int intervalOid;
+    private Date startdate;
+    private String starttype;
+    private Date stopdate;
+    private String stoptype;
+    private String studyid;
+    public String getStudyid(){
+    	return studyid;
+    }
+    
+    public void setStudyid(String studyid){
+    	this.studyid=studyid;
+    }
+    public String getAnimid() {
+        return animid;
+    }
+    public void setAnimid(String animid) {
+        this.animid = animid;
+    }
+    public int getAnimOid() {
+        return animOid;
+    }
+    public void setAnimOid(int animOid) {
+        this.animOid = animOid;
+    }
+    public int getIntervalOid() {
+        return intervalOid;
+    }
+    public void setIntervalOid(int intervalOid) {
+        this.intervalOid = intervalOid;
+    }
+  
+    public Date getStartdate() {
+        return startdate;
+    }
+    public void setStartdate(Date startdate) {
+        this.startdate = startdate;
+    }
+    public String getStarttype() {
+        return starttype;
+    }
+    public void setStarttype(String starttype) {
+        this.starttype = starttype;
+    }
+    public Date getStopdate() {
+        return stopdate;
+    }
+    public void setStopdate(Date stopdate) {
+        this.stopdate = stopdate;
+    }
+    public String getStoptype() {
+        return stoptype;
+    }
+    public void setStoptype(String stoptype) {
+        this.stoptype = stoptype;
+    }
+    
+   
 }

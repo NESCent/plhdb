@@ -220,7 +220,7 @@ CREATE OR REPLACE RULE r_biography_upd AS
        UPDATE audit.dmltrace SET
               tstamp = timeofday()::timestamp
        WHERE tablename = 'Biography'
-       AND rowkey = old.Anim_OID::text 
+       AND rowkey = old.Anim_OID 
        AND optype = 'U' AND usr = current_user AND tstamp IS NULL;
 );
 
@@ -324,7 +324,7 @@ CREATE OR REPLACE RULE r_femalefertilityinterval_upd AS
        UPDATE audit.dmltrace SET
               tstamp = timeofday()::timestamp
        WHERE tablename = 'FemaleFertilityInterval'
-       AND rowkey = old.Interval_OID::text 
+       AND rowkey = old.Interval_OID 
        AND optype = 'U' AND usr = current_user AND tstamp IS NULL;
 );
 

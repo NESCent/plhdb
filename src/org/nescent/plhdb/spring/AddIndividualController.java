@@ -1,16 +1,16 @@
 package org.nescent.plhdb.spring;
 
-import java.security.AccessControlException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
-
+import java.security.AccessControlException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Biography;
@@ -82,15 +82,24 @@ public class AddIndividualController implements Controller {
 			throw new IllegalArgumentException("No birth date specified.");
 		}
 
+		/*
+		 * if (bdmin == null) { throw new IllegalArgumentException(
+		 * "No birth date derror specified."); }
+		 */
 		if (departdate == null) {
 			throw new IllegalArgumentException("No depart date specified.");
 		}
 		if (departtype == null) {
 			throw new IllegalArgumentException("No depart type specified.");
 		}
-
+		/*
+		if (departdateerror == null) {
+			throw new IllegalArgumentException(
+					"No depart date error specified.");
+		}
+*/
 		Session session = HibernateSessionFactory.getSession();
-
+		
 		SimpleDateFormat sfm = new SimpleDateFormat("dd-MMM-yyyy");
 
 		try {

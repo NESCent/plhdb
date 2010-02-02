@@ -11,77 +11,77 @@ import java.util.Set;
  */
 public class Site implements java.io.Serializable {
 
-	private int siteOid;
-	private String name;
-	private BigDecimal latitude;
-	private BigDecimal longitude;
-	private String geodeticDatum;
-	private Set studies = new HashSet(0);
+    private int siteOid;
+    private String name;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+    private String geodeticDatum;
+    private Set studies = new HashSet(0);
 
-	public Site() {
-	}
+    public Site() {
+    }
 
-	public Site(int siteOid, String name) {
-		this.siteOid = siteOid;
-		this.name = name;
-	}
+    public Site(int siteOid, String name) {
+	this.siteOid = siteOid;
+	this.name = name;
+    }
 
-	public Site(int siteOid, String name, BigDecimal latitude,
-			BigDecimal longitude, String geodeticDatum, Set studies) {
-		this.siteOid = siteOid;
-		this.name = name;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.geodeticDatum = geodeticDatum;
-		this.studies = studies;
-	}
+    public Site(int siteOid, String name, BigDecimal latitude,
+	    BigDecimal longitude, String geodeticDatum, Set studies) {
+	this.siteOid = siteOid;
+	this.name = name;
+	this.latitude = latitude;
+	this.longitude = longitude;
+	this.geodeticDatum = geodeticDatum;
+	this.studies = studies;
+    }
 
-	public int getSiteOid() {
-		return this.siteOid;
-	}
+    public int getSiteOid() {
+	return this.siteOid;
+    }
 
-	public void setSiteOid(int siteOid) {
-		this.siteOid = siteOid;
-	}
+    public void setSiteOid(int siteOid) {
+	this.siteOid = siteOid;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+	return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	public BigDecimal getLatitude() {
-		return this.latitude;
-	}
+    public BigDecimal getLatitude() {
+	return this.latitude;
+    }
 
-	public void setLatitude(BigDecimal latitude) {
-		this.latitude = latitude;
-	}
+    public void setLatitude(BigDecimal latitude) {
+	this.latitude = latitude;
+    }
 
-	public BigDecimal getLongitude() {
-		return this.longitude;
-	}
+    public BigDecimal getLongitude() {
+	return this.longitude;
+    }
 
-	public void setLongitude(BigDecimal longitude) {
-		this.longitude = longitude;
-	}
+    public void setLongitude(BigDecimal longitude) {
+	this.longitude = longitude;
+    }
 
-	public String getGeodeticDatum() {
-		return this.geodeticDatum;
-	}
+    public String getGeodeticDatum() {
+	return this.geodeticDatum;
+    }
 
-	public void setGeodeticDatum(String geodeticDatum) {
-		this.geodeticDatum = geodeticDatum;
-	}
+    public void setGeodeticDatum(String geodeticDatum) {
+	this.geodeticDatum = geodeticDatum;
+    }
 
-	public Set getStudies() {
-		return this.studies;
-	}
+    public Set getStudies() {
+	return this.studies;
+    }
 
-	public void setStudies(Set studies) {
-		this.studies = studies;
-	}
+    public void setStudies(Set studies) {
+	this.studies = studies;
+    }
 
 }

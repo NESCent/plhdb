@@ -10,124 +10,124 @@ import java.util.Set;
  */
 public class Cvterm implements java.io.Serializable {
 
-	private int cvtermOid;
-	private String name;
-	private String code;
-	private String identifier;
-	private String namespace;
-	private Set recordingperiods = new HashSet(0);
-	private Set cvtermRelationshipsForSubjectOid = new HashSet(0);
-	private Set cvtermRelationshipsForObjectOid = new HashSet(0);
-	private Set observations = new HashSet(0);
-	private Set cvtermRelationshipsForPredicateOid = new HashSet(0);
+    private int cvtermOid;
+    private String name;
+    private String code;
+    private String identifier;
+    private String namespace;
+    private Set recordingperiods = new HashSet(0);
+    private Set cvtermRelationshipsForSubjectOid = new HashSet(0);
+    private Set cvtermRelationshipsForObjectOid = new HashSet(0);
+    private Set observations = new HashSet(0);
+    private Set cvtermRelationshipsForPredicateOid = new HashSet(0);
 
-	public Cvterm() {
-	}
+    public Cvterm() {
+    }
 
-	public Cvterm(int cvtermOid, String name, String namespace) {
-		this.cvtermOid = cvtermOid;
-		this.name = name;
-		this.namespace = namespace;
-	}
+    public Cvterm(int cvtermOid, String name, String namespace) {
+	this.cvtermOid = cvtermOid;
+	this.name = name;
+	this.namespace = namespace;
+    }
 
-	public Cvterm(int cvtermOid, String name, String code, String identifier,
-			String namespace, Set recordingperiods,
-			Set cvtermRelationshipsForSubjectOid,
-			Set cvtermRelationshipsForObjectOid, Set observations,
-			Set cvtermRelationshipsForPredicateOid) {
-		this.cvtermOid = cvtermOid;
-		this.name = name;
-		this.code = code;
-		this.identifier = identifier;
-		this.namespace = namespace;
-		this.recordingperiods = recordingperiods;
-		this.cvtermRelationshipsForSubjectOid = cvtermRelationshipsForSubjectOid;
-		this.cvtermRelationshipsForObjectOid = cvtermRelationshipsForObjectOid;
-		this.observations = observations;
-		this.cvtermRelationshipsForPredicateOid = cvtermRelationshipsForPredicateOid;
-	}
+    public Cvterm(int cvtermOid, String name, String code, String identifier,
+	    String namespace, Set recordingperiods,
+	    Set cvtermRelationshipsForSubjectOid,
+	    Set cvtermRelationshipsForObjectOid, Set observations,
+	    Set cvtermRelationshipsForPredicateOid) {
+	this.cvtermOid = cvtermOid;
+	this.name = name;
+	this.code = code;
+	this.identifier = identifier;
+	this.namespace = namespace;
+	this.recordingperiods = recordingperiods;
+	this.cvtermRelationshipsForSubjectOid = cvtermRelationshipsForSubjectOid;
+	this.cvtermRelationshipsForObjectOid = cvtermRelationshipsForObjectOid;
+	this.observations = observations;
+	this.cvtermRelationshipsForPredicateOid = cvtermRelationshipsForPredicateOid;
+    }
 
-	public int getCvtermOid() {
-		return this.cvtermOid;
-	}
+    public int getCvtermOid() {
+	return this.cvtermOid;
+    }
 
-	public void setCvtermOid(int cvtermOid) {
-		this.cvtermOid = cvtermOid;
-	}
+    public void setCvtermOid(int cvtermOid) {
+	this.cvtermOid = cvtermOid;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+	return this.name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+	this.name = name;
+    }
 
-	public String getCode() {
-		return this.code;
-	}
+    public String getCode() {
+	return this.code;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setCode(String code) {
+	this.code = code;
+    }
 
-	public String getIdentifier() {
-		return this.identifier;
-	}
+    public String getIdentifier() {
+	return this.identifier;
+    }
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
+    public void setIdentifier(String identifier) {
+	this.identifier = identifier;
+    }
 
-	public String getNamespace() {
-		return this.namespace;
-	}
+    public String getNamespace() {
+	return this.namespace;
+    }
 
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
-	}
+    public void setNamespace(String namespace) {
+	this.namespace = namespace;
+    }
 
-	public Set getRecordingperiods() {
-		return this.recordingperiods;
-	}
+    public Set getRecordingperiods() {
+	return this.recordingperiods;
+    }
 
-	public void setRecordingperiods(Set recordingperiods) {
-		this.recordingperiods = recordingperiods;
-	}
+    public void setRecordingperiods(Set recordingperiods) {
+	this.recordingperiods = recordingperiods;
+    }
 
-	public Set getCvtermRelationshipsForSubjectOid() {
-		return this.cvtermRelationshipsForSubjectOid;
-	}
+    public Set getCvtermRelationshipsForSubjectOid() {
+	return this.cvtermRelationshipsForSubjectOid;
+    }
 
-	public void setCvtermRelationshipsForSubjectOid(
-			Set cvtermRelationshipsForSubjectOid) {
-		this.cvtermRelationshipsForSubjectOid = cvtermRelationshipsForSubjectOid;
-	}
+    public void setCvtermRelationshipsForSubjectOid(
+	    Set cvtermRelationshipsForSubjectOid) {
+	this.cvtermRelationshipsForSubjectOid = cvtermRelationshipsForSubjectOid;
+    }
 
-	public Set getCvtermRelationshipsForObjectOid() {
-		return this.cvtermRelationshipsForObjectOid;
-	}
+    public Set getCvtermRelationshipsForObjectOid() {
+	return this.cvtermRelationshipsForObjectOid;
+    }
 
-	public void setCvtermRelationshipsForObjectOid(
-			Set cvtermRelationshipsForObjectOid) {
-		this.cvtermRelationshipsForObjectOid = cvtermRelationshipsForObjectOid;
-	}
+    public void setCvtermRelationshipsForObjectOid(
+	    Set cvtermRelationshipsForObjectOid) {
+	this.cvtermRelationshipsForObjectOid = cvtermRelationshipsForObjectOid;
+    }
 
-	public Set getObservations() {
-		return this.observations;
-	}
+    public Set getObservations() {
+	return this.observations;
+    }
 
-	public void setObservations(Set observations) {
-		this.observations = observations;
-	}
+    public void setObservations(Set observations) {
+	this.observations = observations;
+    }
 
-	public Set getCvtermRelationshipsForPredicateOid() {
-		return this.cvtermRelationshipsForPredicateOid;
-	}
+    public Set getCvtermRelationshipsForPredicateOid() {
+	return this.cvtermRelationshipsForPredicateOid;
+    }
 
-	public void setCvtermRelationshipsForPredicateOid(
-			Set cvtermRelationshipsForPredicateOid) {
-		this.cvtermRelationshipsForPredicateOid = cvtermRelationshipsForPredicateOid;
-	}
+    public void setCvtermRelationshipsForPredicateOid(
+	    Set cvtermRelationshipsForPredicateOid) {
+	this.cvtermRelationshipsForPredicateOid = cvtermRelationshipsForPredicateOid;
+    }
 
 }

@@ -74,8 +74,8 @@ padding-top:0;
 .header #user_info {
 float:right;
 color:#FFFFFF;
-font-size:80%;
-width:400px;
+font-size:small;
+width:320px;
 }
 #nav {
 	height: 46px;

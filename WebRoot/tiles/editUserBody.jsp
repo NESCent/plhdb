@@ -13,7 +13,7 @@ NoCache.nocache(response);
 function deleteUser(id){
     if (confirm("Do you really want to delete the user?")) { 
 	if (confirm("Before deleting the user, please make sure it really should be deleted. Do you still want to delete the user?")){
-	    var url="/delete/user.go?id="+id;
+	    var url="/plhdb/delete/user.go?id="+id;
 	    window.location.href=url;
 	}
     }
@@ -119,7 +119,7 @@ function addAccess(){
 </script>
 
 <h2>User </h2>
-<form method="post" action="/save/user.go?user=<c:out value='${user.userAccountOid}' />" name="user_form" >
+<form method="post" action="/plhdb/save/user.go?user=<c:out value='${user.userAccountOid}' />" name="user_form" >
 <table><tr>
 <td class="TdField">Last Name</td><td class="TdValue"><input name="lastName" value="<c:out value='${user.lastName}' />" /></td></tr><tr>
 <td class="TdField">First Name</td><td class="TdValue"><input name="firstName" value="<c:out value='${user.firstName}' />" /></td></tr><tr>

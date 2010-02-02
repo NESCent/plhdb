@@ -12,50 +12,50 @@ import java.util.List;
  * 
  */
 public class PermissionManager {
-	List<Permission> permissions;
-	boolean admin = false;
+    List<Permission> permissions;
+    boolean admin = false;
 
-	public PermissionManager() {
-		permissions = new ArrayList<Permission>();
+    public PermissionManager() {
+	permissions = new ArrayList<Permission>();
+    }
+
+    public boolean isAdmin() {
+	return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+	this.admin = admin;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addPermission(Permission permission) {
+	if (permissions != null) {
+	    permissions.add(permission);
+	    permission.setManager(this);
 	}
+    }
 
-	public boolean isAdmin() {
-		return admin;
+    public boolean permit(Permission permission) {
+	if (permissions == null)
+	    return false;
+	for (Permission perm : permissions) {
+	    boolean permitted = perm.permit(permission);
+	    if (permitted)
+		return true;
 	}
+	return false;
+    }
 
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
+    public List<String> getPermittedStudies(String access) {
+	List<String> studies = new ArrayList<String>();
+
+	for (Permission p : permissions) {
+	    if (p.getAccess().equals(Permission.ACCESS_TYPE_ALL)
+		    || (p.getAccess().toUpperCase()
+			    .equals(access.toUpperCase()))) {
+		studies.add(p.getStudy());
+	    }
 	}
-
-	@SuppressWarnings("unchecked")
-	public void addPermission(Permission permission) {
-		if (permissions != null) {
-			permissions.add(permission);
-			permission.setManager(this);
-		}
-	}
-
-	public boolean permit(Permission permission) {
-		if (permissions == null)
-			return false;
-		for (Permission perm : permissions) {
-			boolean permitted = perm.permit(permission);
-			if (permitted)
-				return true;
-		}
-		return false;
-	}
-
-	public List<String> getPermittedStudies(String access) {
-		List<String> studies = new ArrayList<String>();
-
-		for (Permission p : permissions) {
-			if (p.getAccess().equals(Permission.ACCESS_TYPE_ALL)
-					|| (p.getAccess().toUpperCase()
-							.equals(access.toUpperCase()))) {
-				studies.add(p.getStudy());
-			}
-		}
-		return studies;
-	}
+	return studies;
+    }
 }

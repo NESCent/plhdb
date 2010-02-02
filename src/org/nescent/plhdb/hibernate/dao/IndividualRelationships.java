@@ -7,21 +7,21 @@ package org.nescent.plhdb.hibernate.dao;
  */
 public class IndividualRelationships implements java.io.Serializable {
 
-	private IndividualRelationshipsId id;
+    private IndividualRelationshipsId id;
 
-	public IndividualRelationships() {
-	}
+    public IndividualRelationships() {
+    }
 
-	public IndividualRelationships(IndividualRelationshipsId id) {
-		this.id = id;
-	}
+    public IndividualRelationships(IndividualRelationshipsId id) {
+	this.id = id;
+    }
 
-	public IndividualRelationshipsId getId() {
-		return this.id;
-	}
+    public IndividualRelationshipsId getId() {
+	return this.id;
+    }
 
-	public void setId(IndividualRelationshipsId id) {
-		this.id = id;
-	}
+    public void setId(IndividualRelationshipsId id) {
+	this.id = id;
+    }
 
 }

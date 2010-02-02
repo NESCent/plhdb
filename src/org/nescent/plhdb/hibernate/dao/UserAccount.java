@@ -11,132 +11,132 @@ import java.util.Set;
  */
 public class UserAccount implements java.io.Serializable {
 
-	private int userAccountOid;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private String password;
-	private Date createDate;
-	private String enableDisableStatus;
-	private boolean admin;
-	private Set permissions = new HashSet(0);
+    private int userAccountOid;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
+    private Date createDate;
+    private String enableDisableStatus;
+    private boolean admin;
+    private Set permissions = new HashSet(0);
 
-	public UserAccount() {
-	}
+    public UserAccount() {
+    }
 
-	public UserAccount(int userAccountOid, String firstName, String lastName,
-			String email, String password, Date createDate,
-			String enableDisableStatus, boolean admin, Set permissions) {
-		super();
-		this.userAccountOid = userAccountOid;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.createDate = createDate;
-		this.enableDisableStatus = enableDisableStatus;
-		this.admin = admin;
-		this.permissions = permissions;
-	}
+    public UserAccount(int userAccountOid, String firstName, String lastName,
+	    String email, String password, Date createDate,
+	    String enableDisableStatus, boolean admin, Set permissions) {
+	super();
+	this.userAccountOid = userAccountOid;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.email = email;
+	this.password = password;
+	this.createDate = createDate;
+	this.enableDisableStatus = enableDisableStatus;
+	this.admin = admin;
+	this.permissions = permissions;
+    }
 
-	public UserAccount(int userAccountOid, String firstName, String lastName,
-			String email, String userName, String password,
-			String enableDisableStatus) {
-		this.userAccountOid = userAccountOid;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.enableDisableStatus = enableDisableStatus;
-	}
+    public UserAccount(int userAccountOid, String firstName, String lastName,
+	    String email, String userName, String password,
+	    String enableDisableStatus) {
+	this.userAccountOid = userAccountOid;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.email = email;
+	this.password = password;
+	this.enableDisableStatus = enableDisableStatus;
+    }
 
-	public UserAccount(int userAccountOid, String firstName, String lastName,
-			String email, String password, Date createDate,
-			String enableDisableStatus, Set permissions) {
-		this.userAccountOid = userAccountOid;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.createDate = createDate;
-		this.enableDisableStatus = enableDisableStatus;
-		this.permissions = permissions;
-	}
+    public UserAccount(int userAccountOid, String firstName, String lastName,
+	    String email, String password, Date createDate,
+	    String enableDisableStatus, Set permissions) {
+	this.userAccountOid = userAccountOid;
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.email = email;
+	this.password = password;
+	this.createDate = createDate;
+	this.enableDisableStatus = enableDisableStatus;
+	this.permissions = permissions;
+    }
 
-	public boolean isAdmin() {
-		return admin;
-	}
+    public boolean isAdmin() {
+	return admin;
+    }
 
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
-	}
+    public void setAdmin(boolean admin) {
+	this.admin = admin;
+    }
 
-	public void setPermissions(Set permissions) {
-		this.permissions = permissions;
-	}
+    public void setPermissions(Set permissions) {
+	this.permissions = permissions;
+    }
 
-	public int getUserAccountOid() {
-		return this.userAccountOid;
-	}
+    public int getUserAccountOid() {
+	return this.userAccountOid;
+    }
 
-	public void setUserAccountOid(int userAccountOid) {
-		this.userAccountOid = userAccountOid;
-	}
+    public void setUserAccountOid(int userAccountOid) {
+	this.userAccountOid = userAccountOid;
+    }
 
-	public String getFirstName() {
-		return this.firstName;
-	}
+    public String getFirstName() {
+	return this.firstName;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setFirstName(String firstName) {
+	this.firstName = firstName;
+    }
 
-	public String getLastName() {
-		return this.lastName;
-	}
+    public String getLastName() {
+	return this.lastName;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setLastName(String lastName) {
+	this.lastName = lastName;
+    }
 
-	public String getEmail() {
-		return this.email;
-	}
+    public String getEmail() {
+	return this.email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+	this.email = email;
+    }
 
-	public String getPassword() {
-		return this.password;
-	}
+    public String getPassword() {
+	return this.password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+	this.password = password;
+    }
 
-	public Date getCreateDate() {
-		return this.createDate;
-	}
+    public Date getCreateDate() {
+	return this.createDate;
+    }
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
+    public void setCreateDate(Date createDate) {
+	this.createDate = createDate;
+    }
 
-	public String getEnableDisableStatus() {
-		return this.enableDisableStatus;
-	}
+    public String getEnableDisableStatus() {
+	return this.enableDisableStatus;
+    }
 
-	public void setEnableDisableStatus(String enableDisableStatus) {
-		this.enableDisableStatus = enableDisableStatus;
-	}
+    public void setEnableDisableStatus(String enableDisableStatus) {
+	this.enableDisableStatus = enableDisableStatus;
+    }
 
-	public Set getPermissions() {
-		return this.permissions;
-	}
+    public Set getPermissions() {
+	return this.permissions;
+    }
 
-	public void setUserAcctRoleAssocs(Set permissiosn) {
-		this.permissions = permissions;
-	}
+    public void setUserAcctRoleAssocs(Set permissiosn) {
+	this.permissions = permissions;
+    }
 
 }

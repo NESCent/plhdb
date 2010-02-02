@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="plhdb" basedir="." default="war">
+<project name="plhdb-demo" basedir="." default="war">
 
 	
 	<!-- Give user a chance to override without editing this file
@@ -8,9 +8,9 @@
     
 
     <!-- Generic project properties -->
-    <property name="project.fullname" value="Primary Life History Database"/>
+    <property name="project.fullname" value="Primary Life History Database Demo"/>
     <property name="project.version" value="0.5.0"/>
-    <property name="project.name" value="plhdb"/>
+    <property name="project.name" value="plhdb-demo"/>
 
     <!-- hibernate connection settings -->
     <property name="hibernate.password" value=""/>

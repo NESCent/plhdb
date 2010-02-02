@@ -3,7 +3,7 @@
 <c:if test='${sessionScope.Message!=null}'>
 <p><h3><c:out value='${sessionScope.Message}' /></h3></p>
 </c:if>
-	<form name="changepassword"  action="/change/password.go" method="post"  >    
+	<form name="changepassword"  action="/plhdb/change/password.go" method="post"  >    
        
    
     <h2>Change Password</h2>

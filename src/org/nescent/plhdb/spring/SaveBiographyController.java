@@ -17,6 +17,7 @@ import org.nescent.plhdb.hibernate.dao.Biography;
 import org.nescent.plhdb.util.PrepareModel;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import java.security.AccessControlException;
 
 public class SaveBiographyController implements Controller {
 
@@ -97,11 +98,13 @@ public class SaveBiographyController implements Controller {
 		if (departtype == null) {
 			throw new IllegalArgumentException("No depart type specified.");
 		}
-
+		
 		/*
-		 * if (departdateerror == null) { throw new IllegalArgumentException(
-		 * "No depart date error specified."); }
-		 */
+		if (departdateerror == null) {
+			throw new IllegalArgumentException(
+					"No depart date error specified.");
+		}
+*/
 		Session session = HibernateSessionFactory.getSession();
 		Transaction tx = session.beginTransaction();
 

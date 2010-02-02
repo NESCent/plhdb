@@ -57,7 +57,7 @@
 		</table>
 		
  
-		<h4>Forgot your username and password? <a href="/jsp/resetpassword.jsp">Please retrieve it.</a></h4> 
+		<h4>Forgot your username and password? <a href="/plhdb/jsp/resetpassword.jsp">Please retrieve it.</a></h4> 
 
 		<h4>To report bugs, please contact <a href="ma&#105;l&#116;&#111;:&#112;lhdb&#x40;nes&#x63;&#101;&#x6e;&#116;.&#x6f;&#114;g">&#112;lh&#100;&#x62;&#x40;ne&#x73;&#99;&#x65;nt&#46;&#111;&#114;g</a></h4> 
 

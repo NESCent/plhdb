@@ -7,60 +7,60 @@ package org.nescent.plhdb.hibernate.dao;
  */
 public class Recordingperiod implements java.io.Serializable {
 
-	private int recordingperiodOid;
-	private Observation observationByStartOid;
-	private Cvterm cvterm;
-	private Observation observationByEndOid;
+    private int recordingperiodOid;
+    private Observation observationByStartOid;
+    private Cvterm cvterm;
+    private Observation observationByEndOid;
 
-	public Recordingperiod() {
-	}
+    public Recordingperiod() {
+    }
 
-	public Recordingperiod(int recordingperiodOid,
-			Observation observationByStartOid, Cvterm cvterm) {
-		this.recordingperiodOid = recordingperiodOid;
-		this.observationByStartOid = observationByStartOid;
-		this.cvterm = cvterm;
-	}
+    public Recordingperiod(int recordingperiodOid,
+	    Observation observationByStartOid, Cvterm cvterm) {
+	this.recordingperiodOid = recordingperiodOid;
+	this.observationByStartOid = observationByStartOid;
+	this.cvterm = cvterm;
+    }
 
-	public Recordingperiod(int recordingperiodOid,
-			Observation observationByStartOid, Cvterm cvterm,
-			Observation observationByEndOid) {
-		this.recordingperiodOid = recordingperiodOid;
-		this.observationByStartOid = observationByStartOid;
-		this.cvterm = cvterm;
-		this.observationByEndOid = observationByEndOid;
-	}
+    public Recordingperiod(int recordingperiodOid,
+	    Observation observationByStartOid, Cvterm cvterm,
+	    Observation observationByEndOid) {
+	this.recordingperiodOid = recordingperiodOid;
+	this.observationByStartOid = observationByStartOid;
+	this.cvterm = cvterm;
+	this.observationByEndOid = observationByEndOid;
+    }
 
-	public int getRecordingperiodOid() {
-		return this.recordingperiodOid;
-	}
+    public int getRecordingperiodOid() {
+	return this.recordingperiodOid;
+    }
 
-	public void setRecordingperiodOid(int recordingperiodOid) {
-		this.recordingperiodOid = recordingperiodOid;
-	}
+    public void setRecordingperiodOid(int recordingperiodOid) {
+	this.recordingperiodOid = recordingperiodOid;
+    }
 
-	public Observation getObservationByStartOid() {
-		return this.observationByStartOid;
-	}
+    public Observation getObservationByStartOid() {
+	return this.observationByStartOid;
+    }
 
-	public void setObservationByStartOid(Observation observationByStartOid) {
-		this.observationByStartOid = observationByStartOid;
-	}
+    public void setObservationByStartOid(Observation observationByStartOid) {
+	this.observationByStartOid = observationByStartOid;
+    }
 
-	public Cvterm getCvterm() {
-		return this.cvterm;
-	}
+    public Cvterm getCvterm() {
+	return this.cvterm;
+    }
 
-	public void setCvterm(Cvterm cvterm) {
-		this.cvterm = cvterm;
-	}
+    public void setCvterm(Cvterm cvterm) {
+	this.cvterm = cvterm;
+    }
 
-	public Observation getObservationByEndOid() {
-		return this.observationByEndOid;
-	}
+    public Observation getObservationByEndOid() {
+	return this.observationByEndOid;
+    }
 
-	public void setObservationByEndOid(Observation observationByEndOid) {
-		this.observationByEndOid = observationByEndOid;
-	}
+    public void setObservationByEndOid(Observation observationByEndOid) {
+	this.observationByEndOid = observationByEndOid;
+    }
 
 }

@@ -75,7 +75,7 @@ function headerClicked(field){
 }
 
 </script>
-<form action="/search/fertility.go" method="post" name="searchFertilityForm">
+<form action="/plhdb/search/fertility.go" method="post" name="searchFertilityForm">
 <input type='hidden' name='show_studyid' value='<%= form.getShow_studyid()==null?"":form.getShow_studyid() %>' />
 <input type='hidden' name='show_animid' value='<%= form.getShow_animid()==null?"":form.getShow_animid() %>' />
 <input type='hidden' name='show_startdate' value='<%= form.getShow_startdate()==null?"":form.getShow_startdate() %>' />

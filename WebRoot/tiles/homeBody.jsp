@@ -9,68 +9,37 @@
      
 NoCache.nocache(response);
 boolean loggedIn=(request.getSession().getAttribute("permission_manager")!=null);
+
+
 %>
-<div id="left">
-
 <h2>Introduction</h2>
-<p>Primates are highly charismatic and often serve as flagship species in conservation efforts. 
-They are also the closest living relatives of humans, and therefore hold the keys to resolving many 
-questions about human evolution and ecology. However, the slow life histories of primates, combined with 
-their complex social systems, their behavioral plasticity, and the challenging field conditions in which 
-primate researchers must work, have severely limited analyses of mortality and fertility in wild, unprovisioned 
-primate populations. This in turn limits comparative analyses that can shed light on the population dynamics and 
-the social and ecological adaptations that have shaped both human and nonhuman primate evolution. </p>
-<p>This database contains  individual-based life 
-history data that have been collected from wild primate populations by nine working group participants over a minimum of 19 years.  The purpose of collecting 
-data of this type is to make comparative analyses that can shed light on the population dynamics and 
-the social and ecological adaptations that have shaped both human and nonhuman primate evolution. Records in the database include mortality and fertility schedules across multiple primate taxa. The data are searchable and can be downloaded 
-into  csv format.</p>
-<p>This site was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group Working Group</a> 
-through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. This site is currently only accessible for the working group members. If you want to see how the system work, please visit 
-our <a href="http://plhdb-demo.nescent.org">demo site</a>, which includes an example dataset, representing a subset of the actual database, as well as a live version of the graphical user interface. </p>
-</div>
+<img src="/images/photos/Muriqui-Bandit-Kali-CBP.jpg" width="194" height="301" style="float: right; margin-left: 15px; margin-bottom: 15px;">
+<img src="/images/photos/VECELLIO-small.jpg" width="310" height="228" style="float:left; margin-right: 15px; margin-bottom: 15px;">
+<p>Primates are highly charismatic and often serve as flagship species in conservation efforts. They are also the closest living relatives of humans, and therefore 
+hold the keys to resolving many questions about human evolution and ecology. However, the slow life histories of primates, combined with their complex social systems, 
+their behavioral plasticity, and the challenging field conditions in which primate researchers must work, have limited comparative analyses of primate mortality and 
+fertility in wild, unprovisioned populations. This in turn limits our understanding of population dynamics and of the social and ecological adaptations that have 
+shaped both human and nonhuman primate evolution.
+</p>
+<p>
+The Primate Life History Database (PLHD) was designed to permit comparative analyses of the evolution of primate life histories. It contains individual-based life history data 
+from wild primate populations that have been collected by eight working group participants/organizations over a minimum of 24 years. Records in the database include mortality and fertility 
+schedules for seven primate taxa. The data are searchable and can be downloaded into csv format, but access to the complete PLHD is currently limited to Working Group members.
+</p>
+<p>
+This Demo site was created to illustrate how the actual online database works. It was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a>
+through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. It includes an example dataset, taken from the actual database, to illustrate the graphical 
+user interface.
+</p>
 
-<div id="right">
-<% if(loggedIn){ %>
-<img src="/images/photos/Muriqui-Bandit-Kali-CBP.jpg" width="194" height="301" style=" margin-left: 15px; margin-bottom: 15px;"><br/>
-<% } else { %>
-
-<h2>Login</h2>
-
-<form method="post" action="login.go">
-    
-    <table>
-
-	    <tr>
-	    	<td >Username</td>
-	    	<td class="TdValue">
-
-		    		<input type="text" name="email" value="" size="15"/>
-
-			</td>
-		</tr>
-		<tr>
-			<td >Password</td>
-			<td class="TdValue">
-    			
-			    	<input type="password" name="password" value="" size="15"/>
-		    	
-			</td>
-
-		</tr>
-				
-		<tr>
-			<td></td>
-			<td>
-				<input type="submit" value="login" />
-			</td>
-		</tr>
-		</table>
-		
- 
-		<span>Forgot your username and password?<br/><a href="/jsp/resetpassword.jsp">Please retrieve it.</a></span> 
-
-		
-	</form>
-	<% } %>
-</div>
+<h3>How to access the demo database</h3>
+<img src="/images/photos/Fundi_Fanni_Familia_Fadhila_3_A_small.jpg" width="273" height="209" style="float: right;margin-left: 15px; margin-bottom: 15px;">
+<p>
+Anybody can use this web interface to search or download Demo data from this subset of examples from the PLHD. However the sample data provided here should not be 
+considered to be representative of the life histories of any of the species or populations included in the PLHD. We do not authorize the use of this small sample 
+for actual analyses of primate life histories; they will be incomplete and any results may be potentially misleading with respect to actual life histories.
+</p>
+<h3>Memorandum of Understanding among the PLHD Working Group Members</h3>
+<p><a href="/MOU">See the memorandum document</a>.</p>
+<h3>Acknowledgments</h3>
+<p><a href="/Acknowledgments">See the acknowledgment document</a>.</p>

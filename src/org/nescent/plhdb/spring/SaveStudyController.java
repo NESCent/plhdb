@@ -1,7 +1,8 @@
 package org.nescent.plhdb.spring;
 
 import java.math.BigDecimal;
-import java.security.AccessControlException;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.nescent.plhdb.hibernate.dao.Studyinfo;
 import org.nescent.plhdb.util.PrepareModel;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
+import java.security.AccessControlException;
 
 public class SaveStudyController implements Controller {
 	private static Logger log;
@@ -54,6 +56,7 @@ public class SaveStudyController implements Controller {
 		Session session = HibernateSessionFactory.getSession();
 		Transaction tx = session.beginTransaction();
 
+
 		if (studyId == null || studyId.trim().equals("")) {
 			throw new IllegalArgumentException("No study id specified.");
 		}
@@ -76,10 +79,9 @@ public class SaveStudyController implements Controller {
 		}
 
 		BigDecimal big_lat = d_lat == null ? null : BigDecimal.valueOf(d_lat);
-		BigDecimal big_long = d_long == null ? null : BigDecimal
-				.valueOf(d_long);
-		;
-
+		BigDecimal big_long = d_long==null?null : BigDecimal.valueOf(d_long);;
+		
+	
 		if (scientificName == null || scientificName.trim().equals("")) {
 			throw new IllegalArgumentException("No scientific name specified.");
 		}
@@ -89,8 +91,7 @@ public class SaveStudyController implements Controller {
 		}
 
 		try {
-			saveStudyHibernate(session, studyId, owners, siteName, big_lat,
-					big_long, commonName, scientificName);
+			saveStudyHibernate(session,studyId,owners, siteName, big_lat, big_long,commonName,scientificName);
 			session.flush();
 			tx.commit();
 
@@ -107,30 +108,28 @@ public class SaveStudyController implements Controller {
 		}
 	}
 
-	public void saveStudyHibernate(Session session, String study_id,
-			String owners, String siteName, BigDecimal latitude,
-			BigDecimal longitude, String commonName, String scientificName) {
-		String sql = "FROM Studyinfo WHERE studyId= :studyid";
-		Query q = session.createQuery(sql);
+	public void saveStudyHibernate(Session session,String study_id,
+			String owners, String siteName, BigDecimal latitude, BigDecimal longitude,String commonName, String scientificName) {
+		String sql="FROM Studyinfo WHERE studyId= :studyid";
+		Query q=session.createQuery(sql);
 		q.setString("studyid", study_id);
-		List studies = q.list();
-		Studyinfo study = null;
-		if (studies.size() == 0) {
-			log().error("failed to retrieve the study with id: " + study_id);
-			throw new IllegalArgumentException(
-					"failed to retrieve the study with id: " + study_id);
+		List studies=q.list();
+		Studyinfo study=null;
+		if(studies.size()==0){
+			log().error("failed to retrieve the study with id: "+study_id);
+			throw new IllegalArgumentException("failed to retrieve the study with id: "+study_id);
 		}
-
-		study = (Studyinfo) studies.get(0);
+	
+		study=(Studyinfo)studies.get(0);
 		study.setSiteid(siteName);
 		study.setCommonname(commonName);
 		study.setSciname(scientificName);
 		study.setLatitude(latitude);
 		study.setLongitude(longitude);
 		study.setOwners(owners);
-
+		
 		session.update(study);
-
+		
 	}
 
 	private String nullIfEmpty(String s) {

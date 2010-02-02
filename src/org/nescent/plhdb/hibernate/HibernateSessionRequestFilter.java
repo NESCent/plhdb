@@ -24,53 +24,49 @@ public class HibernateSessionRequestFilter implements Filter {
 		}
 		return log;
 	}
+    
 
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request,
+                         ServletResponse response,
+                         FilterChain chain)
+            throws IOException, ServletException {
+    	
+    	Transaction tr=null;
+        try {
+            log().debug("Starting a database transaction");
+            Session sess=HibernateSessionFactory.getSession();
+           	tr=sess.beginTransaction();
+            
+            // Call the next filter (continue request processing)
+            chain.doFilter(request, response);
 
-		Transaction tr = null;
-		try {
-			log().debug("Starting a database transaction");
-			Session sess = HibernateSessionFactory.getSession();
-			tr = sess.beginTransaction();
+            // Commit and cleanup
+            if(tr!=null){
+            	log().debug("Committing the database transaction");
+            	sess.flush();
+            	tr.commit();
+            }
+        } catch (StaleObjectStateException staleEx) {
+            log().error("This interceptor does not implement optimistic concurrency control!");
+            log().error("Your application will not work until you add compensation actions!");
+            throw staleEx;
+        } catch (Throwable ex) {
+        	log().error("failed to process the request!",ex);
+            throw new ServletException(ex);
+        }finally{
+        	
+        	if (tr!=null && !tr.wasCommitted()) {
+                 log().debug("Trying to rollback database transaction after exception");
+                  tr.rollback();
+            }
+        	HibernateSessionFactory.getSession().close();
+        }
+    }
 
-			// Call the next filter (continue request processing)
-			chain.doFilter(request, response);
+    public void init(FilterConfig filterConfig) throws ServletException {
+ 
+    }
 
-			// Commit and cleanup
-			if (tr != null) {
-				log().debug("Committing the database transaction");
-				sess.flush();
-				tr.commit();
-			}
-		} catch (StaleObjectStateException staleEx) {
-			log()
-					.error(
-							"This interceptor does not implement optimistic concurrency control!");
-			log()
-					.error(
-							"Your application will not work until you add compensation actions!");
-			throw staleEx;
-		} catch (Throwable ex) {
-			log().error("failed to process the request!", ex);
-			throw new ServletException(ex);
-		} finally {
-
-			if (tr != null && !tr.wasCommitted()) {
-				log()
-						.debug(
-								"Trying to rollback database transaction after exception");
-				tr.rollback();
-			}
-			HibernateSessionFactory.getSession().close();
-		}
-	}
-
-	public void init(FilterConfig filterConfig) throws ServletException {
-
-	}
-
-	public void destroy() {
-	}
+    public void destroy() {}
 
 }

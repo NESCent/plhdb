@@ -36,13 +36,15 @@ public class HibernateSessionFactory {
 	private static Configuration configuration = new Configuration();
 	private static org.hibernate.SessionFactory sessionFactory;
 	private static String configFile = CONFIG_FILE_LOCATION;
-
+	
 	private HibernateSessionFactory() {
 	}
 
-	public static SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
+	
+   
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 
 	/**
 	 * Returns the ThreadLocal Session instance. Lazy initialize the
@@ -51,24 +53,26 @@ public class HibernateSessionFactory {
 	 * @return Session
 	 * @throws HibernateException
 	 */
-
+    
+   
 	public static Session getSession() throws HibernateException {
-
-		Session session = threadLocal.get();
+		
+		Session session = (Session) threadLocal.get();
 
 		if (session == null || !session.isOpen()) {
 			if (sessionFactory == null) {
 				rebuildSessionFactory();
 			}
-			session = (sessionFactory != null) ? sessionFactory.openSession()
-					: null;
+			session = (sessionFactory != null) ? sessionFactory.openSession(): null;
 			threadLocal.set(session);
 		}
-
+	
 		return session;
-
+		
 	}
-
+	
+    
+   
 	/**
 	 * Rebuild hibernate session factory
 	 * 
@@ -85,48 +89,46 @@ public class HibernateSessionFactory {
 
 	public static Connection createConnection() throws HibernateException {
 		try {
-			String dbUrl = configuration
-					.getProperty("hibernate.connection.url");
-			String dbClass = configuration
-					.getProperty("hibernate.connection.driver_class");
-			String dbUser = configuration
-					.getProperty("hibernate.connection.username");
-			String dbPassword = configuration
-					.getProperty("hibernate.connection.password");
+			String dbUrl=configuration.getProperty("hibernate.connection.url");
+			String dbClass=configuration.getProperty("hibernate.connection.driver_class");
+			String dbUser=configuration.getProperty("hibernate.connection.username");
+			String dbPassword=configuration.getProperty("hibernate.connection.password");
 			Class.forName(dbClass).newInstance();
-			String url = dbUrl + "?user=" + dbUser + "&password=" + dbPassword;
-
+			String url = dbUrl+"?user="+dbUser+"&password="+dbPassword;
+		    
 			Connection conn = DriverManager.getConnection(url);
 			return conn;
 		} catch (Exception e) {
 			log().error("failed to create database connection");
-			throw new HibernateException(
-					"failed to create database connection", e);
+			throw new HibernateException("failed to create database connection",e);
 		}
 	}
-
+	
 	/**
 	 * Close the single hibernate session instance.
 	 * 
 	 * @throws HibernateException
 	 */
 	public static void closeSession() throws HibernateException {
-		Session session = threadLocal.get();
+		Session session = (Session) threadLocal.get();
 		threadLocal.set(null);
 
 		if (session != null) {
 			session.close();
 		}
-
+	
+		
+		
 	}
 
 	/**
 	 * return session factory
 	 * 
 	 */
-	// public static org.hibernate.SessionFactory getSessionFactory() {
-	// return sessionFactory;
-	// }
+//	public static org.hibernate.SessionFactory getSessionFactory() {
+//		return sessionFactory;
+//	}
+
 	/**
 	 * return session factory
 	 * 

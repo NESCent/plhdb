@@ -10,57 +10,57 @@ import java.util.Set;
  */
 public class Taxon implements java.io.Serializable {
 
-	private int taxonOid;
-	private String scientificName;
-	private String commonName;
-	private Set studies = new HashSet(0);
+    private int taxonOid;
+    private String scientificName;
+    private String commonName;
+    private Set studies = new HashSet(0);
 
-	public Taxon() {
-	}
+    public Taxon() {
+    }
 
-	public Taxon(int taxonOid, String scientificName) {
-		this.taxonOid = taxonOid;
-		this.scientificName = scientificName;
-	}
+    public Taxon(int taxonOid, String scientificName) {
+	this.taxonOid = taxonOid;
+	this.scientificName = scientificName;
+    }
 
-	public Taxon(int taxonOid, String scientificName, String commonName,
-			Set studies) {
-		this.taxonOid = taxonOid;
-		this.scientificName = scientificName;
-		this.commonName = commonName;
-		this.studies = studies;
-	}
+    public Taxon(int taxonOid, String scientificName, String commonName,
+	    Set studies) {
+	this.taxonOid = taxonOid;
+	this.scientificName = scientificName;
+	this.commonName = commonName;
+	this.studies = studies;
+    }
 
-	public int getTaxonOid() {
-		return this.taxonOid;
-	}
+    public int getTaxonOid() {
+	return this.taxonOid;
+    }
 
-	public void setTaxonOid(int taxonOid) {
-		this.taxonOid = taxonOid;
-	}
+    public void setTaxonOid(int taxonOid) {
+	this.taxonOid = taxonOid;
+    }
 
-	public String getScientificName() {
-		return this.scientificName;
-	}
+    public String getScientificName() {
+	return this.scientificName;
+    }
 
-	public void setScientificName(String scientificName) {
-		this.scientificName = scientificName;
-	}
+    public void setScientificName(String scientificName) {
+	this.scientificName = scientificName;
+    }
 
-	public String getCommonName() {
-		return this.commonName;
-	}
+    public String getCommonName() {
+	return this.commonName;
+    }
 
-	public void setCommonName(String commonName) {
-		this.commonName = commonName;
-	}
+    public void setCommonName(String commonName) {
+	this.commonName = commonName;
+    }
 
-	public Set getStudies() {
-		return this.studies;
-	}
+    public Set getStudies() {
+	return this.studies;
+    }
 
-	public void setStudies(Set studies) {
-		this.studies = studies;
-	}
+    public void setStudies(Set studies) {
+	this.studies = studies;
+    }
 
 }

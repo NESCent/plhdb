@@ -7,53 +7,53 @@ package org.nescent.plhdb.hibernate.dao;
  */
 public class CvtermRelationship implements java.io.Serializable {
 
-	private int cvtermRelationshipOid;
-	private Cvterm cvtermByPredicateOid;
-	private Cvterm cvtermByObjectOid;
-	private Cvterm cvtermBySubjectOid;
+    private int cvtermRelationshipOid;
+    private Cvterm cvtermByPredicateOid;
+    private Cvterm cvtermByObjectOid;
+    private Cvterm cvtermBySubjectOid;
 
-	public CvtermRelationship() {
-	}
+    public CvtermRelationship() {
+    }
 
-	public CvtermRelationship(int cvtermRelationshipOid,
-			Cvterm cvtermByPredicateOid, Cvterm cvtermByObjectOid,
-			Cvterm cvtermBySubjectOid) {
-		this.cvtermRelationshipOid = cvtermRelationshipOid;
-		this.cvtermByPredicateOid = cvtermByPredicateOid;
-		this.cvtermByObjectOid = cvtermByObjectOid;
-		this.cvtermBySubjectOid = cvtermBySubjectOid;
-	}
+    public CvtermRelationship(int cvtermRelationshipOid,
+	    Cvterm cvtermByPredicateOid, Cvterm cvtermByObjectOid,
+	    Cvterm cvtermBySubjectOid) {
+	this.cvtermRelationshipOid = cvtermRelationshipOid;
+	this.cvtermByPredicateOid = cvtermByPredicateOid;
+	this.cvtermByObjectOid = cvtermByObjectOid;
+	this.cvtermBySubjectOid = cvtermBySubjectOid;
+    }
 
-	public int getCvtermRelationshipOid() {
-		return this.cvtermRelationshipOid;
-	}
+    public int getCvtermRelationshipOid() {
+	return this.cvtermRelationshipOid;
+    }
 
-	public void setCvtermRelationshipOid(int cvtermRelationshipOid) {
-		this.cvtermRelationshipOid = cvtermRelationshipOid;
-	}
+    public void setCvtermRelationshipOid(int cvtermRelationshipOid) {
+	this.cvtermRelationshipOid = cvtermRelationshipOid;
+    }
 
-	public Cvterm getCvtermByPredicateOid() {
-		return this.cvtermByPredicateOid;
-	}
+    public Cvterm getCvtermByPredicateOid() {
+	return this.cvtermByPredicateOid;
+    }
 
-	public void setCvtermByPredicateOid(Cvterm cvtermByPredicateOid) {
-		this.cvtermByPredicateOid = cvtermByPredicateOid;
-	}
+    public void setCvtermByPredicateOid(Cvterm cvtermByPredicateOid) {
+	this.cvtermByPredicateOid = cvtermByPredicateOid;
+    }
 
-	public Cvterm getCvtermByObjectOid() {
-		return this.cvtermByObjectOid;
-	}
+    public Cvterm getCvtermByObjectOid() {
+	return this.cvtermByObjectOid;
+    }
 
-	public void setCvtermByObjectOid(Cvterm cvtermByObjectOid) {
-		this.cvtermByObjectOid = cvtermByObjectOid;
-	}
+    public void setCvtermByObjectOid(Cvterm cvtermByObjectOid) {
+	this.cvtermByObjectOid = cvtermByObjectOid;
+    }
 
-	public Cvterm getCvtermBySubjectOid() {
-		return this.cvtermBySubjectOid;
-	}
+    public Cvterm getCvtermBySubjectOid() {
+	return this.cvtermBySubjectOid;
+    }
 
-	public void setCvtermBySubjectOid(Cvterm cvtermBySubjectOid) {
-		this.cvtermBySubjectOid = cvtermBySubjectOid;
-	}
+    public void setCvtermBySubjectOid(Cvterm cvtermBySubjectOid) {
+	this.cvtermBySubjectOid = cvtermBySubjectOid;
+    }
 
 }

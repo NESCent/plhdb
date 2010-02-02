@@ -43,10 +43,9 @@ public class DeleteStudyController implements Controller {
 		if (studyId == null || studyId.trim().equals("")) {
 			throw new IllegalArgumentException("No studyid specified.");
 		}
-
+		
 		try {
-			Studyinfo studyInfo = (Studyinfo) session.get(Studyinfo.class,
-					studyId);
+			Studyinfo studyInfo = (Studyinfo) session.get(Studyinfo.class, studyId);
 
 			if (studyInfo == null) {
 				log().error(
@@ -75,16 +74,15 @@ public class DeleteStudyController implements Controller {
 	private String nullIfEmpty(String s) {
 		return (s != null && s.trim().equals("")) ? null : s;
 	}
-
-	public static void main(String[] agrs) {
+	
+	public static void main(String [] agrs){
 		String studyId = "1";
 
 		Session session = HibernateSessionFactory.getSession();
 		Transaction tx = session.beginTransaction();
 
 		try {
-			Studyinfo studyInfo = (Studyinfo) session.get(Studyinfo.class,
-					studyId);
+			Studyinfo studyInfo = (Studyinfo) session.get(Studyinfo.class, studyId);
 
 			if (studyInfo == null) {
 				log().error(
@@ -95,7 +93,7 @@ public class DeleteStudyController implements Controller {
 
 			session.delete(studyInfo);
 			tx.commit();
-
+			
 		} catch (HibernateException he) {
 			log().error("failed to delete the study with id: " + studyId, he);
 			throw he;
