@@ -40,7 +40,7 @@ if(loggedIn){
 
 %>
 <div id="logo"><img src="/images/plhdb_logo.jpg" width="172" height="45" alt="Primate Life Histories" /></div>
-<div id="user_info">Version: <%=version %>&nbsp;&nbsp;Built: <%=built %>
+<div id="user_info">Version: <%=version %><br/>Built: <%=built %>
 <% if(loggedIn){ %>
     <br/>Logged in as: <%=username %>  &nbsp;&nbsp;[ <a href="/jsp/changepassword.jsp">Change Password</a> | <a href="/jsp/logout.jsp">Logout</a> ] 
 <% } %>

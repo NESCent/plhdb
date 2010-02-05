@@ -1,26 +1,22 @@
-<h2>Data</h2>
+<h2>Example Data</h2>
 <img src="/images/photos/bogart_copyright.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 <p>
-This database contains  individual-based life 
-history data that have been collected from wild primate populations by nine working group participants over a minimum of 19 years.  The purpose of collecting 
-data of this type is to make comparative analyses that can shed light on the population dynamics and 
-the social and ecological adaptations that have shaped both human and nonhuman primate evolution. Records in the database include mortality and fertility schedules across multiple primate taxa. The data are searchable and can be downloaded 
-into  csv format.</p>
-
-<h2>About the demo site and example database</h2>
-<p>To illustrate how the system work, we created a demo site with an example dataset, representing a subset of the actual database. Please visit our <a href="http://plhdb-demo.nescent.org">demo site</a> 
-for details</p> 
+This sample database represents a small subset of the actual database, which contains individual-based life history data that have been collected from wild primate 
+populations by eight working group participants/organizations over a minimum of 24 years. We present the sample database to illustrate how we implemented our common vocabulary 
+and to provide examples of particular decisions in different life histories.  Although the database was designed to allow us to carry out comparative life history 
+analyses, the database structure can be generalized for a wide range of uses. Records in the database include mortality and fertility schedules across multiple primate taxa. 
+The data are searchable and can be downloaded into csv format.  However, we do not authorize the use of this small sample for actual analyses of primate life histories. 
+</p>
 <h2>Technology</h2>
 <ul>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 8.3</a></li>
 <li>Database ORM : <a href="https://www.hibernate.org/">Hibernate</a></li>
 <li>Programming Language: <a href="http://java.com/">java</a></li>
 <li>Web Framework: <a href="http://www.springsource.org/">Sping</a></li>
-<li>Other Libraries 
+<li>Other Java Libraries 
   <ul>
     <li><a href="http://www.mchange.com/projects/c3p0/index.html">c3p0 Database Connection Pooling</a></li>
     <li><a href="http://struts.apache.org/2.x/index.html">struts</a></li>
-    <li><a href="http://www.dojotoolkit.org/">dojo</a></li>
     </ul>
 </li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
