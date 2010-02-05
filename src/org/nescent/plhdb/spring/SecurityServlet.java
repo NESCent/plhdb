@@ -3,16 +3,16 @@
  */
 package org.nescent.plhdb.spring;
 
-import java.io.IOException;
-import java.security.AccessControlException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.nescent.plhdb.aa.PermissionManager;
+import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.springframework.web.servlet.DispatcherServlet;
+import java.security.AccessControlException;
+import java.io.IOException;
 
 /**
  * @author xianhua
@@ -36,7 +36,6 @@ public class SecurityServlet extends DispatcherServlet {
 	 * org.springframework.web.servlet.DispatcherServlet#doDispatch(javax.servlet
 	 * .http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
 	protected void doDispatch(HttpServletRequest arg0, HttpServletResponse arg1)
 			throws Exception {
 		super.doDispatch(arg0, arg1);
@@ -49,16 +48,19 @@ public class SecurityServlet extends DispatcherServlet {
 	 * org.springframework.web.servlet.DispatcherServlet#doService(javax.servlet
 	 * .http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
-	@Override
 	protected void doService(HttpServletRequest request,
 			HttpServletResponse response) {
 		String studyid = request.getParameter("studyid");
 		try {
 			String uri = request.getRequestURI();
-			if (uri.indexOf("login.go") > -1) {
-				setActiveMenu("login", request);
+			if (uri.indexOf("login.go") > -1){
+				setActiveMenu("login",request);
 				super.doService(request, response);
-			} else if (uri.indexOf("register.go") > -1)
+			}else if (uri.indexOf("MOU") > -1)
+				response.sendRedirect("http://www.nescent.org/wg/plhd/images/d/d7/Final_Internal_MOU.pdf");
+			else if (uri.indexOf("Acknowledgments") > -1)
+				response.sendRedirect("http://www.nescent.org/wg/plhd/images/f/f2/Acknowledgments.pdf");
+			else if (uri.indexOf("register.go") > -1)
 				super.doService(request, response);
 			else if (uri.indexOf("cv.go") > -1)
 				super.doService(request, response);
@@ -68,15 +70,15 @@ public class SecurityServlet extends DispatcherServlet {
 				super.doService(request, response);
 			else if (uri.indexOf("edit.go") > -1
 					&& (studyid == null || studyid.trim().equals(""))) {
-				setActiveMenu("edit", request);
+				setActiveMenu("edit",request);
 				super.doService(request, response);
 			} else if (uri.indexOf("search/biography.go") > -1) {
-				setActiveMenu("search_biography", request);
+				setActiveMenu("search_biography",request);
 				super.doService(request, response);
 			} else if (uri.indexOf("search/fertility.go") > -1) {
-				setActiveMenu("search_fertility", request);
+				setActiveMenu("search_fertility",request);
 				super.doService(request, response);
-			} else {
+			}else {
 
 				PermissionManager manager = (PermissionManager) request
 						.getSession().getAttribute("permission_manager");
@@ -85,7 +87,7 @@ public class SecurityServlet extends DispatcherServlet {
 				if (manager == null) {
 					request.getSession().setAttribute("Message",
 							"You have not logged in. Login please!");
-					response.sendRedirect("/jsp/login.jsp");
+					response.sendRedirect("/plhdb-demo/jsp/login.jsp");
 				} else {
 					if (uri.indexOf("view/users.go") != -1
 							|| uri.indexOf("view/user.go") != -1
@@ -93,7 +95,7 @@ public class SecurityServlet extends DispatcherServlet {
 							|| uri.indexOf("delete/user.go") != -1
 							|| uri.indexOf("add/user.go") != -1
 							|| uri.indexOf("edit/user.go") != -1) {
-						setActiveMenu("users", request);
+						setActiveMenu("users",request);
 						if (isadmin) {
 							super.doService(request, response);
 						} else {
@@ -101,7 +103,7 @@ public class SecurityServlet extends DispatcherServlet {
 									"Sorry! you do not have the authority.");
 						}
 					} else {
-						setActiveMenu("edit", request);
+						setActiveMenu("edit",request);
 						String study = getStudy(request);
 						String access = getAccess(request);
 						if (study == null) {
@@ -170,8 +172,8 @@ public class SecurityServlet extends DispatcherServlet {
 
 		return null;
 	}
-
-	private void setActiveMenu(String menu, HttpServletRequest request) {
-		request.setAttribute("active_menu", menu);
+    
+	private void setActiveMenu(String menu, HttpServletRequest request){
+		request.setAttribute("active_menu",menu);
 	}
 }
