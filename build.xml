@@ -10,7 +10,7 @@
     <!-- Generic project properties -->
     <property name="project.fullname" value="Primary Life History Database"/>
     <property name="project.version" value="0.5.0"/>
-    <property name="project.name" value="plhdb"/>
+    <property name="project.name" value="plhdb-demo"/>
 
     <!-- hibernate connection settings -->
     <property name="hibernate.password" value=""/>
