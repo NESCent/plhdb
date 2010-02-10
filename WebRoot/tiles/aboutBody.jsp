@@ -27,7 +27,7 @@ for details</p>
 </ul>
 <b>Source Code</b>
 <p>
-Source code is available on <a href="#">[TBD]</a> under a [TBD] license.
+Source code is available on <a href="http://github.com/plhdb/plhdb">http://github.com/plhdb/plhdb</a> under a GPL license.
 </p> 
 <div style="clear:both;"></div>
 <b>Credits</b>
