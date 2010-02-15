@@ -23,7 +23,11 @@ The data are searchable and can be downloaded into csv format.  However, we do n
 </ul>
 <b>Source Code</b>
 <p>
-Source code is available on <a href="http://github.com/plhdb/plhdb">http://github.com/plhdb/plhdb</a> under a GPL license.
+Source code is available on <a href="http://github.com/plhdb/plhdb">http://github.com/plhdb/plhdb</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL license (v3)</a>. Git repositories are available 
+on both source forge and github:<br/>
+<ul><li>SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb</li>
+<li>Github: git://github.com/plhdb/plhdb.git</li>
+</ul>	
 </p> 
 <div style="clear:both;"></div>
 <b>Credits</b>
