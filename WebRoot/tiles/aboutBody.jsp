@@ -24,8 +24,8 @@ The data are searchable and can be downloaded into csv format.  However, we do n
 <h2>Source Code</h2>
 <p>
 Source code is available on <a href="http://github.com/plhdb/plhdb">GitHub</a> and <a href="http://sf.net/projects/
-	plhdb">SourceForge</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. Git repositories are available 
-on both Source Forge and Github:<br/>
+	plhdb">SourceForge</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>.The Git repositories are available 
+on both SourceForge and Github:<br/>
 <ul><li>SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb</li>
 <li>GitHub: git://github.com/plhdb/plhdb.git</li>
 </ul>	
