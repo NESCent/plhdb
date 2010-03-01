@@ -21,27 +21,28 @@ The data are searchable and can be downloaded into csv format.  However, we do n
 </li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
 </ul>
-<b>Source Code</b>
+<h2>Source Code</h2>
 <p>
-Source code is available on <a href="http://github.com/plhdb/plhdb">http://github.com/plhdb/plhdb</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL license (v3)</a>. Git repositories are available 
-on both source forge and github:<br/>
+Source code is available on <a href="http://github.com/plhdb/plhdb">GitHub</a> and <a href="http://sf.net/projects/
+	plhdb">SourceForge</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. Git repositories are available 
+on both Source Forge and Github:<br/>
 <ul><li>SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb</li>
-<li>Github: git://github.com/plhdb/plhdb.git</li>
+<li>GitHub: git://github.com/plhdb/plhdb.git</li>
 </ul>	
 </p> 
 <div style="clear:both;"></div>
-<b>Credits</b>
+<h2>Credits</h2>
 <img src="/images/photos/Baboon_AlbertsAltmann_small.jpg" style="float:right; margin-left: 15px; margin-bottom:15px;" />
 <ul>
 <li>Concept, content, and scientific requirements: <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a>, Susan C Alberts (Duke University, PI), Karen B Strier (University of Wisconsin-Madison, PI) 
 <li>Database and application programming: Hilmar Lapp (NESCent), Xianhua Liu (NESCent)
 </ul>
 
-<b>Publications</b>
+<h2>Publications</h2>
 <p>
 [TBD]
 </p>
- <b>Contact</b>
+ <h2>Contact</h2>
  <ul>
  <li>
  The website is maintained by <a href="http://www.nescent.org">the National Evolutionary Synthesis Center (NESCent)</a>. 

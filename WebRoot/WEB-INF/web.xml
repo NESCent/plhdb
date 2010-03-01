@@ -12,7 +12,14 @@
   <servlet-mapping>
     <servlet-name>springapp</servlet-name>
     <url-pattern>*.go</url-pattern>
- 
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>springapp</servlet-name>
+    <url-pattern>/MOU</url-pattern>
+  </servlet-mapping>
+     <servlet-mapping>
+    <servlet-name>springapp</servlet-name>
+    <url-pattern>/Acknowledgments</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>context</servlet-name>
