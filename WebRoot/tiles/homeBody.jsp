@@ -39,7 +39,16 @@ Anybody can use this web interface to search or download Demo data from this sub
 considered to be representative of the life histories of any of the species or populations included in the PLHD. We do not authorize the use of this small sample 
 for actual analyses of primate life histories; they will be incomplete and any results may be potentially misleading with respect to actual life histories.
 </p>
-<h3>Memorandum of Understanding among the PLHD Working Group Members</h3>
-<p><a href="/MOU">See the memorandum document</a>.</p>
-<h3>Acknowledgments</h3>
-<p><a href="/Acknowledgments">See the acknowledgment document</a>.</p>
+<h3>Documents</h3>
+<ul>
+<li><a href="/MOU">Memorandum of Understanding among the PLHD Working Group Members</a>.</li>
+<li><a href="/Acknowledgments">Acknowledgments</a>.</li>
+</ul>
+<h3>Related web resources</h3>
+<ul>
+<li><a href="https://www.nescent.org/wg_plhd">Project wiki site of the working group</a></li>
+<li><a href="http://www.nescent.org/science/awards_summary.php?id=19">NESCent award page of the working group</a></li>
+<li><a href="http://sf.net/projects/plhdb">Open source project on SourceForge</a></li>
+<li><a href="http://github.com/plhdb/plhdb">Open source project on GitHub</a></li>
+<li><a href="http://www.nescent.org">National Evolutionary Synthesis Center</a></li>
+</ul>
