@@ -56,8 +56,7 @@ Fax: (919) 668-9198<br/>
 
 <li>Send email to  
 <div style="left-padding: 30px;">
-leading scientists of the working group (<a href="&#x6d;&#x61;i&#108;t&#x6f;:&#x62;&#x6f;&#x64;y&#115;&#x69;&#x7a;e&#45;&#97;&#x64;m&#x69;&#x6e;&#64;ne&#x73;ce&#110;t.o&#x72;g">plhdb-&#x61;dmin&#64;n&#x65;scen&#116;&#x2e;o&#114;&#103;</a>)<br/>
-report bugs or request technical help (<a href="m&#97;i&#x6c;&#116;&#x6f;&#58;&#98;o&#x64;y&#x73;iz&#x65;&#45;h&#101;lp&#64;n&#x65;sc&#101;n&#x74;&#46;&#x6f;r&#103;">plhdb-bug&#x40;ne&#x73;c&#101;&#110;t.or&#x67;</a>)<br/>
+report bugs or request technical help (<a href="m&#x61;&#105;lt&#x6f;&#x3a;&#112;l&#104;&#100;&#98;&#x40;&#x6e;es&#x63;ent.&#x6f;r&#x67;">p&#108;h&#100;b&#64;&#110;e&#x73;cent&#46;&#x6f;&#114;g</a>)<br/>
 </div>
 </li>
 </ul>
