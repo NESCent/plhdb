@@ -28,12 +28,12 @@ into  csv format.</p>
 <p>This site was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group Working Group</a> 
 through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. This site is currently only accessible for the working group members. If you want to see how the system work, please visit 
 our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dataset, representing a subset of the actual database, as well as a live version of the graphical user interface. </p>
-</div>
-
 <h2>Web Citation</h2>
 <p>
 "Primate Life Histories Database." 2010.Evolutionary Ecology of Primate Life Histories Working Group. National Evolutionary Synthesis Center. (date accessed by user) http://plhdb.org/
 </p>
+</div>
+
 <div id="right">
 <% if(loggedIn){ %>
 <img src="/images/photos/Muriqui-Bandit-Kali-CBP.jpg" width="194" height="301" style=" margin-left: 15px; margin-bottom: 15px;"><br/>
