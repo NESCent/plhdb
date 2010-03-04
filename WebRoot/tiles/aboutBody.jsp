@@ -25,27 +25,28 @@ for details</p>
 </li>
 <li>Website Theme: <a href="http://www.freewebsitetemplates.com/preview/charitytrust/">charitytrust</a></li>
 </ul>
-<b>Source Code</b>
+<h2>Source Code</h2>
 <p>
-Source code is available on <a href="http://github.com/plhdb/plhdb">http://github.com/plhdb/plhdb</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL license (v3)</a>. Git repositories are available 
-	on both source forge and github:<br/>
-	<ul><li>SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb</li>
-	<li>Github: git://github.com/plhdb/plhdb.git</li>
-	</ul>
+Source code is available on <a href="http://github.com/plhdb/plhdb">GitHub</a> and <a href="http://sf.net/projects/
+	plhdb">SourceForge</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. Git repositories are available 
+on both Source Forge and Github:<br/>
+<ul><li>SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb</li>
+<li>GitHub: git://github.com/plhdb/plhdb.git</li>
+</ul>
 </p> 
 <div style="clear:both;"></div>
-<b>Credits</b>
+<h2>Credits</h2>
 <img src="/images/photos/Baboon_AlbertsAltmann_small.jpg" style="float:right; margin-left: 15px; margin-bottom:15px;" />
 <ul>
 <li>Concept, content, and scientific requirements: <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a>, Susan C Alberts (Duke University, PI), Karen B Strier (University of Wisconsin-Madison, PI) 
 <li>Database and application programming: Hilmar Lapp (NESCent), Xianhua Liu (NESCent)
 </ul>
 
-<b>Publications</b>
+<h2>Publications</h2>
 <p>
 [TBD]
 </p>
- <b>Contact</b>
+ <h2>Contact</h2>
  <ul>
  <li>
  The website is maintained by <a href="http://www.nescent.org">the National Evolutionary Synthesis Center (NESCent)</a>. 
@@ -59,8 +60,7 @@ Fax: (919) 668-9198<br/>
 
 <li>Send email to  
 <div style="left-padding: 30px;">
-leading scientists of the working group (<a href="&#x6d;&#x61;i&#108;t&#x6f;:&#x62;&#x6f;&#x64;y&#115;&#x69;&#x7a;e&#45;&#97;&#x64;m&#x69;&#x6e;&#64;ne&#x73;ce&#110;t.o&#x72;g">plhdb-&#x61;dmin&#64;n&#x65;scen&#116;&#x2e;o&#114;&#103;</a>)<br/>
-report bugs or request technical help (<a href="m&#97;i&#x6c;&#116;&#x6f;&#58;&#98;o&#x64;y&#x73;iz&#x65;&#45;h&#101;lp&#64;n&#x65;sc&#101;n&#x74;&#46;&#x6f;r&#103;">plhdb-bug&#x40;ne&#x73;c&#101;&#110;t.or&#x67;</a>)<br/>
+report bugs or request technical help (<a href="m&#x61;&#105;lt&#x6f;&#x3a;&#112;l&#104;&#100;&#98;&#x40;&#x6e;es&#x63;ent.&#x6f;r&#x67;">p&#108;h&#100;b&#64;&#110;e&#x73;cent&#46;&#x6f;&#114;g</a>)<br/>
 </div>
 </li>
 </ul>
