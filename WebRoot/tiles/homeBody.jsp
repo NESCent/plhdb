@@ -25,13 +25,28 @@ history data that have been collected from wild primate populations by nine work
 data of this type is to make comparative analyses that can shed light on the population dynamics and 
 the social and ecological adaptations that have shaped both human and nonhuman primate evolution. Records in the database include mortality and fertility schedules across multiple primate taxa. The data are searchable and can be downloaded 
 into  csv format.</p>
-<p>This site was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group Working Group</a> 
+<p>This site was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a> 
 through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. This site is currently only accessible for the working group members. If you want to see how the system work, please visit 
 our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dataset, representing a subset of the actual database, as well as a live version of the graphical user interface. </p>
-<h2>Web Citation</h2>
+<h3>Web Citation</h3>
 <p>
 "Primate Life Histories Database." 2010.Evolutionary Ecology of Primate Life Histories Working Group. National Evolutionary Synthesis Center. (date accessed by user) http://plhdb.org/
 </p>
+
+<h3>Documents</h3>
+<ul>
+<li><a href="/MOU">Memorandum of Understanding among the PLHD Working Group Members</a>.</li>
+<li><a href="/Acknowledgments">Acknowledgments</a>.</li>
+</ul>
+<h3>Related web resources</h3>
+<ul>
+<li><a href="http://demo.plhdb.org">Demo site</a></li>
+<li><a href="https://www.nescent.org/wg_plhd">Project wiki site of the working group</a></li>
+<li><a href="http://www.nescent.org/science/awards_summary.php?id=19">NESCent award page of the working group</a></li>
+<li><a href="http://sf.net/projects/plhdb">Open source project on SourceForge</a></li>
+<li><a href="http://github.com/plhdb/plhdb">Open source project on GitHub</a></li>
+<li><a href="http://www.nescent.org">National Evolutionary Synthesis Center</a></li>
+</ul>
 </div>
 
 <div id="right">

@@ -29,7 +29,7 @@ for details</p>
 <p>
 Source code is available on <a href="http://github.com/plhdb/plhdb">GitHub</a> and <a href="http://sf.net/projects/
 	plhdb">SourceForge</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. Git repositories are available 
-on both Source Forge and Github:<br/>
+on both SourceForge and Github:<br/>
 <ul><li>SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb</li>
 <li>GitHub: git://github.com/plhdb/plhdb.git</li>
 </ul>
