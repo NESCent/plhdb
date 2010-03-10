@@ -12,7 +12,7 @@ The data are searchable and can be downloaded into csv format.  However, we do n
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 8.3</a></li>
 <li>Database ORM : <a href="https://www.hibernate.org/">Hibernate</a></li>
 <li>Programming Language: <a href="http://java.com/">java</a></li>
-<li>Web Framework: <a href="http://www.springsource.org/">Sping</a></li>
+<li>Web Framework: <a href="http://www.springsource.org/">Spring</a></li>
 <li>Other Java Libraries 
   <ul>
     <li><a href="http://www.mchange.com/projects/c3p0/index.html">c3p0 Database Connection Pooling</a></li>
