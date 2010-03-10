@@ -36,18 +36,7 @@ search can also be combined with filtering conditions, such as start type distri
 <option value="!=">!=</option>
 </select>
 </td>
-<td class="odd" nowrap="nowrap">
-<select name="value_studyid">
-<option value=""></option>
-<option value="1">Brachyteles hypoxanthus</option>
-<option value="2">Papio cynocephalus</option>
-<option value="3">Cercopithecus mitis</option>
-<option value="4">Pan troglodytes schweinfurthii</option>
-<option value="5">Gorilla beringei beringei</option>
-<option value="6">Propithecus verreauxi</option>
-<option value="7">Cebus capucinus</option>
-</select>
-</input>
+<td class="odd" nowrap="nowrap"><input type="text"  name="value_studyid" size="50">
 </td></tr>
 <tr>
 <td class="even" nowrap="nowrap"><input type="checkbox" checked="true"  name="show_animid" /></td><td class="even" nowrap="nowrap">Animal Id</td><td class="even" nowrap="nowrap"><select name="op_animid">
