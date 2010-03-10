@@ -23,7 +23,7 @@ request.setAttribute("C",C);
 <style type="text/css">
 
 html, body { height: 100%; width: 100%; padding: 0; border: 0; }
-#main { height: 100%; width: 100%; padding: 0; border: 0; background-color: #fafafa; }
+#main { height: 650px; width: 100%; padding: 0; border: 0; background-color: #fafafa; }
 #list1, #list2,#list3 {width:100px; background-color: #ededed;padding:0px;} 
 #header, #mainSplit { margin: 10px;}
 #selected {background-color: #629FDD;
@@ -573,8 +573,8 @@ function show_select_names()
 dojo.addOnLoad(function() {
 
 	dojo.parser.parse(dojo.byId('container')); 
-	dojo.byId('loaderInner').innerHTML += " done.";
-	setTimeout("hideLoader()",10);
+//	dojo.byId('loaderInner').innerHTML += " done.";
+//	setTimeout("hideLoader()",10);
 			
 });
 
@@ -585,7 +585,7 @@ dojo.addOnLoad(function() {
 </select>
 </div>
 
-<div id="loader"><div id="loaderInner">Loading data ... </div></div>
+<!-- div id="loader"><div id="loaderInner">Loading data ... </div></div -->
 
 	<div id="main" dojoType="dijit.layout.LayoutContainer">
 		<h1 id="header" dojoType="dijit.layout.ContentPane" layoutAlign=top>Edit Data</h1>
