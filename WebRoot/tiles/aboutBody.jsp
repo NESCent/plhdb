@@ -15,7 +15,7 @@ for details</p>
 <li>Database: <a href="http://www.postgresql.org/">PostgreSQL 8.3</a></li>
 <li>Database ORM : <a href="https://www.hibernate.org/">Hibernate</a></li>
 <li>Programming Language: <a href="http://java.com/">java</a></li>
-<li>Web Framework: <a href="http://www.springsource.org/">Sping</a></li>
+<li>Web Framework: <a href="http://www.springsource.org/">Spring</a></li>
 <li>Other Libraries 
   <ul>
     <li><a href="http://www.mchange.com/projects/c3p0/index.html">c3p0 Database Connection Pooling</a></li>
