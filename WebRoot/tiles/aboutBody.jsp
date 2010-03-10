@@ -8,7 +8,7 @@ the social and ecological adaptations that have shaped both human and nonhuman p
 into  csv format.</p>
 
 <h2>About the demo site and example database</h2>
-<p>To illustrate how the system work, we created a demo site with an example dataset, representing a subset of the actual database. Please visit our <a href="http://plhdb-demo.nescent.org">demo site</a> 
+<p>To illustrate how the system work, we created a demo site with an example dataset, representing a subset of the actual database. Please visit our <a href="http://demo.plhdb.org">demo site</a> 
 for details</p> 
 <h2>Technology</h2>
 <ul>
