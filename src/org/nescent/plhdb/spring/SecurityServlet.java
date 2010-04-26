@@ -58,7 +58,11 @@ public class SecurityServlet extends DispatcherServlet {
 			if (uri.indexOf("login.go") > -1) {
 				setActiveMenu("login", request);
 				super.doService(request, response);
-			} else if (uri.indexOf("register.go") > -1)
+			}else if (uri.indexOf("MOU") > -1)
+				response.sendRedirect("http://www.nescent.org/wg/plhd/images/d/d7/Final_Internal_MOU.pdf");
+			else if (uri.indexOf("Acknowledgments") > -1)
+				response.sendRedirect("http://www.nescent.org/wg/plhd/images/f/f2/Acknowledgments.pdf");
+			else if (uri.indexOf("register.go") > -1)
 				super.doService(request, response);
 			else if (uri.indexOf("cv.go") > -1)
 				super.doService(request, response);
