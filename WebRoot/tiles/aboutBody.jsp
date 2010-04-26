@@ -44,7 +44,9 @@ on both SourceForge and Github:<br/>
 
 <h2>Publications</h2>
 <p>
-[TBD]
+Karen B.  Strier, Jeanne  Altmann, Diane K. Brockman, Anne M. Bronikowski, Marina Cords, Linda M. Fedigan, Hilmar Lapp, Xianhua Liu, William F. Morris, Anne E. Pusey, Tara S. Stoinski and Susan C. Alberts. 
+2010. <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x">The Primate Life History Database: a unique shared ecological data resource</a>. Methods in Ecology and Evolution. 
+DOI: <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x">10.1111/j.2041-210X.2010.00023.x</a>
 </p>
  <h2>Contact</h2>
  <ul>
