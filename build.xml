@@ -400,9 +400,8 @@
         </war>
 		
     </target>
-    
+ 
     <!-- Rebuild application (war file) from scratch -->
     <target name="rebuild" depends="clean,war"
             description="rebuild .war file from scratch"/>
-
 </project>
