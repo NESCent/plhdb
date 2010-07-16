@@ -87,7 +87,7 @@ public class LoginController implements Controller {
 			// prepare commonly used data in the editing interface, such as
 			// cvterms,
 			// owners and individuals.
-			String sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid.cvtermByObjectOid o WHERE o.name='start of recording' ORDER BY term.namespace, term.name";
+			String sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid forSub JOIN forSub.cvtermByObjectOid o WHERE o.name='start of recording' ORDER BY term.namespace, term.name";
 			Query q = session.createQuery(sql);
 			List result = q.list();
 			for (int i = 0; i < result.size(); i++) {
@@ -96,7 +96,7 @@ public class LoginController implements Controller {
 			request.getSession().setAttribute("start_cvterms", starts);
 
 			List stops = new ArrayList();
-			sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid.cvtermByObjectOid o WHERE o.name='end of recording' ORDER BY term.namespace, term.name";
+			sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid forSub JOIN forSub.cvtermByObjectOid o WHERE o.name='end of recording' ORDER BY term.namespace, term.name";
 			q = session.createQuery(sql);
 			result = q.list();
 			for (int i = 0; i < result.size(); i++) {
@@ -105,7 +105,7 @@ public class LoginController implements Controller {
 			request.getSession().setAttribute("stop_cvterms", stops);
 
 			List birthdayDists = new ArrayList();
-			sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid.cvtermByObjectOid o WHERE o.name='probability distribution' ORDER BY term.namespace, term.name";
+			sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid forSub JOIN forSub.cvtermByObjectOid o WHERE o.name='probability distribution' ORDER BY term.namespace, term.name";
 			q = session.createQuery(sql);
 			result = q.list();
 			for (int i = 0; i < result.size(); i++) {
