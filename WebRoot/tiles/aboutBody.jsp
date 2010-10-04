@@ -44,6 +44,10 @@ Karen B.  Strier, Jeanne  Altmann, Diane K. Brockman, Anne M. Bronikowski, Marin
 2010. <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x">The Primate Life History Database: a unique shared ecological data resource</a>. Methods in Ecology and Evolution. 
 DOI: <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x">10.1111/j.2041-210X.2010.00023.x</a>
 </p>
+<h2>Podcast</h2>
+<p>
+<embed height="30" width="266" src="http://bdown.astream.com/mee/strier_alberts_podcast.mp3" volume="50" autostart="false" loop="false"></embed>
+</p>
  <h2>Contact</h2>
  <ul>
  <li>
