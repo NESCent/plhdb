@@ -360,8 +360,11 @@
 
     	<war destfile="${final.war.name}" webxml="${webinf.dir}/web.xml">
             <lib dir="${webinf.dir}/lib">
-            	 <exclude name="hibernate3.jar"/>
-            	<exclude name="hibernate-annotations.jar"/>
+	         	<exclude name="hibernate3.jar"/>
+	    	  	<exclude name="hibernate-annotations.jar"/>
+     	    	<exclude name="xerces-2.6.2.jar"/>
+     	    	<exclude name="xml-apis.jar"/>
+     	    	<exclude name="postgresql-8.2-506.jdbc3.jar"/>
             </lib> 
           <classes dir="${out.classes.dir}" />
           <fileset dir="${web.dir}">
