@@ -640,6 +640,7 @@ dojo.addOnLoad(function() {
 				</c:otherwise>
 			</c:choose>
 				<c:if test='${currentStudy!=null}'>
+				<p>Most resend end date: <fmt:formatDate value='${recentEndDate}' type='both' pattern='dd-MMM-yyyy' /></p>
 				<form action="/save/study.go" method="post" name="study_form">
 				
 				<input type="hidden" name="studyName" value="<c:out value='' />" />

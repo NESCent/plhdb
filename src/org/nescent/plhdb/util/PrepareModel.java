@@ -1,6 +1,8 @@
 package org.nescent.plhdb.util;
 
 import java.security.AccessControlException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,8 @@ public class PrepareModel {
 
 		Studyinfo currentStudy = null;
 		Biography currentIndividual = null;
-
+        Date recentEndDate=null;
+        
 		try {
 			sql = "FROM Studyinfo";
 			if (!manager.isAdmin()) {
@@ -83,6 +86,7 @@ public class PrepareModel {
 				List list = q.list();
 				if (list.size() > 0) {
 					currentStudy = (Studyinfo) list.get(0);
+					
 				} else {
 					throw new IllegalArgumentException(
 							"failed to retrieve the study: " + study_id);
@@ -119,6 +123,16 @@ public class PrepareModel {
 				q.setString("id", currentStudy.getStudyId());
 				models.put("individuals", q.list());
 
+				//get most recent end date
+				sql = "FROM Biography bio WHERE bio.studyid= :id ORDER BY bio.departdate desc";
+				q = session.createQuery(sql);
+				q.setString("id", currentStudy.getStudyId());
+				if(q.list().size()>0){
+					Biography b = (Biography)q.list().get(0);
+					recentEndDate =b.getDepartdate();
+				}
+				models.put("individuals", q.list());
+				
 				sql = "FROM Individual indv WHERE indv.study.studyId = :id ORDER BY indv.individualId";
 				q = session.createQuery(sql);
 				q.setString("id", currentStudy.getStudyId());
@@ -126,6 +140,8 @@ public class PrepareModel {
 			}
 
 			models.put("currentStudy", currentStudy);
+			
+			models.put("recentEndDate", recentEndDate);
 			models.put("currentIndividual", currentIndividual);
 
 			if (currentIndividual != null) {
