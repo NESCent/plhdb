@@ -12,11 +12,12 @@ Installation:
       * plhdb.ddl.sql: create major tables to hold scientific data
       * plhdb.audit.sql: create table to store audit information 
       * plhdb.auth.sql: create auth schema with tables to store user and authentication and authorization information
-      * plhdb.bulkimp.sql: tables for bulk data import
    2) create views: plhdb.views.sql
-   3) create functions:plhdb.funcs.sql
-   4) create rules: plhdb.rules.sql
-   5) initialize data: import cvterm data in the file src/db/data/event_types.txt with term relationship defined in src/db/data/cvterms.ttl
+   3) install the SQL procedural language if it is not already avalable: CREATE LANGUAGE plpgsql;
+   4) create table: plhdb.bulkimp.sql: tables for bulk data import
+   5) create functions:plhdb.funcs.sql
+   6) create rules: plhdb.rules.sql
+   7) initialize data: import cvterm data in the file src/db/data/event_types.txt with term relationship defined in src/db/data/cvterms.ttl
    
 4. Create a user with access to the database
 5. Compile java classes and generate web application war file
