@@ -334,7 +334,49 @@
         </war>
 		
     </target>
+    <!-- Generate the war file for jboss 6 -->
+    <target name="war_jboss6" depends="compile" 
+            description="generates the war file (default)">
 
+    	<!-- copy config file -->
+    	<copy file="WebRoot/config/plhdb.conf.example" 
+              tofile="WebRoot/config/plhdb.conf" 
+              overwrite="yes">
+          <filterset>
+            <filter token="version" value="${project.version}"/>
+            <filter token="deploy_date" value="${plhdb.deploy_time}"/>	
+          </filterset>
+        </copy>
+    	<!-- copy hibernate configuration file -->
+        <copy file="src/hibernate.cfg.xml.template" 
+              tofile="${out.classes.dir}/hibernate.cfg.xml" 
+              overwrite="yes">
+          <filterset>
+            <filter token="password" value="${hibernate.password}"/>
+            <filter token="username" value="${hibernate.username}"/>
+          	<filter token="database" value="${hibernate.database}"/>
+          </filterset>
+        </copy>
+
+    	<war destfile="${final.war.name}" webxml="${webinf.dir}/web.xml">
+            <lib dir="${webinf.dir}/lib">
+	         	<exclude name="hibernate3.jar"/>
+	    	  	<exclude name="hibernate-annotations.jar"/>
+     	    	<exclude name="xerces-2.6.2.jar"/>
+     	    	<exclude name="xml-apis.jar"/>
+     	    	<exclude name="postgresql-8.2-506.jdbc3.jar"/>
+            </lib> 
+          <classes dir="${out.classes.dir}" />
+          <fileset dir="${web.dir}">
+            <exclude name="WEB-INF/web.xml"/>
+            <exclude name="WEB-INF/lib/**/*.*"/>
+            <exclude name="WEB-INF/classes/**/*.*"/>
+            <exclude name="config/*.example"/>
+            <exclude name="config/*.new"/>
+          </fileset>
+        </war>
+		
+    </target>
    <!-- Generate the war file -->
     <target name="war_only" depends="init"  
             description="generates the war file without compiling the source">
@@ -363,7 +405,7 @@
         </war>
 		
     </target>
-    
+
     <!-- Rebuild application (war file) from scratch -->
     <target name="rebuild" depends="clean,war"
             description="rebuild .war file from scratch"/>

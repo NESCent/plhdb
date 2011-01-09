@@ -48,8 +48,10 @@ Technology
           o dojo
 
 Source Code
-
-Source code is available on [TBD] under a GPL v3  license.
+Source code is available on GitHub (http://github.com/plhdb/plhdb) and SourceForge (http://sf.net/projects/plhdb) under a GPL v3 license (http://www.gnu.org/copyleft/gpl.html). Git repositories are available 
+on both Source Forge and Github:
+    * SourceForge: git://plhdb.git.sourceforge.net/gitroot/plhdb/plhdb
+    * GitHub: git://github.com/plhdb/plhdb.git
 
 Credits
     * Concept, content, and scientific requirements: the Evolutionary Ecology of Primate Life Histories Working Group, Susan C Alberts (Duke University, PI), Karen B Strier (University of Wisconsin-Madison, PI)
