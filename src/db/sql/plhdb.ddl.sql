@@ -169,7 +169,7 @@ CREATE TABLE individual (
                CHECK (is_first_born IN ('Y','N','U')),
        study_oid INTEGER NOT NULL,
        FOREIGN KEY (study_oid) REFERENCES study (study_oid)
-               ON DELETE CASCADE;
+               ON DELETE CASCADE,
        CONSTRAINT individual_oid_name UNIQUE (name,study_oid),
        CONSTRAINT individual_oid_code UNIQUE (id,study_oid)
 );
