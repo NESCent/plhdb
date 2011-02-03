@@ -1,4 +1,9 @@
 <%@ page contentType="text/html" %>
+<%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
+<%@ taglib prefix="fmt" uri="/WEB-INF/fmt.tld"%>
+<%
+boolean loggedIn=(request.getSession().getAttribute("permission_manager")!=null);
+%>
 <script type="text/javascript">
 function selectAll() {
 	for (var i=0; i<document.selectform.elements.length; i++) {
@@ -329,6 +334,25 @@ search can also be combined with filtering conditions, such as sex distribution 
 </form>
 <p>All records will be returned if no searching conditions are specified.</p>
 <div style="clear:both;"></div>
+
+<%
+java.util.Calendar calendar = java.util.Calendar.getInstance();
+request.setAttribute("current_year", Integer.valueOf(calendar.get(java.util.Calendar.YEAR)));
+request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Calendar.MONTH)));
+%>
+<c:if test="${loggedIn}">
+<h3>Available downloads</h3>
+<c:forEach var="year" begin="2010" end="${current_year}">
+<ul>
+<c:if test="${current_month<12 && year<current_year}">
+<li><a href="/report/biography_<c:out value='${year}' />_12_31.csv">12/31/<c:out value="${year}" /></a>
+</li></c:if>
+<c:if test="${current_month>7 && yea>2010}">
+<li><a href="/report/biography_<c:out value='${year}' />_7_31.csv">7/31/<c:out value="${year}" /></a>
+</li></c:if>
+</ul>
+</c:forEach>
+</c:if>
 <hr/>
 <img src="/images/photos/BMSR-Sifaka-F80-2001-5wks-infantBrockmanCredit-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 <h3>Biography Fields Definition</h3>
