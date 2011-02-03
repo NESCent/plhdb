@@ -126,6 +126,7 @@ public class SecurityServlet extends DispatcherServlet {
 					}
 				}
 			}
+			
 		} catch (HibernateException e) {
 			log().error("hibernate error", e);
 

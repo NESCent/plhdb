@@ -122,6 +122,23 @@ search can also be combined with filtering conditions, such as start type distri
 </form>
 <p>All records will be returned if no searching conditions are specified.</p>
 <div style="clear:both;"></div>
+<h3>Available downloads</h3>
+<%
+java.util.Calendar calendar = java.util.Calendar.getInstance();
+request.setAttribute("current_year", Integer.valueOf(calendar.get(java.util.Calendar.YEAR)));
+request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Calendar.MONTH)));
+%>
+<c:forEach var="year" begin="2010" end="${current_year}">
+<ul>
+<c:if test="${current_month<12 && year<current_year}">
+<li><a href="/report/fetility_<c:out value="${year}" />_12_31.csv">12/31/<c:out value="${year}" /></a>
+</li></c:if>
+<c:if test="${current_month>7 && yea>2010}">
+<li><a href="/report/fetility_<c:out value="${year}" />_7_31.csv">7/31/<c:out value="${year}" /></a>
+</li></c:if>
+</ul>
+
+</c:forEach>
 <hr/>
 <img src="/images/photos/Campos-Fedigan-Cebus-capucinus-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 
