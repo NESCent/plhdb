@@ -345,7 +345,8 @@
               overwrite="yes">
           <filterset>
             <filter token="version" value="${project.version}"/>
-            <filter token="deploy_date" value="${plhdb.deploy_time}"/>	
+            <filter token="deploy_date" value="${plhdb.deploy_time}"/>
+          	<filter token="report_folder" value="${plhdb.report_folder}"/>	
           </filterset>
         </copy>
     	<!-- copy hibernate configuration file -->
@@ -388,7 +389,8 @@
               overwrite="yes">
           <filterset>
             <filter token="version" value="${project.version}"/>
-            <filter token="deploy_date" value="${plhdb.deploy_time}"/>	
+            <filter token="deploy_date" value="${plhdb.deploy_time}"/>
+          	<filter token="report_folder" value="${plhdb.report_folder}"/>	
           </filterset>
         </copy>
 
