@@ -1,2 +1,3 @@
 Version=@version@
 Deploy_Date=@deploy_date@
+Report_Folder=@report_folder@

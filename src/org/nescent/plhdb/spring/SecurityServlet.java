@@ -4,16 +4,32 @@
 package org.nescent.plhdb.spring;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.AccessControlException;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.nescent.nead.hibernate.HibernateSessionFactory;
+import org.nescent.nead.util.DatabaseUtil;
+import org.nescent.nead.util.Emailer;
+import org.nescent.nead.util.NeadConfiguration;
+import org.nescent.nead.util.NeadRuntimeException;
+import org.nescent.nead.util.TabConfiguration;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.util.DownloadFile;
+import org.nescent.plhdb.util.PlhdbConfiguration;
+import org.springframework.beans.BeansException;
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
@@ -29,6 +45,55 @@ public class SecurityServlet extends DispatcherServlet {
 			log = Logger.getLogger(SecurityServlet.class);
 		}
 		return log;
+	}
+	
+	PlhdbConfiguration plhdbConfig;
+	@Override
+	protected void initFrameworkServlet() {
+		try {
+			super.initFrameworkServlet();
+		} catch (ServletException se) {
+			log().error("failed to initialize the servlet framework.", se);
+			throw new RuntimeException(
+					"failed to initialize the servlet framework.", se);
+		} catch (BeansException be) {
+			log().error("failed to initialize the servlet framework.", be);
+			throw new RuntimeException(
+					"failed to initialize the servlet framework.", be);
+		}
+
+		plhdbConfig = (PlhdbConfiguration) this.getServletContext().getAttribute(
+				"plhdb_config");
+
+		String configFile = "config/plhdb.conf";
+		if (plhdbConfig == null) {
+			plhdbConfig = new PlhdbConfiguration();
+			String file = getServletContext().getRealPath(configFile);
+			FileInputStream in = null;
+			try {
+				in = new FileInputStream(new File(file));
+				plhdbConfig.load(in);
+				this.getServletContext()
+						.setAttribute("plhdb_config", plhdbConfig);
+			} catch (FileNotFoundException e) {
+				log().error("failed to find the file: " + file, e);
+				throw new RuntimeException("failed to find the file: "
+						+ file, e);
+			} catch (IOException e) {
+				log().error("failed to load the configration file: " + file, e);
+				throw new RuntimeException(
+						"failed to load the configration file: " + file, e);
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (IOException ex) {
+						log().error("failed to close the file: " + file, ex);
+						// ignore otherwise
+					}
+				}
+			}
+		}
 	}
 
 	/*
@@ -90,7 +155,11 @@ public class SecurityServlet extends DispatcherServlet {
 					if(f==null || f.equals("")){
 						throw new IllegalArgumentException("no file specified");
 					}
-					String root = request.getSession().getServletContext().getRealPath("/");
+					
+					String root = plhdbConfig.getProperty("Report_Folder");
+					if(root==null){
+						throw new RuntimeException("No report folder found in the configuration file.");
+					}
 					String file =root+ (root.endsWith("/")?"":"/") + f;
 					try{
 						DownloadFile.downloadFile(response,new File(file), true);
