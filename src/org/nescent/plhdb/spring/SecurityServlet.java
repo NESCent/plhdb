@@ -3,6 +3,7 @@
  */
 package org.nescent.plhdb.spring;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.AccessControlException;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.nescent.plhdb.aa.PermissionManager;
+import org.nescent.plhdb.util.DownloadFile;
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
@@ -80,11 +82,21 @@ public class SecurityServlet extends DispatcherServlet {
 			} else if (uri.indexOf("search/fertility.go") > -1) {
 				setActiveMenu("search_fertility", request);
 				super.doService(request, response);
-			} else if (uri.indexOf(".csv.go") > -1) {
+			} else if (uri.indexOf("download.go") > -1) {
 				PermissionManager manager = (PermissionManager) request
 				.getSession().getAttribute("permission_manager");
 				if(manager!=null){
-					response.sendRedirect(uri.replaceAll(".go",""));
+					String f = request.getParameter("f");
+					if(f==null || f.equals("")){
+						throw new IllegalArgumentException("no file specified");
+					}
+					String root = request.getSession().getServletContext().getRealPath("/");
+					String file =root+ (root.endsWith("/")?"":"/") + f;
+					try{
+						DownloadFile.downloadFile(response,new File(file), true);
+					}catch(Exception e){
+						throw new RuntimeException("failed to download the file: "+f,e);
+					}
 				}else{
 					throw new AccessControlException(
 					"Sorry! you do not have the authority.");
