@@ -95,7 +95,7 @@ public class SecurityServlet extends DispatcherServlet {
 					try{
 						DownloadFile.downloadFile(response,new File(file), true);
 					}catch(Exception e){
-						throw new RuntimeException("failed to download the file: "+f,e);
+						throw new RuntimeException("failed to download the file: "+file,e);
 					}
 				}else{
 					throw new AccessControlException(
