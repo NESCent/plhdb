@@ -80,6 +80,16 @@ public class SecurityServlet extends DispatcherServlet {
 			} else if (uri.indexOf("search/fertility.go") > -1) {
 				setActiveMenu("search_fertility", request);
 				super.doService(request, response);
+			} else if (uri.indexOf(".csv.go") > -1) {
+				PermissionManager manager = (PermissionManager) request
+				.getSession().getAttribute("permission_manager");
+				if(manager!=null){
+					response.sendRedirect(uri.replaceAll(".go",""));
+				}else{
+					throw new AccessControlException(
+					"Sorry! you do not have the authority.");
+				}
+				
 			} else {
 
 				PermissionManager manager = (PermissionManager) request
