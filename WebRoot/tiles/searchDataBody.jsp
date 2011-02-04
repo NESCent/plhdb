@@ -1,6 +1,7 @@
 <%@ page contentType="text/html" %>
 <%@ taglib uri="/WEB-INF/c.tld" prefix="c" %>
 <%@ taglib prefix="fmt" uri="/WEB-INF/fmt.tld"%>
+<%@ page import = "java.util.*" %> 
 <%
 boolean loggedIn=(request.getSession().getAttribute("permission_manager")!=null);
 %>
