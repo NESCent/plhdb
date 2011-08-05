@@ -99,12 +99,7 @@ stop_type_codes[4]="P";
 
 var targetedObject;
 var newid=0;
-/*
-var moms=new Array();
-<c:forEach items="${moms}" var="mom" varStatus="status">
-	moms[<c:out value='${status.count-1}'/>]="<c:out value='${mom.individualId}' />";
-</c:forEach>
-*/
+
 function handleEnter (field, event) {
 	var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
 	if (keyCode == 13) {
@@ -163,11 +158,6 @@ function addFertility(){
     input.setAttribute("size", "10");
     td_startdate.appendChild(input);
    
-    
-    
-    //var dojoInput = dojo.widget.createWidget("dijit.form.DateTextBox", { constraints:{datePattern:'yyyy-MM-dd'}} , input);
-    //td_startdate.appendChild(dojoInput.domNode);
-    
     var stopdate_id="newstopdate"+newid;
     var input1=document.createElement("input");
     //input1.setAttribute("constraints", "{datePattern:'yyyy-MM-dd'}");
@@ -189,7 +179,6 @@ function addFertility(){
     select.setAttribute("id", id);
     td_starttype.appendChild(select);
     
-    
     id="newstoptype"+newid;
     var select1=document.createElement("select");
     for(var i=0;i<stop_types.length;i++){
@@ -201,8 +190,7 @@ function addFertility(){
     select1.setAttribute("name",id);
     select1.setAttribute("id", id);
     td_stoptype.appendChild(select1);
-    
-    
+        
     td_starttype.setAttribute("class","TdValue");
     td_startdate.setAttribute("class","TdValue");
     td_startdate.setAttribute("style","width:80px;");
@@ -211,7 +199,6 @@ function addFertility(){
     td_stoptype.setAttribute("class","TdValue");
     tr.appendChild(input_id);
     if(!dojo.isIE){
-	
 	tr.appendChild(td_startdate);
 	tr.appendChild(td_starttype);
 	tr.appendChild(td_stopdate);
@@ -221,22 +208,9 @@ function addFertility(){
     var parameters = {
 	    constraints:{datePattern:'yyyy-MM-dd'}
             };
-    /*
-    var box=new dijit.form.DateTextBox(parameters, dojo.byId(startdate_id));
-    box.domNode.setAttribute("name",startdate_id);
-    box.domNode.setAttribute("style","width:80px;");
-    box.startup();
-    
-    var box1=new dijit.form.DateTextBox(parameters, dojo.byId(stopdate_id));
-    box1.domNode.setAttribute("name",stopdate_id);
-    box1.domNode.setAttribute("style","width:80px;");
-    box1.startup();
-    */
     newid=newid+1;
     //dojo.parser.parse(dojo.byId(id)); 
 }
-
-
 
 function createDateTd(name){
     var id=name+newid;
@@ -319,263 +293,9 @@ function copyBirthDate1(){
     entrytype.value="B";
     
 }
-/*
-var isNav = (navigator.appName.indexOf("Netscape")>=0);
-var isIE=(navigator.appName.indexOf("Microsoft Internet Explore")>=0);	
-var req=null;
 
-function handleNameChanged(snames)
-{
-	var theObj = document.getElementById("div_name_options");
-	
-	var opts=document.getElementById("name_options");
-	opts.options.length=0;
-
-	var ind=0;
-		
-	var pos1=snames.indexOf("<name>");
-				
-	while(pos1>-1)
-	{
-		var pos2=snames.indexOf("</name>",pos1);
-		if(pos2>-1)
-		{
-			var sname=snames.substring(pos1+6,pos2);
-			opts.options[ind++]=new Option(sname,sname);	
-		}
-		
-		pos1=snames.indexOf("<name>", pos2);
-		
-	}
-		
-	if(ind>0)
-	{
-		if (isNav)
-		{
-			if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";
-		}
-	    else if (isIE)
-	    {
-	    	if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";	  
-	    }
-		else
-		{
-			if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";
-		}
-	}
-	else
-	{
-		theObj.style.visibility="hidden";
-	}
-
-}
-
-
-
-function trim(inputString)
-{
-	if (typeof inputString != "string") { return inputString; }
-	var retValue = inputString;
-	var ch = retValue.substring(0, 1);
-	while (ch == " ")
-	{ // Check for spaces at the beginning of the string
-       retValue = retValue.substring(1, retValue.length);
-       ch = retValue.substring(0, 1);
-    }
-
-  	ch = retValue.substring(retValue.length-1, retValue.length);
-   	while (ch == " ")
-   	{ // Check for spaces at the end of the string
-      retValue = retValue.substring(0, retValue.length-1);
-      ch = retValue.substring(retValue.length-1, retValue.length);
-    }
-   	while (retValue.indexOf("  ") != -1)
-   	{ // Note that there are two spaces in the string - look for multiple spaces within the string
-   	  retValue = retValue.substring(0, retValue.indexOf("  ")) + retValue.substring(retValue.indexOf("  ")+1, retValue.length); // Again, there are two spaces in each of the strings
-   	}
-    return retValue; // Return the trimmed string back to the user
-} // Ends the "trim" function
-
-function name_changed(obj)
-{
-	//alert("Is Nav:"+isNav+ " Is IE:"+isIE );
-
-	var v=trim(obj.value).toUpperCase();
-	var theObj = document.getElementById("div_name_options");
-	
-	var opts=document.getElementById("name_options");
-	opts.options.length=0;
-	
-	var ind=0;
-	var max=20;
-	var count=0;	
-	for(var i=0;i<moms.length;i++)
-	{
-		if(moms[i].toUpperCase().indexOf(v)>-1)
-		{
-			opts.options[ind++]=new Option(moms[i],moms[i]);	
-			count++;
-		}
-		if(count==max)
-			i=moms.length;
-	}
-		
-	if(ind>0)
-	{
-		if (isNav)
-		{
-			if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";
-		}
-	    else if (isIE)
-	    {
-	    	if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";	  
-	    }
-		else
-		{
-			if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";
-		}
-	}
-	else
-	{
-		theObj.style.visibility="hidden";
-	}
-	var pos=findPos(targetedObject);
-	theObj.style.left=pos[0]+"px";
-	theObj.style.top=pos[1]+25+"px";
-
-}
-
-
-function name_selected()
-{
-	var theObj = document.getElementById("div_name_options");
-	var opts=document.getElementById("name_options");
-	var name=opts.value;
-
-	if(name!=null && name!="") targetedObject.value=name;	
-
-	
-	theObj.style.visibility="hidden";
-	
-}
-function findPos(obj) {
-	var curleft = curtop = 0;
-	if (obj.offsetParent) {
-		curleft = obj.offsetLeft
-		curtop = obj.offsetTop
-		while (obj = obj.offsetParent) {
-			curleft += obj.offsetLeft
-			curtop += obj.offsetTop
-		}
-	}
-	return [curleft,curtop];
-}
-
-function getkey(e)
-{
-	if (window.event)
-		return window.event.keyCode;
-	else if (e)
-		return e.which;
-	else
-		return null;
-}
-
-function key_pressed(e,obj)
-{
-    targetedObject=obj;
-	var theObj = document.getElementById("div_name_options");
-    var opts=document.getElementById("name_options");
-
-	var key=getkey(e);
-//	alert(key);
-	
-	if(key==40) //next
-	{
-	    if(theObj.style.visibility =="hidden")
-		    show_select_names();
-		  //  name_changed(obj);
-		var l=opts.options.length-1;
-		if(l>-1)
-		{
-			if(opts.options.selectedIndex==-1)
-				opts.options[0].selected=true;
-			else if(opts.options.selectedIndex==l)
-				opts.options[0].selected=true;
-			else 
-				opts.options[opts.options.selectedIndex+1].selected=true;
-			
-	
-			document.queryFloraShow.taxon_name.value=opts.options[opts.options.selectedIndex].value;
-		}	
-	}
-	else if(key==38) //upper
-	{
-		if(theObj.style.visibility =="hidden")
-			show_select_names();
-
-		//    name_changed(obj);
-		
-
-		var l=opts.options.length-1;
-		if(l>-1)
-		{
-			if(opts.options.selectedIndex==-1)
-				opts.options[0].selected=true;
-			else if(opts.options.selectedIndex==0)
-				opts.options[l].selected=true;
-			else 
-				opts.options[opts.options.selectedIndex-1].selected=true;
-				
-			document.biography_form.momid1.value=opts.options[opts.options.selectedIndex].value;
-		}    
-
-	}
-	else if(key==13)
-	{
-		
-		theObj.style.visibility="hidden";
-		return false;
-		
-	}
-	else
-	{
-		name_changed(obj);		
-	}
-	
-}
-
-function hide_select_names()
-{
-	var theObj = document.getElementById("div_name_options");
-	theObj.style.visibility="hidden";
-}
-
-function show_select_names()
-{
-	//var t=parent.TopFrame;
-	var theObj = document.getElementById("div_name_options");
-
-	if (isNav)
-	{
-		if(theObj.style.visibility=="hidden") theObj.style.visibility="show";
-	}
-	if (isIE)
-	{
-		if(theObj.style.visibility=="hidden") theObj.style.visibility="visible";	  
-	}
-	else
-	{
-		if(theObj.style.visibility=="hidden") theObj.style.visibility="show";
-	}
-}
-*/
 dojo.addOnLoad(function() {
-
 	dojo.parser.parse(dojo.byId('container')); 
-//	dojo.byId('loaderInner').innerHTML += " done.";
-//	setTimeout("hideLoader()",10);
-			
 });
 
 
@@ -600,10 +320,10 @@ dojo.addOnLoad(function() {
         				<tr><td>
         				<c:choose>
         				<c:when test='${currentStudy.studyId==study.studyId}'>
-        				<span id="selected"><c:out value='${study.studyId}' />(<c:out value='${study.sciname}' />)</span>
+        				<span id="selected"><c:out value='${study.studyId} (${study.sciname})' /></span>
         				</c:when>
         				<c:otherwise>
-        					<a href="/edit.go?studyid=<c:out value='${study.studyId}' />"><c:out value='${study.studyId}' />(<c:out value='${study.sciname}' />)</a>
+        					<a href="/edit.go?studyid=<c:out value='${study.studyId}' />"><c:out value='${study.studyId} (${study.sciname})' /></a>
         					</c:otherwise>
         						</c:choose>
         					</td></tr>
@@ -791,9 +511,9 @@ dojo.addOnLoad(function() {
 					
 			    	</select>
 			    	</td></tr>
-				<tr><td class='TdField required'>Birth Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='birthdate1' id="birthdate1" value="<fmt:formatDate value='${currentIndividual.birthdate}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
-				<tr><td class='TdField'>Min Birth Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmin1' id="bdmin1" value="<fmt:formatDate value='${currentIndividual.bdmin}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
-				<tr><td class='TdField'>Max Birth Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmax1' id="bdmax1" value="<fmt:formatDate value='${currentIndividual.bdmax}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
+				<tr><td class='TdField required'>Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='birthdate1' id="birthdate1" value="<fmt:formatDate value='${currentIndividual.birthdate}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
+				<tr><td class='TdField'>Min Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmin1' id="bdmin1" value="<fmt:formatDate value='${currentIndividual.bdmin}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
+				<tr><td class='TdField'>Max Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmax1' id="bdmax1" value="<fmt:formatDate value='${currentIndividual.bdmax}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
 				<tr><td class='TdField'>Birth Date Distribution</td><td class='TdValue'>
 				<select name="bddist1"  onkeypress="return handleEnter(this, event)">
 				<c:forEach items="${sessionScope.bddist_cvterms}" var="cvterm">
@@ -810,7 +530,7 @@ dojo.addOnLoad(function() {
 				</c:forEach>
 				</select>
 				</td></tr>
-				<tr><td class='TdField required'>Entry Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='entrydate1' id="entrydate1"  value="<fmt:formatDate value='${currentIndividual.entrydate}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)" />
+				<tr><td class='TdField required'>Entry Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='entrydate1' id="entrydate1"  value="<fmt:formatDate value='${currentIndividual.entrydate}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)" />
 				</td></tr>
 				<tr><td class='TdField required'>Entry Type</td><td class='TdValue'>
 				<select name="entrytype1"  onkeypress="return handleEnter(this, event)">
@@ -828,7 +548,7 @@ dojo.addOnLoad(function() {
 				</c:forEach>
 				</select>
 				</td></tr>
-				<tr><td class='TdField required'>Depart Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='departdate1' id="departdate1" value="<fmt:formatDate value='${currentIndividual.departdate}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
+				<tr><td class='TdField required'>Depart Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='departdate1' id="departdate1" value="<fmt:formatDate value='${currentIndividual.departdate}' type='both' pattern='dd-MMM-yyyy' />" onkeypress="return handleEnter(this, event)"/></td></tr>
 				<tr><td class='TdField'>Depart Date Error</td><td class='TdValue'><input type='text' name='departdateerror1'  value="<c:out value='${currentIndividual.departdateerror}' />"  onkeypress="return handleEnter(this, event)"/></td></tr>
 				<tr><td class='TdField required'>Depart Type</td><td class='TdValue'>
 				<select name="departtype1"  onkeypress="return handleEnter(this, event)">
@@ -1012,10 +732,10 @@ dojo.addOnLoad(function() {
 			<option value="U">Unknown</option>
 			</select>
 			</td></tr>
-			<tr><td class="TdField  required">Birth Date(dd-MMM-yyyy)</td><td class="TdValue">
+			<tr><td class="TdField  required">Birth Date (dd-MMM-yyyy)</td><td class="TdValue">
 			<input id="birthdate" type="text" name="birthdate"  onkeypress="return handleEnter(this, event)"/>
-			</td></<tr><td class='TdField'>Min Birth Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmin' id="bdmin" type='both' pattern='dd-MMM-yyyy' onkeypress="return handleEnter(this, event)"/></td></tr>
-			<tr><td class='TdField'>Max Birth Date(dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmax' id="dbmax" type='both' pattern='dd-MMM-yyyy' onkeypress="return handleEnter(this, event)"/></td></tr>
+			</td></<tr><td class='TdField'>Min Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmin' id="bdmin" type='both' pattern='dd-MMM-yyyy' onkeypress="return handleEnter(this, event)"/></td></tr>
+			<tr><td class='TdField'>Max Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmax' id="dbmax" type='both' pattern='dd-MMM-yyyy' onkeypress="return handleEnter(this, event)"/></td></tr>
 			<tr><td class='TdField'>Birth Date Distribution</td><td class='TdValue'>
 			<select name="bddist"  onkeypress="return handleEnter(this, event)">
 			<c:forEach items="${sessionScope.bddist_cvterms}" var="cvterm">
@@ -1023,7 +743,7 @@ dojo.addOnLoad(function() {
 			</c:forEach>
 			</select>
 			</td></tr>
-                	<tr><td class="TdField required">Entry Date(dd-MMM-yyyy)</td><td class="TdValue">
+                	<tr><td class="TdField required">Entry Date (dd-MMM-yyyy)</td><td class="TdValue">
                 		<input id="entrydate" type="text" name="entrydate"  onkeypress="return handleEnter(this, event)"/>
                 	</td></tr>
                 	<tr><td class="TdField required">Entry Type</td><td class="TdValue">
@@ -1033,7 +753,7 @@ dojo.addOnLoad(function() {
                 	</c:forEach>
                 	</select>
                 	</td></tr>
-                	<tr><td class="TdField required">Depart Date(dd-MMM-yyyy)</td><td class="TdValue">
+                	<tr><td class="TdField required">Depart Date (dd-MMM-yyyy)</td><td class="TdValue">
                 		<input type="text" name="departdate" id="departdate"  onkeypress="return handleEnter(this, event)"/>
                 	</td></tr>
                 	<tr><td class="TdField">Depart Date Error</td><td class="TdValue">
