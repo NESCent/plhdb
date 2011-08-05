@@ -132,8 +132,6 @@ function addFertility(){
     tb=document.getElementById("fertility_table");
     
     if(!dojo.isIE){
-	
-	
 	tr=document.createElement("tr");
     	td_startdate=document.createElement("td");
    	td_starttype=document.createElement("td");
@@ -209,24 +207,6 @@ function addFertility(){
     //dojo.parser.parse(dojo.byId(id)); 
 }
 
-function createDateTd(name){
-    var id=name+newid;
-    var td=document.createElement("td");
-    td.setAttribute("class","TdValue");
-    var input=document.createElement("input");
-    input.setAttribute("dojoType","dijit.form.DateTextBox");
-    input.setAttribute("constraints", "{datePattern:'yyyy-MM-dd'}");
-    input.setAttribute("name",id);
-    input.setAttribute("id", id);
-    td.appendChild(input);
-}
-
-function entryDateTooClicked(){
-    var addindividual_form=document.addindividual_form;
-    addindividual_form.entrydate.value=addindividual_form.birthdate.value;
-    dojo.byId("entrydate").setDate(new Date("2000, 10,10"));
-}
-
 function deleteData(dataEntity, id, studyid){
     if (confirm("Do you really want to delete the "+ dataEntity+"?")){ 
 	if(confirm("You asked to delete the "+ dataEntity+" record. Please confirm that the record should be deleted. This operation cannot be undone.")){
@@ -235,6 +215,7 @@ function deleteData(dataEntity, id, studyid){
 	}
     }
 }
+
 function removeBiography(id,studyid){
     if (confirm("You asked to remove a biography record. This will cause the biography and all fertility interval records of the animal to be deleted from the database, but the animal's offspring will retain it as the mother. Please confirm that the biography is to be removed.")){
 	if(confirm("Please confirm again that the biography really should be removed. This operation cannot be undone.")) {
@@ -243,6 +224,7 @@ function removeBiography(id,studyid){
 	}
     }
 }
+
 function deleteFertilityData(dataEntity,animOid,id,studyid){
     if (confirm("Do you really want to delete the fertility record?")){
 	if(confirm("You asked to delete a fertility interval. Please confirm that the fertility interval should be deleted. This operation cannot be undone.")){
@@ -259,36 +241,6 @@ function hideLoader(){
 			loader.style.display = "none"; 
 		}
 	}).play();
-}
-
-function copyBirthDate(){
-    var birtherror=document.getElementById("bderror");
-    if(birtherror.value!=null && birtherror.value!="0.0")
-    {
-	alert("The entry date can not be the same as the birth date since the birth date error is not equal to 0");
-	return;
-    }
-    var birth=document.getElementById("birthdate");
-    var entrydate=document.getElementById("entrydate");
-    var entrytype=document.getElementById("entrytype");
-    entrydate.value=birth.value;
-    entrytype.value="B";
-    
-}
-
-function copyBirthDate1(){
-    var birtherror=document.getElementById("bderror1");
-    if(birtherror.value!=null && birtherror.value!="0.0")
-    {
-	alert("The entry date can not be the same as the birth date since the birth date error is not equal to 0");
-	return;
-    }
-    var birth=document.getElementById("birthdate1");
-    var entrydate=document.getElementById("entrydate1");
-    var entrytype=document.getElementById("entrytype1");
-    entrydate.value=birth.value;
-    entrytype.value="B";
-    
 }
 
 dojo.addOnLoad(function() {
