@@ -205,9 +205,6 @@ function addFertility(){
 	tr.appendChild(td_stoptype);
 	tb.appendChild(tr);
     }
-    var parameters = {
-	    constraints:{datePattern:'yyyy-MM-dd'}
-            };
     newid=newid+1;
     //dojo.parser.parse(dojo.byId(id)); 
 }
