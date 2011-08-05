@@ -731,8 +731,8 @@ dojo.addOnLoad(function() {
 			</td></tr>
 			<tr><td class="TdField  required">Birth Date (dd-MMM-yyyy)</td><td class="TdValue">
 			<input id="birthdate" type="text" name="birthdate"  onkeypress="return handleEnter(this, event)"/>
-			</td></<tr><td class='TdField'>Min Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmin' id="bdmin" type='both' pattern='dd-MMM-yyyy' onkeypress="return handleEnter(this, event)"/></td></tr>
-			<tr><td class='TdField'>Max Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmax' id="dbmax" type='both' pattern='dd-MMM-yyyy' onkeypress="return handleEnter(this, event)"/></td></tr>
+			</td></<tr><td class='TdField'>Min Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmin' id="bdmin" onkeypress="return handleEnter(this, event)"/></td></tr>
+			<tr><td class='TdField'>Max Birth Date (dd-MMM-yyyy)</td><td class='TdValue'><input type="text" name='bdmax' id="dbmax" onkeypress="return handleEnter(this, event)"/></td></tr>
 			<tr><td class='TdField'>Birth Date Distribution</td><td class='TdValue'>
 			<select name="bddist"  onkeypress="return handleEnter(this, event)">
 			<c:forEach items="${sessionScope.bddist_cvterms}" var="cvterm">
