@@ -346,7 +346,7 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 <c:if test="${current_month<12 && year<current_year}">
 <li><a href="download.go?f=biography_<c:out value='${year}' />_12_31.csv">12/31/<c:out value="${year}" /></a>
 </li></c:if>
-<c:if test="${current_month>7 && yea>2010}">
+<c:if test="${current_month>7 && year>2010}">
 <li><a href="download.go?f=biography_<c:out value='${year}' />_7_31.csv">7/31/<c:out value="${year}" /></a>
 </li></c:if>
 </ul>
