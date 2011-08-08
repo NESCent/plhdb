@@ -273,7 +273,7 @@ public class SearchFertilityController extends SimpleFormController {
 
 			return new ModelAndView("fertilityList", models);
 		} catch (HibernateException e) {
-			log().error("failed to search biography", e);
+			log().error("failed to search fertility records", e);
 			throw e;
 		} finally {
 			if (tx.isActive() && !tx.wasCommitted())
@@ -305,13 +305,4 @@ public class SearchFertilityController extends SimpleFormController {
 		return where;
 	}
 
-	public static void main(String[] agrs) {
-		String sql = "FROM Biography ";
-		Session session = HibernateSessionFactory.getSession();
-		Query q = session.createQuery(sql);
-
-		int total = q.list().size();
-		q.setFirstResult(0);
-		q.setMaxResults(2);
-	}
 }
