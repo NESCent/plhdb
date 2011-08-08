@@ -69,12 +69,6 @@ function clearForm(oForm){
 </script>
 <h2>Search Biography</h2>
 <form action="/search/biography.go" method="post" name="selectform">
-<!-- input type="hidden"  name="value_studyid" size="50">
-<input type="hidden"  name="value_animid" size="50">
-<input type="hidden"  name="show_studyid" />
-<input type="hidden" name="show_animid" />
-<input type="hidden"  name="op_animid" />
-<input type="hidden"  name="op_studyid" / -->
 <table>
 <tr><td colspan="5"><input type="checkbox" id="searchDistribution" name="searchDistribution" onClick="javascript:searchDistributionClicked()" /><label for="searchDistribution">Search Distribution</label><br/>
 Check 'Search Distribution' to get a summary result of data records distribution according to the fields you choose below. For example, you can get a sex distribution by ckecking the sex field. The distribution 
@@ -354,33 +348,41 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 
 <hr/>
 <img src="/images/photos/BMSR-Sifaka-F80-2001-5wks-infantBrockmanCredit-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
-<h3>Biography Fields Definition</h3>
+<h3>Column Definition for Biography Downloads</h3>
 <ul>
-<li>Study/Species: the unique identifier of each study population, representing different species in the database.</li>
-<li>AnimID:  the ID of each animal (typically an abbreviated code) to unambiguously identify individuals within a study. Animals in different studies might share an AnimID 
-(for instance, study 2 and study 5 both have an animal with AnimID = 'AFR'). </li>
-<li>BirthGroup and BGQual: the social group into which an animal was born (BirthGroup) and the researcher's confidence in this assignment (BGQual). </li>
-<li>Sex: sex of each individual, possible values include:<ul><li>M: Male</li><li>F: Female</li><li>U: unknown</li></ul></li>
+<li>Study/Species: the ID of the study. Because animals in a study are
+  from a single species, the study also identifies the species. </li>
+<li>AnimID:  the ID of each animal (typically an abbreviated code),
+  which unambiguously identifies individuals within a study. Animals in different studies might have the same ID. </li>
+<li>BirthGroup and BGQual: the social group into which an animal was
+  born (BirthGroup) and the researcher's confidence ((U)ncertain,
+  (C)ertain, or missing) in this assignment (BGQual). </li>
+<li>Sex: sex of each individual, possible values include (M)ale,
+  (F)emale, and (U)nknown</li>
 <li>MomID:  the AnimID of an individual's mother.</li>
-<li>FirstBorn:  whether individuals were known to be their mother’s first offspring.</li>
-<li>Birthdate, BDMin, BDMax:  Birth dates, and estimates of the range of possible dates in which the birth could have occurred (BDMin and BDMax).</li>
+<li>FirstBorn:  whether individuals were known to be their mother's first offspring.</li>
+<li>Birthdate, BDMin, BDMax:  Birth date, and estimates of the minimum (BDMin)
+  and maximum (BDMax) possible dates in which the birth could have occurred..</li>
 <li>BDDist: distribution of birth date estimates to increase precision. More information can be found in the methid paper.
    <ul><li>N: Normal. the most likely birthdate to be closer to Birthdate than to BDMin or BDMax</li>
    <li>U: Uniform. any birthdate between BDMin and BDMax (including Birthdate) was equally likely.</li>
    </ul>
-<li>
 <li>Entrydate and Entrytype:  the date and type at which individuals entered their respective study populations. Possible Entrytypes include:
 	<ul><li>B: birth</li>
 	<li>I: immigration</li>
-	<li>C: start of confirmed AnimID</li>
+	<li>C: start of confirmed identification of the individual</li>
 	<li>Q: initiation of close observation</li>
 	</ul>
 </li>
 <li>Departdate and DepartdateError:  the last date on which an animal was observed in the study population is the Departdate. DepartdateError reflects the time between Departdate 
-(last date observed) and the first time that an animal was confirmed missing (e.g., when observations resumed and all individuals present could be expected to be re-encountered).  
-DepartdateError was expressed as a fraction of a year (number of days divided by number of days in a year), and was >0 whenever the number of days between Departdate and retrospective 
-confirmed missing date was >15 days. In some studies, members of the study population did not live in cohesive groups, making it difficult to specify an expected lag to re-sighting and a 
-corresponding DepartdateError.  In cases when DepartdateError could not be calculated, its value was missing.
+(last date observed) and the first time that an animal was confirmed
+  missing (e.g., when observations resumed and all individuals present
+  could be expected to be re-encountered), and is expressed as a
+  fraction of a year (number of days divided by number of days in a
+  year). It is greater than 0 whenever the number of days between Departdate and retrospective 
+confirmed missing date was more than 15 days. In some studies, members
+  of the study population did not live in cohesive groups, making it
+  difficult to specify an expected lag to re-sighting and a corresponding DepartdateError.  In cases when DepartdateError cannot be calculated, its value is missing.
 </li>
 <li>DepartType:  the type of departure of an individual from the population, including: 
 	<ul><li>D: death</li>

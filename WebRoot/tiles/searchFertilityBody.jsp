@@ -148,18 +148,11 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 <hr/>
 <img src="/images/photos/Campos-Fedigan-Cebus-capucinus-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 
-<h3>Fertility Fields Definition</h3>
+<h3>Column Definitions for Female Fertility Record Downloads</h3>
 <ul>
-<li>Study/Species: the unique identifer of each study population, representing different species in the database.</li>
-<li>AnimID:  the ID of each animal (typically an abbreviated code) to unambiguously identify individuals within a study. Animals in different studies might share an AnimID 
-(for instance, study 2 and study 5 both have an animal with AnimID = 'AFR'). </li>
-<li>Entrydate and Entrytype:  the date and type at which individuals entered their respective study populations. Possible Entrytypes include:
-	<ul><li>B: birth</li>
-	<li>I: immigration</li>
-	<li>C: start of confirmed AnimID</li>
-	<li>Q: initiation of close observation</li>
-	</ul>
-</li>
+<li>Study/Species: the ID of the study. Because animals in a study are from a single species, the study also identifies the species.</li>
+<li>AnimID:  the ID of each animal (typically an abbreviated code),
+  which unambiguously identifies individuals within a study. Animals in different studies might have the same ID. </li>
 <li>Startdate and Stopdate: the start end end dates of an uninterrupted period of observation on a female during which no possible births would have been missed.</li>
 <li>Starttype and Stoptype: see Entrytype and Departype in BIOGRAPHY; these correspond to Starttype and Stoptype in FERTILITY.</li>
 </ul>
