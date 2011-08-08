@@ -7,7 +7,7 @@
 
     <!-- Generic project properties -->
     <property name="project.fullname" value="Primary Life History Database"/>
-    <property name="project.version" value="1.0"/>
+    <property name="project.version" value="1.1"/>
     <property name="project.name" value="plhdb"/>
 	<property name="plhdb.report_folder" value="/home/plhdb_reports/"/>
 	
@@ -18,7 +18,7 @@
 	<property name="hibernate.database" value=""/>
 	
     <!-- Miscellaneous settings -->
-    <property name="year" value="2007-2010"/>
+    <property name="year" value="2007-2011"/>
     <property name="debug" value="on"/>
     <property name="optimize" value="off"/>
     <property name="deprecation" value="on"/>
@@ -308,7 +308,7 @@
           <filterset>
             <filter token="version" value="${project.version}"/>
             <filter token="deploy_date" value="${plhdb.deploy_time}"/>	
-          	<filter token="report_folder" value="${plhdb.report_folder}"/>	
+            <filter token="report_folder" value="${plhdb.report_folder}"/>	
           </filterset>
         </copy>
     	<!-- copy hibernate configuration file -->
@@ -318,7 +318,7 @@
           <filterset>
             <filter token="password" value="${hibernate.password}"/>
             <filter token="username" value="${hibernate.username}"/>
-          	<filter token="database" value="${hibernate.database}"/>
+            <filter token="database" value="${hibernate.database}"/>
           </filterset>
         </copy>
 
@@ -335,6 +335,7 @@
         </war>
 		
     </target>
+
     <!-- Generate the war file for jboss 6 -->
     <target name="war_jboss6" depends="compile" 
             description="generates the war file (default)">
@@ -346,7 +347,7 @@
           <filterset>
             <filter token="version" value="${project.version}"/>
             <filter token="deploy_date" value="${plhdb.deploy_time}"/>
-          	<filter token="report_folder" value="${plhdb.report_folder}"/>	
+            <filter token="report_folder" value="${plhdb.report_folder}"/>	
           </filterset>
         </copy>
     	<!-- copy hibernate configuration file -->
@@ -356,17 +357,17 @@
           <filterset>
             <filter token="password" value="${hibernate.password}"/>
             <filter token="username" value="${hibernate.username}"/>
-          	<filter token="database" value="${hibernate.database}"/>
+            <filter token="database" value="${hibernate.database}"/>
           </filterset>
         </copy>
 
     	<war destfile="${final.war.name}" webxml="${webinf.dir}/web.xml">
             <lib dir="${webinf.dir}/lib">
-	         	<exclude name="hibernate3.jar"/>
-	    	  	<exclude name="hibernate-annotations.jar"/>
-     	    	<exclude name="xerces-2.6.2.jar"/>
-     	    	<exclude name="xml-apis.jar"/>
-     	    	<exclude name="postgresql-8.2-506.jdbc3.jar"/>
+              <exclude name="hibernate3.jar"/>
+              <exclude name="hibernate-annotations.jar"/>
+              <exclude name="xerces-2.6.2.jar"/>
+              <exclude name="xml-apis.jar"/>
+              <exclude name="postgresql-8.2-506.jdbc3.jar"/>
             </lib> 
           <classes dir="${out.classes.dir}" />
           <fileset dir="${web.dir}">
