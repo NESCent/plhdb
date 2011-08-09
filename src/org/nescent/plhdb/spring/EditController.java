@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.util.PrepareModel;
@@ -39,7 +38,6 @@ public class EditController implements Controller {
 		}
 		Map<String, Object> models = PrepareModel.prepare(study_id,
 				individual_id, manager);
-		Session session = HibernateSessionFactory.getSession();
 
 		return new ModelAndView("editData", models);
 	}

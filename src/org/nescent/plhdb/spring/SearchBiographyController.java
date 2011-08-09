@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.Permission;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
@@ -423,10 +421,8 @@ public class SearchBiographyController extends SimpleFormController {
 			}
 		}
 
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
 		try {
-			Query q = session.createQuery(sql);
+			Query q = HibernateSessionFactory.getSession().createQuery(sql);
 
 			for (String searchParam : searchParams.keySet()) {
 				Object param = searchParams.get(searchParam);
@@ -473,10 +469,7 @@ public class SearchBiographyController extends SimpleFormController {
 		} catch (HibernateException e) {
 			log().error("failed to search biography", e);
 			throw e;
-		} finally {
-			if (tx.isActive() && !tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	public String getStudyConstraints(PermissionManager manager) {
@@ -503,13 +496,4 @@ public class SearchBiographyController extends SimpleFormController {
 		return where;
 	}
 
-	public static void main(String[] agrs) {
-		String sql = "FROM Biography ";
-		Session session = HibernateSessionFactory.getSession();
-		Query q = session.createQuery(sql);
-
-		int total = q.list().size();
-		q.setFirstResult(0);
-		q.setMaxResults(2);
-	}
 }

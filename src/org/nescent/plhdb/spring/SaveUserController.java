@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.UserAccount;
 import org.nescent.plhdb.util.AccessRecord;
@@ -38,9 +37,7 @@ public class SaveUserController implements Controller {
 	@SuppressWarnings("unchecked")
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) {
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
+	
 		String id = request.getParameter("user");
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
@@ -49,6 +46,7 @@ public class SaveUserController implements Controller {
 		if (!isValid(id)) {
 			throw new IllegalArgumentException("No user id specified.");
 		}
+		Session session = HibernateSessionFactory.getSession();
 		try {
 			UserAccount ua = null;
 			if (id.equals("-1")) {
@@ -83,22 +81,18 @@ public class SaveUserController implements Controller {
 				saveAccess(ua, r, session);
 			}
 			session.flush();
-			tx.commit();
+
 			String sql = "FROM Studyinfo ORDER BY studyId";
 			Query q = session.createQuery(sql);
 			List studies = q.list();
 			Map<String, Object> models = new HashMap<String, Object>();
 			models.put("studies", studies);
-			tx.commit();
 			models.put("user", ua);
 			return new ModelAndView("edituser", models);
 		} catch (HibernateException he) {
 			log().error("failed to retrive the user.", he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	@SuppressWarnings("unchecked")
@@ -120,7 +114,7 @@ public class SaveUserController implements Controller {
 				acct.getPermissions().add(perm);
 				session.save(perm);
 			}
-		} else { // existing fertility
+		} else { // existing record
 
 			perm = (org.nescent.plhdb.hibernate.dao.Permission) session.get(
 					"org.nescent.plhdb.hibernate.dao.Permission", Integer

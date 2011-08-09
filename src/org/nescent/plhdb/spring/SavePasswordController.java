@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.UserAccount;
 import org.nescent.plhdb.util.PasswordService;
@@ -37,12 +36,10 @@ public class SavePasswordController implements Controller {
 
 		if (!(newpas.equals(renewpas))) {
 			request.getSession().setAttribute("Message",
-					"unmathced new password and the re-typed new password.");
+					"new password and re-typed password do not match.");
 			return new ModelAndView("changepassword");
 		}
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
 		try {
 
 			Query q = session
@@ -77,7 +74,6 @@ public class SavePasswordController implements Controller {
 					session.save(uaccount);
 					session.flush();
 
-					tx.commit();
 					request.getSession().setAttribute("Message",
 							"Your password has been successfully changed.");
 					return new ModelAndView("changepassword");
@@ -92,13 +88,8 @@ public class SavePasswordController implements Controller {
 			return new ModelAndView("changepassword");
 
 		} catch (HibernateException he) {
-			tx.rollback();
 			throw he;
-		} finally {
-			if (!tx.wasCommitted()) {
-				tx.rollback();
-			}
-		}
+		} 
 
 	}
 }

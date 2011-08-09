@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Studyinfo;
@@ -36,14 +35,11 @@ public class DeleteStudyController implements Controller {
 					"You have not logged in.");
 		}
 		String studyId = nullIfEmpty(request.getParameter("studyid"));
-
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
-		if (studyId == null || studyId.trim().equals("")) {
+		if (studyId == null) {
 			throw new IllegalArgumentException("No studyid specified.");
 		}
 
+		Session session = HibernateSessionFactory.getSession();
 		try {
 			Studyinfo studyInfo = (Studyinfo) session.get(Studyinfo.class,
 					studyId);
@@ -54,9 +50,7 @@ public class DeleteStudyController implements Controller {
 				throw new IllegalArgumentException(
 						"failed to retrieve the studyinfo with id: " + studyId);
 			}
-
 			session.delete(studyInfo);
-			tx.commit();
 
 			Map<String, Object> models = PrepareModel.prepare(null, null,
 					manager);
@@ -66,43 +60,11 @@ public class DeleteStudyController implements Controller {
 		} catch (HibernateException he) {
 			log().error("failed to delete the study with id: " + studyId, he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {
 		return (s != null && s.trim().equals("")) ? null : s;
-	}
-
-	public static void main(String[] agrs) {
-		String studyId = "1";
-
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
-		try {
-			Studyinfo studyInfo = (Studyinfo) session.get(Studyinfo.class,
-					studyId);
-
-			if (studyInfo == null) {
-				log().error(
-						"failed to retrieve the studyinfo with id: " + studyId);
-				throw new IllegalArgumentException(
-						"failed to retrieve the studyinfo with id: " + studyId);
-			}
-
-			session.delete(studyInfo);
-			tx.commit();
-
-		} catch (HibernateException he) {
-			log().error("failed to delete the study with id: " + studyId, he);
-			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
 	}
 
 }

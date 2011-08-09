@@ -9,7 +9,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.UserAccount;
 import org.nescent.plhdb.util.Emailer;
@@ -55,7 +54,6 @@ public class ResetPasswordController implements Controller {
 	public boolean forgotPassword(String emailAddress) {
 
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
 		boolean success = false;
 		try {
 
@@ -88,15 +86,10 @@ public class ResetPasswordController implements Controller {
 						Emailer.CONTENT_TYPE_PLAIN);
 				success = true;
 			}
-
-			tx.commit();
 		} catch (HibernateException he) {
 			log().error("failed to reset password for: " + emailAddress, he);
 			throw he;
-		} finally {
-			if (tx.isActive() && !tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 		return success;
 	}
 }

@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.UserAccount;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,14 +29,11 @@ public class EditUserController implements Controller {
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) {
 		String id = nullIfEmpty(request.getParameter("id"));
-
-		if (id == null || id.trim().equals("")) {
+		if (id == null) {
 			throw new IllegalArgumentException("No user id specified.");
 		}
 
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
 		try {
 			String sql = "FROM Studyinfo ORDER BY studyId";
 			Query q = session.createQuery(sql);
@@ -52,16 +48,12 @@ public class EditUserController implements Controller {
 				throw new IllegalArgumentException(
 						"failed to retrieve the user account with id: " + id);
 			}
-			tx.commit();
 			models.put("user", ua);
 			return new ModelAndView("edituser", models);
 		} catch (HibernateException he) {
 			log().error("failed to retrive the user.", he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {

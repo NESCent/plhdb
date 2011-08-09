@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Biography;
@@ -42,8 +41,6 @@ public class DeleteBiographyController implements Controller {
 		}
 
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
 		try {
 
 			Biography biography = (Biography) session.get(
@@ -58,21 +55,17 @@ public class DeleteBiographyController implements Controller {
 
 			session.delete(biography);
 			session.flush();
-			tx.commit();
 			Map<String, Object> models = PrepareModel.prepare(biography
 					.getStudyid(), null, manager);
 
 			models.put("tab", "study");
 			return new ModelAndView("editData", models);
 		} catch (HibernateException he) {
-			log().error(
-					"failed to delete the biography with id: " + individual_id,
-					he);
+			log().error("failed to delete the biography with id: " 
+                                    + individual_id,
+                                    he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {

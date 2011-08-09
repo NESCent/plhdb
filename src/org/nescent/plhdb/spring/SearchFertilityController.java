@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.Permission;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
@@ -225,10 +223,8 @@ public class SearchFertilityController extends SimpleFormController {
 			
 		}
 
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
 		try {
-			Query q = session.createQuery(sql);
+			Query q = HibernateSessionFactory.getSession().createQuery(sql);
 
 			for (String searchParam : searchParams.keySet()) {
 				Object param = searchParams.get(searchParam);
@@ -275,10 +271,7 @@ public class SearchFertilityController extends SimpleFormController {
 		} catch (HibernateException e) {
 			log().error("failed to search fertility records", e);
 			throw e;
-		} finally {
-			if (tx.isActive() && !tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	public String getStudyConstraints(PermissionManager manager) {

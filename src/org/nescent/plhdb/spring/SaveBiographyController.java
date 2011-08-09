@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Biography;
@@ -62,20 +61,20 @@ public class SaveBiographyController implements Controller {
 				.getParameter("departdateerror1"));
 		String departtype = nullIfEmpty(request.getParameter("departtype1"));
 
-		if (individual_id == null || individual_id.trim().equals("")) {
+		if (individual_id == null) {
 			throw new IllegalArgumentException("No individual oid specified.");
 		}
 
-		if (individualid == null || individualid.trim().equals("")) {
+		if (individualid == null) {
 			throw new IllegalArgumentException("No individual id specified.");
 		}
 
-		if (entrydate == null || entrydate.trim().equals("")) {
+		if (entrydate == null) {
 			throw new IllegalArgumentException("No entry date specified.");
 		}
 
-		if (entrytype == null || entrytype.trim().equals("")) {
-			throw new IllegalArgumentException("No  entry type specified.");
+		if (entrytype == null) {
+			throw new IllegalArgumentException("No entry type specified.");
 		}
 
 		if (sex == null) {
@@ -103,10 +102,7 @@ public class SaveBiographyController implements Controller {
 		 * "No depart date error specified."); }
 		 */
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
 		SimpleDateFormat sfm = new SimpleDateFormat("dd-MMM-yyyy");
-
 		try {
 
 			Biography biography = (Biography) session.get(
@@ -134,19 +130,19 @@ public class SaveBiographyController implements Controller {
 			if (isfirstborn != null && !isfirstborn.trim().equals(""))
 				biography
 						.setFirstborn(Character.valueOf(isfirstborn.charAt(0)));
-			if (sex != null && !sex.trim().equals(""))
+			if (sex != null)
 				biography.setSex(Character.valueOf(sex.charAt(0)));
 
 			biography.setMomid(momid);
 
-			if (bdmin != null && !bdmin.trim().equals("")) {
+			if (bdmin != null) {
 				biography.setBdmin(sfm.parse(bdmin));
 			}
-			if (bdmax != null && !bdmax.trim().equals("")) {
+			if (bdmax != null) {
 				biography.setBdmax(sfm.parse(bdmax));
 			}
 
-			if (bddist != null && !bddist.trim().equals("")) {
+			if (bddist != null) {
 				biography.setBddist(bddist);
 			}
 
@@ -172,7 +168,6 @@ public class SaveBiographyController implements Controller {
 
 			session.update(biography);
 			session.flush();
-			tx.commit();
 			Map<String, Object> models = PrepareModel.prepare(studyid,
 					individual_id, manager);
 
@@ -184,10 +179,7 @@ public class SaveBiographyController implements Controller {
 		} catch (ParseException he) {
 			log().error("failed to parse the date.", he);
 			throw new IllegalArgumentException("failed to parse the date.", he);
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {

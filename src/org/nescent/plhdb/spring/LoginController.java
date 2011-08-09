@@ -40,8 +40,6 @@ public class LoginController implements Controller {
 
 		Session session = HibernateSessionFactory.getSession();
 
-		// Transaction tx = session.beginTransaction();
-
 		try {
 			PermissionManager pm = new PermissionManager();
 
@@ -84,9 +82,8 @@ public class LoginController implements Controller {
 					Boolean.valueOf(ua.isAdmin()));
 
 			List<Cvterm> starts = new ArrayList<Cvterm>();
-			// prepare commonly used data in the editing interface, such as
-			// cvterms,
-			// owners and individuals.
+			// prepare commonly used data in the editing interface, such 
+                        // as cvterms, owners and individuals.
 			String sql = "FROM Cvterm term JOIN term.cvtermRelationshipsForSubjectOid forSub JOIN forSub.cvtermByObjectOid o WHERE o.name='start of recording' ORDER BY term.namespace, term.name";
 			Query q = session.createQuery(sql);
 			List result = q.list();
@@ -113,17 +110,11 @@ public class LoginController implements Controller {
 			}
 			request.getSession().setAttribute("bddist_cvterms", birthdayDists);
 
-			// session.flush();
-			// tx.commit();
-
 			return new ModelAndView("home", "username", "");
 		} catch (HibernateException he) {
 			log().error("failed to log in.", he);
 			throw he;
 		}
 
-		/*
-		 * finally{ if(!tx.wasCommitted()){ tx.rollback(); } }
-		 */
 	}
 }

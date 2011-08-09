@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Permission;
 import org.nescent.plhdb.hibernate.dao.UserAccount;
@@ -28,21 +27,15 @@ public class DeleteUserController implements Controller {
 		return log;
 	}
 
-	public boolean isValid(String str) {
-		return (str != null && !str.trim().equals(""));
-	}
-
 	@SuppressWarnings("unchecked")
 	public ModelAndView handleRequest(HttpServletRequest request,
 			HttpServletResponse response) {
 
 		String id = nullIfEmpty(request.getParameter("id"));
-
-		if (!isValid(id)) {
+		if (id == null) {
 			throw new IllegalArgumentException("No user id specified.");
 		}
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
 		try {
 			UserAccount ua = (UserAccount) session.get(
 					"org.nescent.plhdb.hibernate.dao.UserAccount", Integer
@@ -61,19 +54,14 @@ public class DeleteUserController implements Controller {
 			ua.getPermissions().clear();
 			session.delete(ua);
 			session.flush();
-			tx.commit();
 			String sql = "FROM UserAccount ORDER BY lastName";
 			Query q = session.createQuery(sql);
 			List users = q.list();
-			tx.commit();
 			return new ModelAndView("users", "users", users);
 		} catch (HibernateException he) {
 			log().error("failed to retrive the user.", he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {

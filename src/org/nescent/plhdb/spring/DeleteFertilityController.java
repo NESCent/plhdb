@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Femalefertilityinterval;
@@ -44,9 +43,8 @@ public class DeleteFertilityController implements Controller {
 		if (animOid == null) {
 			throw new IllegalArgumentException("No animal oid  specified.");
 		}
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
 
+		Session session = HibernateSessionFactory.getSession();
 		try {
 
 			Femalefertilityinterval period = (Femalefertilityinterval) session
@@ -63,7 +61,6 @@ public class DeleteFertilityController implements Controller {
 			}
 			session.delete(period);
 			session.flush();
-			tx.commit();
 
 			Map<String, Object> models = PrepareModel.prepare(null, animOid,
 					manager);
@@ -72,10 +69,7 @@ public class DeleteFertilityController implements Controller {
 		} catch (HibernateException he) {
 			log().error("failed to delete the fertility with id: " + id, he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {

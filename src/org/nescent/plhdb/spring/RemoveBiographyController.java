@@ -10,7 +10,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Biography;
@@ -39,57 +38,43 @@ public class RemoveBiographyController implements Controller {
 					"You have not logged in.");
 		}
 		String animoid = nullIfEmpty(request.getParameter("animoid"));
-
-		if (animoid == null || animoid.trim().equals("")) {
+		if (animoid == null) {
 			throw new IllegalArgumentException("No individual oid specified.");
 		}
 
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
 		try {
 
 			Biography biography = (Biography) session.get(
-
-			"org.nescent.plhdb.hibernate.dao.Biography", Integer
-
-			.parseInt(animoid));
+                            "org.nescent.plhdb.hibernate.dao.Biography", 
+                            Integer.parseInt(animoid));
 
 			if (biography == null) {
-
 				throw new IllegalArgumentException(
-
 				"failed to retrieve the biography with id: " + animoid);
-
 			}
 
 			String animid = biography.getAnimid();
-
 			String studyid = biography.getStudyid();
-
 			String sql = "FROM Biography where studyid= :studyid AND momid= :momid";
 
 			Query q = session.createQuery(sql);
-
 			q.setString("studyid", studyid);
-
 			q.setString("momid", animid);
-
 			List list = q.list();
 
 			session.delete(biography);
-
 			session.flush();
-			for (int i = 0; i < list.size(); i++) {
 
+                        // for the children of the deleted individual, ensure that the 
+                        // momID hasn't disappeared (not every momID is also a biography)
+			for (int i = 0; i < list.size(); i++) {
 				Biography b = (Biography) list.get(i);
 				session.refresh(b);
 				b.setMomid(animid);
 				session.update(b);
 			}
-
 			session.flush();
-			tx.commit();
 
 			Map<String, Object> models = PrepareModel.prepare(biography
 					.getStudyid(), null, manager);
@@ -100,10 +85,7 @@ public class RemoveBiographyController implements Controller {
 			log().error("failed to remove the biography with id: " + animoid,
 					he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	private String nullIfEmpty(String s) {

@@ -12,7 +12,7 @@ import org.hibernate.cfg.Configuration;
 /**
  * Configures and provides access to Hibernate sessions, tied to the current
  * thread of execution. Follows the Thread Local Session pattern, see
- * {@link http://hibernate.org/42.html }.
+ * {@link http://community.jboss.org/wiki/SessionsAndTransactions }.
  */
 public class HibernateSessionFactory {
 	private static Logger log;
@@ -32,48 +32,18 @@ public class HibernateSessionFactory {
 	 * configuration file for the current session.
 	 */
 	private static String CONFIG_FILE_LOCATION = "/hibernate.cfg.xml";
-	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
 	private static Configuration configuration = new Configuration();
-	private static org.hibernate.SessionFactory sessionFactory;
+	private static SessionFactory sessionFactory;
 	private static String configFile = CONFIG_FILE_LOCATION;
 
 	private HibernateSessionFactory() {
 	}
 
+       /**
+        * Create if necessary, and return the singleton Hibernate SessionFactory.
+        */
 	public static SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-
-	/**
-	 * Returns the ThreadLocal Session instance. Lazy initialize the
-	 * <code>SessionFactory</code> if needed.
-	 * 
-	 * @return Session
-	 * @throws HibernateException
-	 */
-
-	public static Session getSession() throws HibernateException {
-
-		Session session = threadLocal.get();
-
-		if (session == null || !session.isOpen()) {
-			if (sessionFactory == null) {
-				rebuildSessionFactory();
-			}
-			session = (sessionFactory != null) ? sessionFactory.openSession()
-					: null;
-			threadLocal.set(session);
-		}
-
-		return session;
-
-	}
-
-	/**
-	 * Rebuild hibernate session factory
-	 * 
-	 */
-	public static void rebuildSessionFactory() {
+            if (sessionFactory == null) {
 		try {
 			configuration.configure(configFile);
 			sessionFactory = configuration.buildSessionFactory();
@@ -81,68 +51,28 @@ public class HibernateSessionFactory {
 			log().error("failed to create SessionFactory");
 			throw he;
 		}
-	}
-
-	public static Connection createConnection() throws HibernateException {
-		try {
-			String dbUrl = configuration
-					.getProperty("hibernate.connection.url");
-			String dbClass = configuration
-					.getProperty("hibernate.connection.driver_class");
-			String dbUser = configuration
-					.getProperty("hibernate.connection.username");
-			String dbPassword = configuration
-					.getProperty("hibernate.connection.password");
-			Class.forName(dbClass).newInstance();
-			String url = dbUrl + "?user=" + dbUser + "&password=" + dbPassword;
-
-			Connection conn = DriverManager.getConnection(url);
-			return conn;
-		} catch (Exception e) {
-			log().error("failed to create database connection");
-			throw new HibernateException(
-					"failed to create database connection", e);
-		}
+            }
+            return sessionFactory;
 	}
 
 	/**
-	 * Close the single hibernate session instance.
+	 * Obtains the current Hibernate Session instance. Auto-initializes the
+	 * <code>SessionFactory</code> if needed.
 	 * 
+	 * @return Session
 	 * @throws HibernateException
 	 */
-	public static void closeSession() throws HibernateException {
-		Session session = threadLocal.get();
-		threadLocal.set(null);
-
-		if (session != null) {
-			session.close();
-		}
-
+	public static Session getSession() throws HibernateException {
+            return getSessionFactory().getCurrentSession();
 	}
 
 	/**
-	 * return session factory
-	 * 
+	 * Update the location of the Hibernate config file. The
+	 * SessionFactory will automatically be rebuilt in the next
+	 * call
 	 */
-	// public static org.hibernate.SessionFactory getSessionFactory() {
-	// return sessionFactory;
-	// }
-	/**
-	 * return session factory
-	 * 
-	 * session factory will be rebuilded in the next call
-	 */
-	public static void setConfigFile(String configFile) {
-		HibernateSessionFactory.configFile = configFile;
+	public static void setConfigFile(String file) {
+		configFile = file;
 		sessionFactory = null;
 	}
-
-	/**
-	 * return hibernate configuration
-	 * 
-	 */
-	public static Configuration getConfiguration() {
-		return configuration;
-	}
-
 }

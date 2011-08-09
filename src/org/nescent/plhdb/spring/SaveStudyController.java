@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Studyinfo;
@@ -51,10 +50,7 @@ public class SaveStudyController implements Controller {
 		Double d_lat = null;
 		Double d_long = null;
 
-		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
-		if (studyId == null || studyId.trim().equals("")) {
+		if (studyId == null) {
 			throw new IllegalArgumentException("No study id specified.");
 		}
 
@@ -80,19 +76,19 @@ public class SaveStudyController implements Controller {
 				.valueOf(d_long);
 		;
 
-		if (scientificName == null || scientificName.trim().equals("")) {
+		if (scientificName == null) {
 			throw new IllegalArgumentException("No scientific name specified.");
 		}
 
-		if (siteName == null || siteName.trim().equals("")) {
+		if (siteName == null) {
 			throw new IllegalArgumentException("No siteName specified.");
 		}
 
+		Session session = HibernateSessionFactory.getSession();
 		try {
 			saveStudyHibernate(session, studyId, owners, siteName, big_lat,
 					big_long, commonName, scientificName);
 			session.flush();
-			tx.commit();
 
 			Map<String, Object> models = PrepareModel.prepare(studyId, null,
 					manager);
@@ -101,10 +97,7 @@ public class SaveStudyController implements Controller {
 		} catch (HibernateException he) {
 			log().error("failed to save study.", he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	public void saveStudyHibernate(Session session, String study_id,

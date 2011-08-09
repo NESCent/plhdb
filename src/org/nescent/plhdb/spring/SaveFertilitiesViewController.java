@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Femalefertilityinterval;
@@ -42,15 +41,12 @@ public class SaveFertilitiesViewController implements Controller {
 		if (manager == null) {
 			throw new AccessControlException("You have not logged in.");
 		}
-		String individual_id = request.getParameter("individual_id");
-
-		if (!isValid(individual_id)) {
+		String individual_id = nullIfEmpty(request.getParameter("individual_id"));
+		if (individual_id == null) {
 			throw new IllegalArgumentException("No animal oid specified.");
 		}
-		Session session = null;
-		Transaction tx = null;
-		session = HibernateSessionFactory.getSession();
-		tx = session.beginTransaction();
+
+		Session session = HibernateSessionFactory.getSession();
 		String s = null;
 		try {
 			for (Fertility f : getFertilities(request)) {
@@ -59,24 +55,16 @@ public class SaveFertilitiesViewController implements Controller {
 			}
 
 			session.flush();
-			tx.commit();
 		} catch (HibernateException he) {
 			log().error("failed to save fertility: " + s, he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 
 		Map<String, Object> models = PrepareModel.prepare(null, individual_id,
 				manager);
 		models.put("tab", "fertility");
 		return new ModelAndView("editData", models);
 
-	}
-
-	public boolean isValid(String str) {
-		return (str != null && !str.trim().equals(""));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -89,14 +77,12 @@ public class SaveFertilitiesViewController implements Controller {
 		String starttype = fertility.getStartType();
 		String stoptype = fertility.getStopType();
 
-		if ((isValid(startdate) && !isValid(starttype))
-				|| (!isValid(startdate) && isValid(starttype))) {
+		if (startdate == null || starttype == null) {
 			throw new IllegalArgumentException(
 					"No start date or start type specified.");
 		}
 
-		if ((isValid(stopdate) && !isValid(stoptype))
-				|| (!isValid(stopdate) && isValid(stoptype))) {
+		if (stopdate == null && stoptype == null) {
 			throw new IllegalArgumentException(
 					"No stop date or stop type specified.");
 		}
@@ -104,10 +90,6 @@ public class SaveFertilitiesViewController implements Controller {
 		SimpleDateFormat sdm = new SimpleDateFormat("dd-MMM-yyyy");
 
 		if (fertility_id.equals("-1")) { // new record
-			if (!isValid(startdate) || !isValid(starttype)) {
-				throw new IllegalArgumentException(
-						"No start date or start type specified.");
-			}
 
 			Femalefertilityinterval period = new Femalefertilityinterval();
 			period.setAnimOid(Integer.parseInt(individual_id));
@@ -133,30 +115,21 @@ public class SaveFertilitiesViewController implements Controller {
 			period.setStartdate(date);
 			period.setStarttype(starttype);
 
-			if (isValid(stopdate) && isValid(stoptype)) {
-				date = null;
-				try {
-					java.util.Date ud = sdm.parse(stopdate);
-					date = new java.sql.Date(ud.getTime());
-				} catch (ParseException e) {
-					throw new IllegalArgumentException("invalid date: "
-							+ stopdate);
-				}
-				period.setStopdate(date);
-				period.setStoptype(stoptype);
-			} else {
-				period.setStopdate(null);
-				period.setStoptype(null);
-			}
+                        date = null;
+                        try {
+                            java.util.Date ud = sdm.parse(stopdate);
+                            date = new java.sql.Date(ud.getTime());
+                        } catch (ParseException e) {
+                            throw new IllegalArgumentException("invalid date: "
+                                                               + stopdate);
+                        }
+                        period.setStopdate(date);
+                        period.setStoptype(stoptype);
 			session.save(period);
 		} else { // existing fertility
 			Femalefertilityinterval period = (Femalefertilityinterval) session
 					.get(Femalefertilityinterval.class, Integer
 							.valueOf(fertility.getId()));
-			if (!isValid(startdate) || !isValid(starttype)) {
-				throw new IllegalArgumentException(
-						"No start date or start type specified.");
-			}
 
 			Date date = null;
 			try {
@@ -168,21 +141,16 @@ public class SaveFertilitiesViewController implements Controller {
 			period.setStartdate(date);
 			period.setStarttype(starttype);
 
-			if (isValid(stopdate) && isValid(stoptype)) {
-				date = null;
-				try {
-					java.util.Date ud = sdm.parse(stopdate);
-					date = new java.sql.Date(ud.getTime());
-				} catch (ParseException e) {
-					throw new IllegalArgumentException("invalid date: "
-							+ stopdate);
-				}
-				period.setStopdate(date);
-				period.setStoptype(stoptype);
-			} else {
-				period.setStopdate(null);
-				period.setStoptype(null);
-			}
+                        date = null;
+                        try {
+                            java.util.Date ud = sdm.parse(stopdate);
+                            date = new java.sql.Date(ud.getTime());
+                        } catch (ParseException e) {
+                            throw new IllegalArgumentException("invalid date: "
+                                                               + stopdate);
+                        }
+                        period.setStopdate(date);
+                        period.setStoptype(stoptype);
 			session.update(period);
 		}
 	}

@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.nescent.plhdb.aa.PermissionManager;
 import org.nescent.plhdb.hibernate.HibernateSessionFactory;
 import org.nescent.plhdb.hibernate.dao.Cvterm;
@@ -45,9 +44,8 @@ public class SaveFertilitiesController implements Controller {
 		if (manager == null) {
 			throw new AccessControlException("You have not logged in.");
 		}
-		String individual_id = request.getParameter("individual_id");
-
-		if (!isValid(individual_id)) {
+		String individual_id = nullIfEmpty(request.getParameter("individual_id"));
+		if (individual_id == null) {
 			throw new IllegalArgumentException("No animal id specified.");
 		}
 		Session session = HibernateSessionFactory.getSession();
@@ -71,10 +69,6 @@ public class SaveFertilitiesController implements Controller {
 
 	}
 
-	public boolean isValid(String str) {
-		return (str != null && !str.trim().equals(""));
-	}
-
 	@SuppressWarnings("unchecked")
 	public void saveFertility(Individual individual, Fertility fertility) {
 		String fertility_id = fertility.getId();
@@ -83,14 +77,12 @@ public class SaveFertilitiesController implements Controller {
 		String starttype = fertility.getStartType();
 		String stoptype = fertility.getStopType();
 
-		if ((isValid(startdate) && !isValid(starttype))
-				|| (!isValid(startdate) && isValid(starttype))) {
+		if (startdate == null || starttype == null) {
 			throw new IllegalArgumentException(
 					"No start date or start type specified.");
 		}
 
-		if ((isValid(stopdate) && !isValid(stoptype))
-				|| (!isValid(stopdate) && isValid(stoptype))) {
+		if (stopdate == null || stoptype == null) {
 			throw new IllegalArgumentException(
 					"No stop date or stop type specified.");
 		}
@@ -101,8 +93,6 @@ public class SaveFertilitiesController implements Controller {
 
 		SimpleDateFormat sfm = new SimpleDateFormat("dd-MMM-yyyy");
 		Session session = HibernateSessionFactory.getSession();
-		Transaction tx = session.beginTransaction();
-
 		try {
 			Cvterm starttype_term = CvtermDAO.getCvterm(starttype,
 					"event types");
@@ -112,48 +102,39 @@ public class SaveFertilitiesController implements Controller {
 
 			if (fertility_id.equals("-1")) { // new record
 
-				if (isValid(startdate) && isValid(starttype)) {
-					period = new Recordingperiod();
-					period.setCvterm(period_term);
-					period_term.getRecordingperiods().add(period);
-					startObs = new Observation();
-					startObs.setIndividual(individual);
-					individual.getObservations().add(startObs);
-					try {
-						Date date = sfm.parse(startdate);
-						startObs.setTimeOfObservation(date);
-					} catch (ParseException ex) {
-						throw new IllegalArgumentException(
-								"failed to parse the start date" + startdate,
-								ex);
-					}
+                            period = new Recordingperiod();
+                            period.setCvterm(period_term);
+                            period_term.getRecordingperiods().add(period);
+                            startObs = new Observation();
+                            startObs.setIndividual(individual);
+                            individual.getObservations().add(startObs);
+                            try {
+                                Date date = sfm.parse(startdate);
+                                startObs.setTimeOfObservation(date);
+                            } catch (ParseException ex) {
+                                throw new IllegalArgumentException(
+                                    "failed to parse the start date" + startdate, ex);
+                            }
 
-					startObs.setCvterm(starttype_term);
-					starttype_term.getObservations().add(startObs);
-					period.setObservationByStartOid(startObs);
-					startObs.getRecordingperiodsForStartOid().add(period);
-				} else {
-					throw new IllegalArgumentException(
-							"No start date or start type specified.");
-				}
+                            startObs.setCvterm(starttype_term);
+                            starttype_term.getObservations().add(startObs);
+                            period.setObservationByStartOid(startObs);
+                            startObs.getRecordingperiodsForStartOid().add(period);
 
-				if (isValid(stopdate) && isValid(stoptype)) {
-					endObs = new Observation();
-					endObs.setIndividual(individual);
-					individual.getObservations().add(endObs);
-					try {
-						Date date = sfm.parse(stopdate);
-						endObs.setTimeOfObservation(date);
-					} catch (ParseException ex) {
-						throw new IllegalArgumentException(
-								"failed to parse the stop date: " + stopdate,
-								ex);
-					}
-					endObs.setCvterm(stoptype_term);
-					stoptype_term.getObservations().add(endObs);
-					period.setObservationByEndOid(endObs);
-					endObs.getRecordingperiodsForEndOid().add(period);
-				}
+                            endObs = new Observation();
+                            endObs.setIndividual(individual);
+                            individual.getObservations().add(endObs);
+                            try {
+                                Date date = sfm.parse(stopdate);
+                                endObs.setTimeOfObservation(date);
+                            } catch (ParseException ex) {
+                                throw new IllegalArgumentException(
+                                    "failed to parse the stop date: " + stopdate, ex);
+                            }
+                            endObs.setCvterm(stoptype_term);
+                            stoptype_term.getObservations().add(endObs);
+                            period.setObservationByEndOid(endObs);
+                            endObs.getRecordingperiodsForEndOid().add(period);
 
 			} else { // existing recordingperiod
 				period = (Recordingperiod) session.get(
@@ -171,62 +152,42 @@ public class SaveFertilitiesController implements Controller {
 				startObs = period.getObservationByStartOid();
 				endObs = period.getObservationByEndOid();
 
-				if (isValid(startdate) && isValid(starttype)) {
-					try {
-						Date date = sfm.parse(startdate);
-						startObs.setTimeOfObservation(date);
-					} catch (ParseException ex) {
-						throw new IllegalArgumentException(
-								"failed to parse the start date" + startdate,
-								ex);
-					}
+                                try {
+                                    Date date = sfm.parse(startdate);
+                                    startObs.setTimeOfObservation(date);
+                                } catch (ParseException ex) {
+                                    throw new IllegalArgumentException(
+                                        "failed to parse the start date" + startdate,ex);
+                                }
 
-					startObs.setCvterm(starttype_term);
-					starttype_term.getObservations().add(startObs);
+                                startObs.setCvterm(starttype_term);
+                                starttype_term.getObservations().add(startObs);
 
-				} else {
-					throw new IllegalArgumentException(
-							"No start date or start type specified.");
-				}
-
-				if (isValid(stopdate) && isValid(stoptype)) {
-					if (endObs == null) {
-						endObs = new Observation();
-						endObs.setIndividual(individual);
-						individual.getObservations().add(endObs);
-						period.setObservationByEndOid(endObs);
-						endObs.getRecordingperiodsForEndOid().add(period);
-					}
-					try {
-						Date date = sfm.parse(stopdate);
-						endObs.setTimeOfObservation(date);
-					} catch (ParseException ex) {
-						throw new IllegalArgumentException(
-								"failed to parse the stop date: " + stopdate,
-								ex);
-					}
-					endObs.setCvterm(stoptype_term);
-					stoptype_term.getObservations().add(endObs);
-
-				} else {
-					if (endObs != null) {
-						session.delete(endObs);
-						period.setObservationByEndOid(null);
-					}
-				}
-			}
+                                if (endObs == null) {
+                                    endObs = new Observation();
+                                    endObs.setIndividual(individual);
+                                    individual.getObservations().add(endObs);
+                                    period.setObservationByEndOid(endObs);
+                                    endObs.getRecordingperiodsForEndOid().add(period);
+                                }
+                                try {
+                                    Date date = sfm.parse(stopdate);
+                                    endObs.setTimeOfObservation(date);
+                                } catch (ParseException ex) {
+                                    throw new IllegalArgumentException(
+                                        "failed to parse the stop date: " + stopdate,ex);
+                                }
+                                endObs.setCvterm(stoptype_term);
+                                stoptype_term.getObservations().add(endObs);
+                        }
 
 			session.update(individual);
 			session.flush();
-			tx.commit();
 
 		} catch (HibernateException he) {
 			log().error("failed to save fertility.", he);
 			throw he;
-		} finally {
-			if (!tx.wasCommitted())
-				tx.rollback();
-		}
+		} 
 	}
 
 	@SuppressWarnings("unchecked")
