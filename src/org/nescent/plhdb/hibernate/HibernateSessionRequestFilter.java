@@ -40,7 +40,10 @@ public class HibernateSessionRequestFilter implements Filter {
                         if (tx.isActive()) {
                             log().debug("Committing the database transaction");
                             tx.commit();
-                            session.close();
+                            // we are using the sessions bound to transaction
+                            // demarcations pattern right now, and so committing the
+                            // transaction closes the session, too. 
+                            // if (session.isOpen()) session.close();
 			}
 		} catch (Throwable ex) {
 			log().error("failed to process the request!", ex);
