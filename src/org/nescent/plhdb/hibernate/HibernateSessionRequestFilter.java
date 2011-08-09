@@ -45,7 +45,7 @@ public class HibernateSessionRequestFilter implements Filter {
 		} catch (Throwable ex) {
 			log().error("failed to process the request!", ex);
                         if ((tx != null) && tx.isActive()) tx.rollback();
-                        session.close();
+                        if (session.isOpen()) session.close();
 			throw new ServletException(ex);
 		}
 	}
