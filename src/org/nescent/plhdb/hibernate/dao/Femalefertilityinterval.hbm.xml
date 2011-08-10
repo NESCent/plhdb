@@ -12,10 +12,10 @@
 		<id name="intervalOid" type="int">
 			<column name="interval_oid" />
 			<generator class="select">
-                <param name="key">startdate</param>
-                <param name="key">starttype</param>
-                <param name="key">animid</param>
-        	</generator>
+                          <param name="key">startdate</param>
+                          <param name="key">starttype</param>
+                          <param name="key">animOid</param>
+                        </generator>
 		</id>
 		<property name="studyid" type="string">
 			<column name="studyid" />
