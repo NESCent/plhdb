@@ -40,57 +40,45 @@ public class AddStudyController implements Controller {
 		String latitude = nullIfEmpty(request.getParameter("latitude"));
 		String longitude = nullIfEmpty(request.getParameter("longitude"));
 
-		float f_lat = 0f;
-		float f_long = 0f;
-
-		try {
-			f_lat = Float.parseFloat(latitude);
-		} catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("invalid latitude: " + latitude,
-					nfe);
-		}
-
-		try {
-			f_long = Float.parseFloat(longitude);
-		} catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("invalid longitude: "
-					+ longitude, nfe);
-		}
-
-		if (scientificName == null || scientificName.trim().equals("")) {
+		if (scientificName == null) {
 			throw new IllegalArgumentException("No scientific name specified.");
 		}
-
-		if (studyId == null || studyId.trim().equals("")) {
+		if (studyId == null) {
 			throw new IllegalArgumentException("No study id specified.");
 		}
-
-		if (siteName == null || siteName.trim().equals("")) {
+		if (siteName == null) {
 			throw new IllegalArgumentException("No siteName specified.");
 		}
 
-		Session session = HibernateSessionFactory.getSession();
-
 		Studyinfo studyInfo = new Studyinfo();
-
 		PermissionManager manager = (PermissionManager) request.getSession()
 				.getAttribute("permission_manager");
 		if (manager == null) {
 			throw new AccessControlException("You have not logged in.");
 		}
+
+		Session session = HibernateSessionFactory.getSession();
 		try {
 			studyInfo.setStudyId(studyId);
 			studyInfo.setCommonname(commonName);
 			studyInfo.setSciname(scientificName);
 			studyInfo.setOwners(owners);
-			studyInfo.setLatitude((BigDecimal.valueOf(f_lat)));
-			studyInfo.setLongitude((BigDecimal.valueOf(f_long)));
+                        if (latitude != null) {
+                            studyInfo.setLatitude(new BigDecimal(latitude));
+                        }
+			if (longitude != null) {
+                            studyInfo.setLongitude(new BigDecimal(longitude));
+                        }
 			studyInfo.setSiteid(siteName);
 			session.save(studyInfo);
 			Map<String, Object> models = PrepareModel.prepare(studyInfo
 					.getStudyId(), null, manager);
 			models.put("tab", "study");
 			return new ModelAndView("editData", models);
+		} catch (NumberFormatException nfe) {
+			throw new IllegalArgumentException(
+                            "invalid latitude or longitude: "+latitude +", "+longitude,
+                            nfe);
 		} catch (HibernateException he) {
 			log().error("failed to add study.", he);
 			throw he;
