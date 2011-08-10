@@ -106,9 +106,10 @@ public class SecurityServlet extends DispatcherServlet {
 	 */
 	@Override
 	protected void doService(HttpServletRequest request,
-			HttpServletResponse response) {
+                                 HttpServletResponse response) 
+            throws Exception {
+
 		String studyid = request.getParameter("studyid");
-		try {
 			String uri = request.getRequestURI();
 			if (uri.indexOf("login.go") > -1) {
 				setActiveMenu("login", request);
@@ -206,7 +207,6 @@ public class SecurityServlet extends DispatcherServlet {
 				}
 			}
 			
-		}
 	}
 
 	private String getStudy(HttpServletRequest request) {
