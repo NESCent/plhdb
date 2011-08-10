@@ -82,7 +82,7 @@ public class SaveFertilitiesViewController implements Controller {
 					"No start date or start type specified.");
 		}
 
-		if (stopdate == null && stoptype == null) {
+		if (stopdate == null || stoptype == null) {
 			throw new IllegalArgumentException(
 					"No stop date or stop type specified.");
 		}
@@ -94,9 +94,8 @@ public class SaveFertilitiesViewController implements Controller {
 			Femalefertilityinterval period = new Femalefertilityinterval();
 			period.setAnimOid(Integer.parseInt(individual_id));
 			Individual indv = (Individual) session.get(
-					"org.nescent.plhdb.hibernate.dao.Individual", Integer
-							.parseInt(individual_id));
-
+					"org.nescent.plhdb.hibernate.dao.Individual", 
+                                        period.getAnimOid());
 			if (indv == null) {
 				throw new IllegalArgumentException(
 						"failed to retrieve the individual with oid: "
