@@ -206,29 +206,6 @@ public class SecurityServlet extends DispatcherServlet {
 				}
 			}
 			
-		} catch (HibernateException e) {
-			log().error("hibernate error", e);
-
-			request.getSession().setAttribute("Message",
-					"Error: " + e.getMessage());
-			try {
-				response.sendRedirect("/jsp/error.jsp");
-			} catch (IOException ioe) {
-				log().error("failed to redirect to the error page.", ioe);
-				throw new RuntimeException(
-						"failed to redirect to the error page.", ioe);
-			}
-		} catch (Exception e) {
-			log().error("something wrong happended", e);
-			request.getSession().setAttribute("Message",
-					"Error: " + e.getMessage());
-			try {
-				response.sendRedirect("/jsp/error.jsp");
-			} catch (IOException ioe) {
-				log().error("failed to handle the request.", ioe);
-				throw new RuntimeException("failed to handle the request.", ioe);
-			}
-
 		}
 	}
 
