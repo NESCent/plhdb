@@ -174,6 +174,7 @@ CREATE OR REPLACE RULE r_biography_ins AS
                        , new.Departdate
                        , new.DepartdateError
                        , new.Departtype
+                       , new.Anim_Oid
        );
        -- at this point this is primarily so applications have a row
        -- count to query
@@ -247,7 +248,8 @@ CREATE OR REPLACE RULE r_femalefertilityinterval_ins AS
        ON INSERT TO femalefertilityinterval
        DO INSTEAD (
        -- insert into recording period instead
-       INSERT INTO plhdb.recordingperiod (start_oid, end_oid, type_oid)
+       INSERT INTO plhdb.recordingperiod (start_oid, end_oid, type_oid, 
+                                          recordingperiod_oid)
        VALUES (
                plhdb.get_observation_oid(
                        new.Startdate, NULL,
@@ -281,7 +283,12 @@ CREATE OR REPLACE RULE r_femalefertilityinterval_ins AS
                         )
                END,
                plhdb.get_cvterm_oid('female fertility period', NULL, NULL,
-                                    'period types', NULL, 0)
+                                    'period types', NULL, 0),
+               CASE
+               WHEN new.Interval_OID IS NULL THEN
+                    nextval('plhdb.recordingperiod_recordingperiod_oid_seq')
+               ELSE new.Interval_OID
+               END
        );
        -- since we are logging updates, let's log inserts too
        INSERT INTO audit.dmltrace (tablename, rowkey, optype, usr, tstamp)

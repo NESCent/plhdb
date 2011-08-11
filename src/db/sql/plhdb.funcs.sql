@@ -385,7 +385,7 @@ DROP FUNCTION get_individual_oid(
        , p_Is_first_born individual.is_first_born%TYPE
        , p_Study_Oid study.study_oid%TYPE
        , p_Study_ID study.id%TYPE
-       , p_Old_Oid individual.individual_oid%TYPE
+       , p_Oid individual.individual_oid%TYPE
        , p_do_DML integer)
 CASCADE;
 
@@ -398,7 +398,7 @@ CREATE FUNCTION get_individual_oid(
        , p_Is_first_born individual.is_first_born%TYPE
        , p_Study_Oid study.study_oid%TYPE
        , p_Study_ID study.id%TYPE
-       , p_Old_Oid individual.individual_oid%TYPE
+       , p_Oid individual.individual_oid%TYPE
        , p_do_DML integer)
 RETURNS individual.individual_oid%TYPE AS
 $$
@@ -414,8 +414,11 @@ BEGIN
                v_study_oid := p_Study_Oid;
         END IF;
         -- obtain the primary key of the individual
-        IF p_Old_Oid IS NULL THEN
-               -- look up: first by id
+        IF p_Oid IS NULL OR p_do_DML & 1 = 1 THEN
+               -- If primary key (Oid) not provided, look it up, first by id.
+               -- If insert is allowed and Oid is provided (pre-fetched), need to verify
+               -- that in reality this isn't an update of an individual that for
+               -- whatever reason isn't in the biography view.
                SELECT INTO v_ind_oid individual_oid 
                FROM plhdb.individual 
                WHERE id = p_Id AND study_oid = v_study_oid;
@@ -427,7 +430,7 @@ BEGIN
                END IF;
         ELSE 
                -- we will be updating the old record
-               v_ind_oid := p_Old_Oid;
+               v_ind_oid := p_Oid;
         END IF;
         -- if no DML allowed, we've done all we can
         IF p_do_DML = 0 THEN
@@ -435,14 +438,20 @@ BEGIN
         END IF;
         -- if not found, insert as new, otherwise update
         IF v_ind_oid IS NULL AND p_do_DML & 1 = 1 THEN
+               IF p_Oid IS NULL THEN
+                      SELECT INTO v_ind_oid 
+                              NEXTVAL('plhdb.individual_individual_oid_seq');
+               ELSE
+                      v_ind_oid = p_Oid;
+               END IF;
                INSERT INTO plhdb.individual (
                                        name, id, sex
                                        , birthgroup, birthgroup_certainty
-                                       , is_first_born, study_oid)
+                                       , is_first_born
+                                       , study_oid, individual_oid)
                VALUES (p_Name, p_Id, p_Sex, p_Birthgroup, p_Birthgroup_certainty
-                       , p_Is_first_born, v_study_oid);
-               SELECT INTO v_ind_oid 
-                      CURRVAL('plhdb.individual_individual_oid_seq');
+                       , p_Is_first_born
+                       , v_study_oid, v_ind_oid);
         ELSIF p_do_DML & 2 = 2 THEN
                UPDATE plhdb.individual SET
                       name = p_Name
@@ -480,7 +489,7 @@ DECLARE
         v_numstudies INTEGER;
 BEGIN
         -- as a shortcut to save time, and to prevent existing records
-        -- from having most of their attributes updates to null, run
+        -- from having most of their attributes update to null, run
         -- query directly
         IF p_Study_Oid IS NULL THEN
                IF p_Study_ID IS NULL THEN
@@ -1019,7 +1028,8 @@ DROP FUNCTION ins_biography_assocs (
         , p_Entrytype biography.Entrytype%TYPE
         , p_Departdate biography.Departdate%TYPE
         , p_DepartdateError biography.DepartdateError%TYPE
-        , p_Departtype biography.Departtype%TYPE)
+        , p_Departtype biography.Departtype%TYPE
+        , p_Anim_OID biography.Anim_OID%TYPE)
 CASCADE;
 
 CREATE FUNCTION ins_biography_assocs (
@@ -1039,7 +1049,8 @@ CREATE FUNCTION ins_biography_assocs (
         , p_Entrytype biography.Entrytype%TYPE
         , p_Departdate biography.Departdate%TYPE
         , p_DepartdateError biography.DepartdateError%TYPE
-        , p_Departtype biography.Departtype%TYPE)
+        , p_Departtype biography.Departtype%TYPE
+        , p_Anim_OID biography.Anim_OID%TYPE)
 RETURNS INTEGER AS
 $$
 DECLARE
@@ -1056,9 +1067,10 @@ BEGIN
        v_ind_oid := plhdb.get_individual_oid(
                                    p_AnimName, p_AnimId, p_Sex, 
                                    p_Birthgroup, p_BGQual, p_FirstBorn,
-                                   v_study_oid, NULL, 
-                                   NULL, -- no old study here
-                                   3 -- allow insert and update
+                                   v_study_oid, -- no old study here
+                                   NULL, 
+                                   p_Anim_OID,  -- OID may or may not be pre-fetched
+                                   3 -- let it figure out whether insert or update
        );
        -- create (or update) the relationship to the parent (here: mother)
        IF p_MomID IS NOT NULL THEN

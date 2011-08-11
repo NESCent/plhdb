@@ -9,13 +9,10 @@
 		<comment>
 			PLHD API: Observed fertility interval of a female animal.
 		</comment>
-		<id name="intervalOid" type="int">
-			<column name="interval_oid" />
-			<generator class="select">
-                          <param name="key">startdate</param>
-                          <param name="key">starttype</param>
-                          <param name="key">animOid</param>
-                        </generator>
+		<id name="intervalOid" type="int" column="interval_oid">
+                  <generator class="sequence">
+                    <param name="sequence">plhdb.recordingperiod_recordingperiod_oid_seq</param>
+                  </generator>
 		</id>
 		<property name="studyid" type="string">
 			<column name="studyid" />

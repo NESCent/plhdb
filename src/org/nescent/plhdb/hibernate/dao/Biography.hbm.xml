@@ -5,12 +5,10 @@
 <hibernate-mapping>
     <class name="org.nescent.plhdb.hibernate.dao.Biography" table="biography" schema="public">
         <comment>PLHD API: Biography of an animal.</comment>
-        <id name="animOid" type="int">
-            <column name="anim_oid" />
-            <generator class="select">
-			<param name="key">studyid</param>
-			<param name="key">animid</param>
-		</generator>
+        <id name="animOid" type="int" column="anim_oid">
+          <generator class="sequence">
+            <param name="sequence">plhdb.individual_individual_oid_seq</param>
+          </generator>
         </id>
         <property name="studyid" type="string">
                 <column name="studyid" length="12" />
