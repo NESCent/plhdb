@@ -164,8 +164,7 @@ public class SecurityServlet extends DispatcherServlet {
 
 				PermissionManager manager = (PermissionManager) request
 						.getSession().getAttribute("permission_manager");
-				boolean isadmin = ((Boolean) request.getSession().getAttribute(
-						"isadmin")).booleanValue();
+				Boolean isadmin = (Boolean) request.getSession().getAttribute("isadmin");
 				if (manager == null) {
 					request.getSession().setAttribute("Message",
 							"You have not logged in. Login please!");
