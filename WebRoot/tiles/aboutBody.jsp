@@ -1,5 +1,3 @@
-<p>Test git-triggered build on DEV</p>
-
 <h2>Data</h2>
 <img src="/images/photos/bogart_copyright.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 <p>
