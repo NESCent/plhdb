@@ -57,8 +57,10 @@ public class SecurityServlet extends DispatcherServlet {
 				setActiveMenu("login",request);
 				super.doService(request, response);
 			}else if (uri.indexOf("MOU") > -1)
+                            // FIXME: needs to be config parameter!
 				response.sendRedirect("https://docs.google.com/document/pub?id=1rjUon48QburrO-xHd_2qxiC9wMQwZf4fZQ9RdbalYtU");
 			else if (uri.indexOf("Acknowledgments") > -1)
+                            // FIXME: needs to be a config parameter!
 				response.sendRedirect("http://www.nescent.org/wg/plhd/images/f/f2/Acknowledgments.pdf");
 			else if (uri.indexOf("register.go") > -1)
 				super.doService(request, response);
