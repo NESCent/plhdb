@@ -26,7 +26,7 @@ data of this type is to make comparative analyses that can shed light on the pop
 the social and ecological adaptations that have shaped both human and nonhuman primate evolution. Records in the database include mortality and fertility schedules across multiple primate taxa. The data are searchable and can be downloaded 
 into  csv format.</p>
 <p>This site was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a> 
-through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. This site is currently only accessible for the working group members. If you want to see how the system work, please visit 
+through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a> (NESCent). This site is currently only accessible for the working group members. If you want to see how the system works, please visit 
 our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dataset, representing a subset of the actual database, as well as a live version of the graphical user interface. </p>
 <h3>How To Cite This Database</h3>
 <p>Please cite the following paper:</p>
