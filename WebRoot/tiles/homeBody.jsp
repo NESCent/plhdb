@@ -26,11 +26,15 @@ data of this type is to make comparative analyses that can shed light on the pop
 the social and ecological adaptations that have shaped both human and nonhuman primate evolution. Records in the database include mortality and fertility schedules across multiple primate taxa. The data are searchable and can be downloaded 
 into  csv format.</p>
 <p>This site was produced by <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a> 
-through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. This site is currently only accessible for the working group members. If you want to see how the system work, please visit 
+through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a> (NESCent). This site is currently only accessible for the working group members. If you want to see how the system works, please visit 
 our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dataset, representing a subset of the actual database, as well as a live version of the graphical user interface. </p>
-<h3>Web Citation</h3>
-<p>
-"Primate Life Histories Database." 2010.Evolutionary Ecology of Primate Life Histories Working Group. National Evolutionary Synthesis Center. (date accessed by user) http://plhdb.org/
+<h3>How To Cite This Database</h3>
+<p>Please cite the following paper:</p>
+<p>Karen B. Strier, Jeanne Altmann, Diane K. Brockman, Anne
+  M. Bronikowski, Marina Cords, Linda M. Fedigan, Hilmar Lapp, Xianhua
+  Liu, William F. Morris, Anne E. Pusey, Tara S. Stoinski and Susan
+  C. Alberts. 2010. <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x"
+  target="_blank">The Primate Life History Database: a unique shared ecological data resource.</a> Methods in Ecology and Evolution 1(2): 199–211.
 </p>
 
 <h3>Documents</h3>
@@ -43,8 +47,8 @@ our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dat
 <li><a href="http://demo.plhdb.org">Demo site</a></li>
 <li><a href="https://www.nescent.org/wg_plhd">Project wiki site of the working group</a></li>
 <li><a href="http://www.nescent.org/science/awards_summary.php?id=19">NESCent award page of the working group</a></li>
-<li><a href="http://sf.net/projects/plhdb">Source code on SourceForge</a></li> and <a href="http://github.com/plhdb/plhdb">GitHub</a></li>
-<li><a href="http://www.nescent.org">National Evolutionary Synthesis Center</a></li>
+<li>Source code <a href="http://github.com/plhdb/plhdb">on GitHub</a> and <a href="http://sf.net/projects/plhdb">on SourceForge</a></li>
+<li><a href="http://www.nescent.org">National Evolutionary Synthesis Center</a> (NESCent)</li>
 </ul>
 </div>
 
