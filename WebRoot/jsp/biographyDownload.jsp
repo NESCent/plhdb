@@ -48,7 +48,7 @@ for(int i=0;i<records.size();i++){
 	    Date d=(Date)record[j];
 	    str+="\""+sdf.format(d)+"\"";
 	}else{
-	    str+="\""+record[j]+"\"";
+	    str+="\""+(record[j] == null ? "" : record[j])+"\"";
 	}
 	if(j<record.length-1)
 	    str+=",";
