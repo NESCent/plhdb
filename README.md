@@ -85,7 +85,9 @@ If you use this code or parts of it, please cite the following publication:
 Contact
 -------
 
-* The website is maintained by the National Evolutionary Synthesis Center (NESCent).
+* The website is maintained by the National Evolutionary Synthesis
+  Center (NESCent).
+
         2024 W. Main Street, Suite A200
         Durham, NC 27705-4667
         Tel: (919) 668-4551
