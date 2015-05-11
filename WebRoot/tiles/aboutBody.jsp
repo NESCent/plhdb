@@ -1,4 +1,4 @@
-<h2>Data</h2>
+>Data</h2>
 <img src="/images/photos/bogart_copyright.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 <p>
 This database contains  individual-based life 
@@ -27,7 +27,7 @@ for details</p>
 </ul>
 <h2>Source Code</h2>
 <p>
-Source code is available on <a href="http://github.com/plhdb/plhdb">GitHub</a> and <a href="http://sf.net/projects/plhdb">SourceForge</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. 
+Source code is available on <a href="http://github.com/NESCent/plhdb">GitHub</a> under a <a href="http://www.gnu.org/copyleft/gpl.html">GPL v3 license</a>. 
 </p> 
 <div style="clear:both;"></div>
 <h2>Credits</h2>
