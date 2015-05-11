@@ -34,7 +34,7 @@ our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dat
   M. Bronikowski, Marina Cords, Linda M. Fedigan, Hilmar Lapp, Xianhua
   Liu, William F. Morris, Anne E. Pusey, Tara S. Stoinski and Susan
   C. Alberts. 2010. <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x"
-  target="_blank">The Primate Life History Database: a unique shared ecological data resource.</a> Methods in Ecology and Evolution 1(2): 199–211.
+  target="_blank">The Primate Life History Database: a unique shared ecological data resource.</a> Methods in Ecology and Evolution 1(2): 199-211.
 </p>
 
 <h3>Documents</h3>
