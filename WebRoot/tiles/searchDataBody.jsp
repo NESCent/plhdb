@@ -371,7 +371,7 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 	<ul><li>B: birth</li>
 	<li>I: immigration</li>
 	<li>C: start of confirmed identification of the individual</li>
-	<li>Q: initiation of close observation</li>
+	<li>O: initiation of close observation</li>
 	</ul>
 </li>
 <li>Departdate and DepartdateError:  the last date on which an animal was observed in the study population is the Departdate. DepartdateError reflects the time between Departdate 
