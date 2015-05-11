@@ -61,9 +61,8 @@ Source Code
 -----------
 
 Source code is available on GitHub (http://github.com/NESCent/plhdb)
-under a GPL v3 license (http://www.gnu.org/copyleft/gpl.html). The
-original repository on SourceForge (http://sf.net/projects/plhdb) is
-no longer maintained.
+under a [GPL v3 license]. The original repository on SourceForge
+(http://sf.net/projects/plhdb) is no longer maintained.
 
 Credits
 -------
@@ -82,20 +81,6 @@ If you use this code or parts of it, please cite the following publication:
 > Strier, K. B., Altmann, J., Brockman, D. K., Bronikowski, A. M., Cords, M., Fedigan, L. M., Lapp, H., Liu, X., Morris, W. F., Pusey, A. E., Stoinski, T. S., and Alberts, S. C. "The Primate Life History Database: A Unique Shared Ecological Data Resource". Methods in Ecology and Evolution 1, no. 2 (2010): 199–211.
 > http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x
 
-Contact
--------
-
-* The website is maintained by the National Evolutionary Synthesis
-  Center (NESCent).
-
-        2024 W. Main Street, Suite A200
-        Durham, NC 27705-4667
-        Tel: (919) 668-4551
-        Fax: (919) 668-9198
-
-* To inquire about the database, send email to the PIs of the working
-  group (plhdb-admin@nescent.org), or report bugs and request
-  technical help (plhdb-bug@nescent.org).
 
 License
 -------
@@ -103,7 +88,7 @@ License
 This software is released under the GPL v3 license (see included LICENSE).
 
 >  Primate Life Histories Database
->  Copyright (C) 2007-2012 Hilmar Lapp, Xianhua Liu 
+>  Copyright (C) 2007-2015 Hilmar Lapp, Xianhua Liu 
 >
 >  This program is free software: you can redistribute it and/or modify
 >  it under the terms of the GNU General Public License as published by
@@ -117,3 +102,5 @@ This software is released under the GPL v3 license (see included LICENSE).
 >
 >  You should have received a copy of the GNU General Public License
 >  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+[GPL v3 license]: http://www.gnu.org/copyleft/gpl.html
