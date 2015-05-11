@@ -1,4 +1,4 @@
->Data</h2>
+<h2>Data</h2>
 <img src="/images/photos/bogart_copyright.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
 <p>
 This database contains  individual-based life 
