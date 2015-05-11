@@ -359,8 +359,8 @@ search can also be combined with filtering conditions, such as sex distribution 
 <li>Entrydate and Entrytype:  the date and type at which individuals entered their respective study populations. Possible Entrytypes include:
 	<ul><li>B: birth</li>
 	<li>I: immigration</li>
-	<li>C: start of confirmed AnimID</li>
-	<li>Q: initiation of close observation</li>
+	<li>C: start of confirmed identification of the individual</li>
+	<li>O: initiation of close observation</li>
 	</ul>
 </li>
 <li>Departdate and DepartdateError:  the last date on which an animal was observed in the study population is the Departdate. DepartdateError reflects the time between Departdate 
