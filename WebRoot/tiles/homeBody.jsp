@@ -31,6 +31,14 @@ This Demo site was created to illustrate how the actual online database works. I
 through the <a href="http://www.nescent.org">National Evolutionary Synthesis Center</a>. It includes an example dataset, taken from the actual database, to illustrate the graphical 
 user interface.
 </p>
+<h3>How To Cite This Database</h3>
+<p>Please cite the following paper:</p>
+<p>Karen B. Strier, Jeanne Altmann, Diane K. Brockman, Anne
+  M. Bronikowski, Marina Cords, Linda M. Fedigan, Hilmar Lapp, Xianhua
+  Liu, William F. Morris, Anne E. Pusey, Tara S. Stoinski and Susan
+  C. Alberts. 2010. <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x"
+  target="_blank">The Primate Life History Database: a unique shared ecological data resource.</a> Methods in Ecology and Evolution 1(2): 199-211.
+</p>
 
 <h3>How to access the demo database</h3>
 <img src="/images/photos/Fundi_Fanni_Familia_Fadhila_3_A_small.jpg" width="273" height="209" style="float: right;margin-left: 15px; margin-bottom: 15px;">
