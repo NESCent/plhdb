@@ -30,7 +30,6 @@ Source code is available on <a href="http://github.com/NESCent/plhdb">GitHub</a>
 <img src="/images/photos/Baboon_AlbertsAltmann_small.jpg" style="float:right; margin-left: 15px; margin-bottom:15px;" />
 <ul>
 <li>Concept, content, and scientific requirements: <a href="http://www.nescent.org/science/awards_summary.php?id=19">the Evolutionary Ecology of Primate Life Histories Working Group</a>, Susan C Alberts (Duke University, PI), Karen B Strier (University of Wisconsin-Madison, PI) 
-<li>Database and application programming: Hilmar Lapp (NESCent), Xianhua Liu (NESCent)
 </ul>
 
 <h2>Publications</h2>
@@ -39,6 +38,17 @@ Karen B.  Strier, Jeanne  Altmann, Diane K. Brockman, Anne M. Bronikowski, Marin
 2010. <a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x">The Primate Life History Database: a unique shared ecological data resource</a>. Methods in Ecology and Evolution 1(2): 199-211. 
 doi:<a href="http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x">10.1111/j.2041-210X.2010.00023.x</a>
 </p>
+<h2>Contact</h2>
+<ul>
+<li>
+The website is maintained by the <a href="http://biology.duke.edu">Duke University Biology Department</a>. 
+<div style="left-padding: 30px;">
+Duke Biology Department
+Box 90338
+Durham, NC 27708-0719
+</div>
+</li>
+</ul>
 <h2>Podcast</h2>
 <p>
 <embed height="30" width="266" src="http://bdown.astream.com/mee/strier_alberts_podcast.mp3" volume="50" autostart="false" loop="false"></embed>
