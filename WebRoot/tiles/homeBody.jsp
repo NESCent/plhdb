@@ -55,7 +55,5 @@ for actual analyses of primate life histories; they will be incomplete and any r
 <h3>Related web resources</h3>
 <ul>
 <li><a href="https://www.nescent.org/wg_plhd">Project wiki site of the working group</a></li>
-<li><a href="http://www.nescent.org/science/awards_summary.php?id=19">NESCent award page of the working group</a></li>
 <li>Source code <a href="http://github.com/NESCent/plhdb">on GitHub</a></li>
-<li><a href="http://www.nescent.org">National Evolutionary Synthesis Center</a> (NESCent)</li>
 </ul>
