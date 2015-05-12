@@ -36,7 +36,7 @@ public final class Emailer {
 		// Set the host smtp address
 		Properties props = System.getProperties();
 
-		props.put("mail.smtp.host", "smtp.nescent.org");
+		props.put("mail.smtp.host", "smtp.duke.edu");
 		props.put("mail.smtp.port", "25");
 
 		// create some properties and get the default Session
