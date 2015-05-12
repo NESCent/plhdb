@@ -13,7 +13,7 @@
 	
 <link rel="stylesheet" type="text/css" href="/js/dijit/themes/tundra/tundra.css" />
 <link rel="stylesheet" type="text/css" href="/css/plhdb.css" />
-<script type="text/javascript" src="/js/dojo/dojo.js"  djConfig="parseOnLoad: false, isDebug: false"></script>
+<script type="text/javascript" src="/js/dojo/dojo.js"  djConfig="parseOnLoad: false, isDebug: false, locale: 'en'"></script>
 <script type="text/javascript" src="/js/dijit/dijit.js"></script>
 
 
