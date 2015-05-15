@@ -141,9 +141,9 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 <c:if test="${current_month>7 && year>2010}">
 <li><a href="download.go?f=fertility_<c:out value='${year}' />_7_31.csv">7/31/<c:out value="${year}" /></a>
 </li></c:if>
-</ul>--%>
+</ul>
 
-</c:forEach>
+</c:forEach>--%>
 
 <hr/>
 <img src="/images/photos/Campos-Fedigan-Cebus-capucinus-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
