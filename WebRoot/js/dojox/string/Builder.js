@@ -1,84 +1,94 @@
-//>>built
-define("dojox/string/Builder",["dojo/_base/lang"],function(_1){
-var _2=_1.getObject("string",true,dojox).Builder=function(_3){
-var b="";
-this.length=0;
-this.append=function(s){
-if(arguments.length>1){
-var _4="",l=arguments.length;
-switch(l){
-case 9:
-_4=""+arguments[8]+_4;
-case 8:
-_4=""+arguments[7]+_4;
-case 7:
-_4=""+arguments[6]+_4;
-case 6:
-_4=""+arguments[5]+_4;
-case 5:
-_4=""+arguments[4]+_4;
-case 4:
-_4=""+arguments[3]+_4;
-case 3:
-_4=""+arguments[2]+_4;
-case 2:
-b+=""+arguments[0]+arguments[1]+_4;
-break;
-default:
-var i=0;
-while(i<arguments.length){
-_4+=arguments[i++];
-}
-b+=_4;
-}
-}else{
-b+=s;
-}
-this.length=b.length;
-return this;
-};
-this.concat=function(s){
-return this.append.apply(this,arguments);
-};
-this.appendArray=function(_5){
-return this.append.apply(this,_5);
-};
-this.clear=function(){
-b="";
-this.length=0;
-return this;
-};
-this.replace=function(_6,_7){
-b=b.replace(_6,_7);
-this.length=b.length;
-return this;
-};
-this.remove=function(_8,_9){
-if(_9===undefined){
-_9=b.length;
-}
-if(_9==0){
-return this;
-}
-b=b.substr(0,_8)+b.substr(_8+_9);
-this.length=b.length;
-return this;
-};
-this.insert=function(_a,_b){
-if(_a==0){
-b=_b+b;
-}else{
-b=b.slice(0,_a)+_b+b.slice(_a);
-}
-this.length=b.length;
-return this;
-};
-this.toString=function(){
-return b;
-};
-if(_3){
-this.append(_3);
-}
-};
-return _2;
-});
+dojo.provide("dojox.string.Builder");
+
+(function(){
+	dojox.string.Builder = function(/*String?*/str){
+		// summary:
+		//		A fast buffer for creating large strings
+		// str: The initial string to seed the buffer with
+		this.b = dojo.isIE ? [] : "";
+		if(str){ this.append(str); }
+	};
+	
+	var m = {
+	 	append: function(/*String*/s){ 
+			// summary: Append all arguments to the end of the buffer 
+			return this.appendArray(dojo._toArray(arguments)); // dojox.string.Builder
+		},
+		appendArray: function(/*Array*/strings) {
+			this.b = String.prototype.concat.apply(this.b, strings);
+			return this;
+		},
+		clear: function(){
+			// summary: Remove all characters from the buffer
+			this._clear();
+			this.length = 0;
+			return this;
+		},
+		replace: function(oldStr,newStr){
+			// summary: Replace instances of one string with another in the buffer
+			var s = this.toString();
+			s = s.replace(oldStr,newStr);
+			this._reset(s);
+			this.length = s.length;
+			return this;
+		},
+		remove: function(start, len){
+			// summary: Remove len characters starting at index start
+			if(len == 0){ return this; }
+			var s = this.toString();
+			this.clear();
+			if(start > 0){
+				this.append(s.substring(0, start));
+			}
+			if(start+len < s.length){
+				this.append(s.substring(start+len));
+			}
+			return this;
+		},
+		insert: function(index, str){
+			// summary: Insert string str starting at index
+			var s = this.toString();
+			this.clear();
+			if(index == 0){
+				this.append(str);
+				this.append(s);
+				return this;
+			}else{
+				this.append(s.substring(0, index));
+				this.append(str);
+				this.append(s.substring(index));
+			}
+			return this;
+		},
+		toString: function(){
+			return this.b;
+		},
+		_clear: function(){
+			this.b = "";
+		},
+		_reset: function(s){
+			this.b = s;
+		}
+	}; // will hold methods for Builder
+	
+	if(dojo.isIE){
+		dojo.mixin(m, {
+			toString: function(){ 
+				// Summary: Get the buffer as a string
+				return this.b.join(""); 
+			},
+			appendArray: function(strings){
+				this.b = this.b.concat(strings);
+				return this;
+			},
+			_clear: function(){
+				this.b = [];
+			},
+			_reset: function(s){
+				this.b = [ s ];
+			}
+		});
+	}
+	
+	dojo.extend(dojox.string.Builder, m);
+})();

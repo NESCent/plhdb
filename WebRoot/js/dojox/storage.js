@@ -1,3 +1,2 @@
-//>>built
-define("dojox/storage",["./storage/_common"],function(){
-});
+dojo.provide("dojox.storage");
+dojo.require("dojox.storage._common");

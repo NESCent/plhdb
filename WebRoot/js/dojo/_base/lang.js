@@ -1,184 +1,218 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+dojo.provide("dojo._base.lang");
 
-//>>built
-define("dojo/_base/lang",["./kernel","../has","../sniff"],function(_1,_2){
-_2.add("bug-for-in-skips-shadowed",function(){
-for(var i in {toString:1}){
-return 0;
+// Crockford functions (ish)
+
+dojo.isString = function(/*anything*/ it){
+	// summary:	Return true if it is a String.
+	return (typeof it == "string" || it instanceof String); // Boolean
 }
-return 1;
-});
-var _3=_2("bug-for-in-skips-shadowed")?"hasOwnProperty.valueOf.isPrototypeOf.propertyIsEnumerable.toLocaleString.toString.constructor".split("."):[],_4=_3.length,_5=function(_6,_7,_8){
-if(!_8){
-if(_6[0]&&_1.scopeMap[_6[0]]){
-_8=_1.scopeMap[_6.shift()][1];
+
+dojo.isArray = function(/*anything*/ it){
+	// summary: Return true of it is an Array
+	return (it && it instanceof Array || typeof it == "array" || ((typeof dojo["NodeList"] != "undefined") && (it instanceof dojo.NodeList))); // Boolean
+}
+
+if(dojo.isBrowser && dojo.isSafari){
+	// only slow this down w/ gratuitious casting in Safari since it's what's b0rken
+	dojo.isFunction = function(/*anything*/ it){
+		if((typeof(it) == "function") && (it == "[object NodeList]")){ return false; }
+		return (typeof it == "function" || it instanceof Function); // Boolean
+	}
 }else{
-_8=_1.global;
+	dojo.isFunction = function(/*anything*/ it){
+		return (typeof it == "function" || it instanceof Function); // Boolean
+	}
 }
+
+dojo.isObject = function(/*anything*/ it){
+	if(typeof it == "undefined"){ return false; }
+	// FIXME: why true for null?
+	return (it === null || typeof it == "object" || dojo.isArray(it) || dojo.isFunction(it)); // Boolean
 }
-try{
-for(var i=0;i<_6.length;i++){
-var p=_6[i];
-if(!(p in _8)){
-if(_7){
-_8[p]={};
-}else{
-return;
+
+dojo.isArrayLike = function(/*anything*/ it){
+	// return:
+	//		If it walks like a duck and quicks like a duck, return true
+	var d = dojo;
+	if((!it)||(typeof it == "undefined")){ return false; }
+	if(d.isString(it)){ return false; }
+	// keep out built-in constructors (Number, String, ...) which have length
+	// properties
+	if(d.isFunction(it)){ return false; } 
+	if(d.isArray(it)){ return true; }
+	if((it.tagName)&&(it.tagName.toLowerCase()=='form')){ return false; }
+	if(isFinite(it.length)){ return true; }
+	return false; // Boolean
 }
+
+dojo.isAlien = function(/*anything*/ it){
+	// summary: 
+	//		Returns true if it is a built-in function or some other kind of
+	//		oddball that *should* report as a function but doesn't
+	if(!it){ return false; }
+	return !dojo.isFunction(it) && /\{\s*\[native code\]\s*\}/.test(String(it)); // Boolean
 }
-_8=_8[p];
+
+dojo._mixin = function(/*Object*/ obj, /*Object*/ props){
+	// summary:
+	//		Adds all properties and methods of props to obj. This addition is
+	//		"prototype extension safe", so that instances of objects will not
+	//		pass along prototype defaults.
+	var tobj = {};
+	for(var x in props){
+		// the "tobj" condition avoid copying properties in "props"
+		// inherited from Object.prototype.  For example, if obj has a custom
+		// toString() method, don't overwrite it with the toString() method
+		// that props inherited from Object.prototype
+		if((typeof tobj[x] == "undefined") || (tobj[x] != props[x])){
+			obj[x] = props[x];
+		}
+	}
+	// IE doesn't recognize custom toStrings in for..in
+	if(dojo.isIE){
+		var p = props.toString;
+		if((typeof(p) == "function") 
+			&& (p != obj.toString) 
+			&& (p != tobj.toString) 
+			&& (p != "\nfunction toString() {\n    [native code]\n}\n")){
+				obj.toString = props.toString;
+		}
+	}
+	return obj; // Object
 }
-return _8;
+
+dojo.mixin = function(/*Object*/obj, /*Object...*/props){
+	// summary:	Adds all properties and methods of props to obj. 
+	for(var i=1, l=arguments.length; i<l; i++){
+		dojo._mixin(obj, arguments[i]);
+	}
+	return obj; // Object
 }
-catch(e){
+
+dojo.extend = function(/*Object*/ constructor, /*Object...*/ props){
+	// summary:
+	//		Adds all properties and methods of props to constructor's
+	//		prototype, making them available to all instances created with
+	//		constructor.
+	for(var i=1, l=arguments.length; i<l; i++){
+		dojo._mixin(constructor.prototype, arguments[i]);
+	}
+	return constructor; // Object
 }
-},_9=Object.prototype.toString,_a=function(_b,_c,_d){
-return (_d||[]).concat(Array.prototype.slice.call(_b,_c||0));
-},_e=/\{([^\}]+)\}/g;
-var _f={_extraNames:_3,_mixin:function(_10,_11,_12){
-var _13,s,i,_14={};
-for(_13 in _11){
-s=_11[_13];
-if(!(_13 in _10)||(_10[_13]!==s&&(!(_13 in _14)||_14[_13]!==s))){
-_10[_13]=_12?_12(s):s;
+
+dojo._hitchArgs = function(scope, method /*,...*/){
+	var pre = dojo._toArray(arguments, 2);
+	var named = dojo.isString(method);
+	return function(){
+		// arrayify arguments
+		var args = dojo._toArray(arguments);
+		// locate our method
+		var f = (named ? (scope||dojo.global)[method] : method);
+		// invoke with collected args
+		return (f)&&(f.apply(scope||this, pre.concat(args))); // Any
+ 	} // Function
 }
+
+dojo.hitch = function(/*Object*/scope, /*Function|String*/method /*,...*/){
+	// summary: 
+	//		Returns a function that will only ever execute in the a given scope. 
+	//		This allows for easy use of object member functions
+	//		in callbacks and other places in which the "this" keyword may
+	//		otherwise not reference the expected scope. 
+	//		Any number of default positional arguments may be passed as parameters 
+	//		beyond "method".
+	//		Each of these values will be used to "placehold" (similar to curry)
+	//		for the hitched function. 
+	// scope: 
+	//		The scope to use when method executes. If method is a string, 
+	//		scope is also the object containing method.
+	// method:
+	//		A function to be hitched to scope, or the name of the method in
+	//		scope to be hitched.
+	// usage:
+	//		dojo.hitch(foo, "bar")(); // runs foo.bar() in the scope of foo
+	//		dojo.hitch(foo, myFunction); // returns a function that runs myFunction in the scope of foo
+	if(arguments.length > 2){
+		return dojo._hitchArgs.apply(dojo, arguments);
+	}
+	if(!method){
+		method = scope;
+		scope = null;
+	}
+	if(dojo.isString(method)){
+		scope = scope || dojo.global;
+		if (!scope[method]) throw(['dojo.hitch: scope["', method, '"] is null (scope="', scope, '")'].join(''))
+		return function(){ return scope[method].apply(scope, arguments||[]); }
+	}else{
+		return (!scope ? method : function(){ return method.apply(scope, arguments||[]); });
+	}
 }
-if(_2("bug-for-in-skips-shadowed")){
-if(_11){
-for(i=0;i<_4;++i){
-_13=_3[i];
-s=_11[_13];
-if(!(_13 in _10)||(_10[_13]!==s&&(!(_13 in _14)||_14[_13]!==s))){
-_10[_13]=_12?_12(s):s;
+
+dojo._delegate = function(obj, props){
+	// boodman/crockford delegation
+	function TMP(){};
+	TMP.prototype = obj;
+	var tmp = new TMP();
+	if(props){
+		dojo.mixin(tmp, props);
+	}
+	return tmp;
 }
+
+dojo.partial = function(/*Function|String*/method /*, ...*/){
+	// summary:
+	//		similar to hitch() except that the scope object is left to be
+	//		whatever the execution context eventually becomes. This is the
+	//		functional equivalent of calling:
+	//		dojo.hitch(null, funcName, ...);
+	var arr = [ null ];
+	return dojo.hitch.apply(dojo, arr.concat(dojo._toArray(arguments)));
 }
+
+dojo._toArray = function(/*Object*/obj, /*Number?*/offset){
+	// summary:
+	//		Converts an array-like object (i.e. arguments, DOMCollection)
+	//		to an array. Returns a new Array object.
+	var arr = [];
+	for(var x= offset||0; x<obj.length; x++){
+		arr.push(obj[x]);
+	}
+	return arr;
 }
+
+dojo.clone = function(/*anything*/ o){
+	// summary:
+	//		Clones objects (including DOM nodes) and all children.
+	//		Warning: do not clone cyclic structures.
+	if(!o){ return o; }
+	if(dojo.isArray(o)){
+		var r = [];
+		for(var i = 0; i < o.length; ++i){
+			r.push(dojo.clone(o[i]));
+		}
+		return r;
+	}else if(dojo.isObject(o)){
+		if(o.nodeType && o.cloneNode){ // isNode
+			return o.cloneNode(true);
+		}else{
+			var r = new o.constructor(); // specific to dojo.declare()'d classes!
+			for(var i in o){
+				if(!(i in r) || r[i] != o[i]){
+					r[i] = dojo.clone(o[i]);
+				}
+			}
+			return r;
+		}
+	}
+	return o;
 }
-return _10;
-},mixin:function(_15,_16){
-if(!_15){
-_15={};
+
+dojo.trim = function(/*String*/ str){
+	// summary: trims whitespaces from both sides of the string
+	// description:
+	//	This version of trim() was selected for inclusion into the base
+	//	due to its compact size and relatively good performance (see Steven Levithan's blog: 
+	//	http://blog.stevenlevithan.com/archives/faster-trim-javascript).
+	//	The fastest but longest version of this function is going to be placed in dojo.string.
+	return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');	// String
 }
-for(var i=1,l=arguments.length;i<l;i++){
-_f._mixin(_15,arguments[i]);
-}
-return _15;
-},setObject:function(_17,_18,_19){
-var _1a=_17.split("."),p=_1a.pop(),obj=_5(_1a,true,_19);
-return obj&&p?(obj[p]=_18):undefined;
-},getObject:function(_1b,_1c,_1d){
-return _5(_1b?_1b.split("."):[],_1c,_1d);
-},exists:function(_1e,obj){
-return _f.getObject(_1e,false,obj)!==undefined;
-},isString:function(it){
-return (typeof it=="string"||it instanceof String);
-},isArray:function(it){
-return it&&(it instanceof Array||typeof it=="array");
-},isFunction:function(it){
-return _9.call(it)==="[object Function]";
-},isObject:function(it){
-return it!==undefined&&(it===null||typeof it=="object"||_f.isArray(it)||_f.isFunction(it));
-},isArrayLike:function(it){
-return it&&it!==undefined&&!_f.isString(it)&&!_f.isFunction(it)&&!(it.tagName&&it.tagName.toLowerCase()=="form")&&(_f.isArray(it)||isFinite(it.length));
-},isAlien:function(it){
-return it&&!_f.isFunction(it)&&/\{\s*\[native code\]\s*\}/.test(String(it));
-},extend:function(_1f,_20){
-for(var i=1,l=arguments.length;i<l;i++){
-_f._mixin(_1f.prototype,arguments[i]);
-}
-return _1f;
-},_hitchArgs:function(_21,_22){
-var pre=_f._toArray(arguments,2);
-var _23=_f.isString(_22);
-return function(){
-var _24=_f._toArray(arguments);
-var f=_23?(_21||_1.global)[_22]:_22;
-return f&&f.apply(_21||this,pre.concat(_24));
-};
-},hitch:function(_25,_26){
-if(arguments.length>2){
-return _f._hitchArgs.apply(_1,arguments);
-}
-if(!_26){
-_26=_25;
-_25=null;
-}
-if(_f.isString(_26)){
-_25=_25||_1.global;
-if(!_25[_26]){
-throw (["lang.hitch: scope[\"",_26,"\"] is null (scope=\"",_25,"\")"].join(""));
-}
-return function(){
-return _25[_26].apply(_25,arguments||[]);
-};
-}
-return !_25?_26:function(){
-return _26.apply(_25,arguments||[]);
-};
-},delegate:(function(){
-function TMP(){
-};
-return function(obj,_27){
-TMP.prototype=obj;
-var tmp=new TMP();
-TMP.prototype=null;
-if(_27){
-_f._mixin(tmp,_27);
-}
-return tmp;
-};
-})(),_toArray:_2("ie")?(function(){
-function _28(obj,_29,_2a){
-var arr=_2a||[];
-for(var x=_29||0;x<obj.length;x++){
-arr.push(obj[x]);
-}
-return arr;
-};
-return function(obj){
-return ((obj.item)?_28:_a).apply(this,arguments);
-};
-})():_a,partial:function(_2b){
-var arr=[null];
-return _f.hitch.apply(_1,arr.concat(_f._toArray(arguments)));
-},clone:function(src){
-if(!src||typeof src!="object"||_f.isFunction(src)){
-return src;
-}
-if(src.nodeType&&"cloneNode" in src){
-return src.cloneNode(true);
-}
-if(src instanceof Date){
-return new Date(src.getTime());
-}
-if(src instanceof RegExp){
-return new RegExp(src);
-}
-var r,i,l;
-if(_f.isArray(src)){
-r=[];
-for(i=0,l=src.length;i<l;++i){
-if(i in src){
-r.push(_f.clone(src[i]));
-}
-}
-}else{
-r=src.constructor?new src.constructor():{};
-}
-return _f._mixin(r,src,_f.clone);
-},trim:String.prototype.trim?function(str){
-return str.trim();
-}:function(str){
-return str.replace(/^\s\s*/,"").replace(/\s\s*$/,"");
-},replace:function(_2c,map,_2d){
-return _2c.replace(_2d||_e,_f.isFunction(map)?map:function(_2e,k){
-return _f.getObject(k,false,map);
-});
-}};
-1&&_f.mixin(_1,_f);
-return _f;
-});

@@ -1,4 +1,2 @@
-//>>built
-define("dojox/validate",["./validate/_base"],function(_1){
-return _1;
-});
+dojo.provide("dojox.validate");
+dojo.require("dojox.validate._base"); 

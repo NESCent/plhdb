@@ -1,48 +1,114 @@
-//>>built
-define("dijit/_Container",["dojo/_base/array","dojo/_base/declare","dojo/dom-construct","dojo/_base/kernel"],function(_1,_2,_3,_4){
-return _2("dijit._Container",null,{buildRendering:function(){
-this.inherited(arguments);
-if(!this.containerNode){
-this.containerNode=this.domNode;
-}
-},addChild:function(_5,_6){
-var _7=this.containerNode;
-if(_6>0){
-_7=_7.firstChild;
-while(_6>0){
-if(_7.nodeType==1){
-_6--;
-}
-_7=_7.nextSibling;
-}
-if(_7){
-_6="before";
-}else{
-_7=this.containerNode;
-_6="last";
-}
-}
-_3.place(_5.domNode,_7,_6);
-if(this._started&&!_5._started){
-_5.startup();
-}
-},removeChild:function(_8){
-if(typeof _8=="number"){
-_8=this.getChildren()[_8];
-}
-if(_8){
-var _9=_8.domNode;
-if(_9&&_9.parentNode){
-_9.parentNode.removeChild(_9);
-}
-}
-},hasChildren:function(){
-return this.getChildren().length>0;
-},_getSiblingOfChild:function(_a,_b){
-_4.deprecated(this.declaredClass+"::_getSiblingOfChild() is deprecated. Use _KeyNavMixin::_getNext() instead.","","2.0");
-var _c=this.getChildren(),_d=_1.indexOf(_c,_a);
-return _c[_d+_b];
-},getIndexOfChild:function(_e){
-return _1.indexOf(this.getChildren(),_e);
-}});
-});
+dojo.provide("dijit._Container");
+
+dojo.declare("dijit._Contained",
+	null,
+	{
+		// summary
+		//		Mixin for widgets that are children of a container widget
+
+		getParent: function(){
+			// summary:
+			//		returns the parent widget of this widget, assuming the parent
+			//		implements dijit._Container
+			for(var p=this.domNode.parentNode; p; p=p.parentNode){
+				var id = p.getAttribute && p.getAttribute("widgetId");
+				if(id){
+					var parent = dijit.byId(id);
+					return parent.isContainer ? parent : null;
+				}
+			}
+			return null;
+		},
+
+		_getSibling: function(which){
+			var node = this.domNode;
+			do{
+				node = node[which+"Sibling"];
+			}while(node && node.nodeType != 1);
+			if(!node){ return null; } // null
+			var id = node.getAttribute("widgetId");
+			return dijit.byId(id);
+		},
+
+		getPreviousSibling: function(){
+			// summary:
+			//		returns null if this is the first child of the parent,
+			//		otherwise returns the next element sibling to the "left".
+
+			return this._getSibling("previous");
+		},
+
+		getNextSibling: function(){
+			// summary:
+			//		returns null if this is the last child of the parent,
+			//		otherwise returns the next element sibling to the "right".
+
+			return this._getSibling("next");
+		}
+	}
+);
+
+dojo.declare("dijit._Container",
+	null,
+	{
+		// summary
+		//		Mixin for widgets that contain a list of children like SplitContainer
+
+		isContainer: true,
+
+		addChild: function(/*Widget*/ widget, /*int?*/ insertIndex){
+			// summary:
+			//		Process the given child widget, inserting it's dom node as
+			//		a child of our dom node
+
+			if(typeof insertIndex == "undefined"){
+				insertIndex = "last";
+			}
+			dojo.place(widget.domNode, this.containerNode || this.domNode, insertIndex);
+
+			// If I've been started but the child widget hasn't been started,
+			// start it now.  Make sure to do this after widget has been
+			// inserted into the DOM tree, so it can see that it's being controlled by me,
+			// so it doesn't try to size itself.
+			if(this._started && !widget._started){
+				widget.startup();
+			}
+		},
+
+		removeChild: function(/*Widget*/ widget){
+			// summary:
+			//		removes the passed widget instance from this widget but does
+			//		not destroy it
+			var node = widget.domNode;
+			node.parentNode.removeChild(node);	// detach but don't destroy
+		},
+
+		_nextElement: function(node){
+			do{
+				node = node.nextSibling;
+			}while(node && node.nodeType != 1);
+			return node;
+		},
+
+		_firstElement: function(node){
+			node = node.firstChild;
+			if(node && node.nodeType != 1){
+				node = this._nextElement(node);
+			}
+			return node;
+		},
+
+		getChildren: function(){
+			// summary:
+			//		returns array of children widgets
+			return dojo.query("> [widgetId]", this.containerNode || this.domNode).map(dijit.byNode); // Array
+		},
+
+		hasChildren: function(){
+			// summary:
+			//		returns true if widget has children
+			var cn = this.containerNode || this.domNode;
+			return !!this._firstElement(cn); // Boolean
+		}
+	}
+);

@@ -1,8 +1,13 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
-
-//>>built
-define("dojo/cldr/nls/it/currency",{"HKD_displayName":"Dollaro di Hong Kong","CHF_displayName":"Franco Svizzero","JPY_symbol":"JP¥","CAD_displayName":"Dollaro Canadese","HKD_symbol":"HK$","CNY_displayName":"Renmimbi Cinese","USD_symbol":"US$","AUD_displayName":"Dollaro Australiano","JPY_displayName":"Yen Giapponese","CAD_symbol":"CA$","USD_displayName":"Dollaro Statunitense","CNY_symbol":"CN¥","GBP_displayName":"Sterlina Inglese","GBP_symbol":"£","AUD_symbol":"A$","EUR_displayName":"Euro"});
+// generated from ldml/main/*.xml, xpath: ldml/numbers/currencies
+({
+	AUD_displayName:"Dollaro Australiano",
+	CAD_displayName:"Dollaro Canadese",
+	CHF_displayName:"Franco Svizzero",
+	CHF_symbol:"SFr.",
+	EUR_displayName:"Euro",
+	GBP_displayName:"Sterlina Inglese",
+	HKD_displayName:"Dollaro di Hong Kong",
+	JPY_displayName:"Yen Giapponese",
+	USD_displayName:"Dollaro Statunitense"
+})
+                 

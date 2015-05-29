@@ -1,4 +1,2 @@
-//>>built
-define("dojox/collections",["./collections/_base"],function(_1){
-return _1;
-});
+dojo.provide("dojox.collections");
+dojo.require("dojox.collections._base");

@@ -1,215 +1,190 @@
-//>>built
-require({cache:{"url:dijit/layout/templates/AccordionButton.html":"<div data-dojo-attach-event='ondijitclick:_onTitleClick' class='dijitAccordionTitle' role=\"presentation\">\n\t<div data-dojo-attach-point='titleNode,focusNode' data-dojo-attach-event='onkeydown:_onTitleKeyDown'\n\t\t\tclass='dijitAccordionTitleFocus' role=\"tab\" aria-expanded=\"false\"\n\t\t><span class='dijitInline dijitAccordionArrow' role=\"presentation\"></span\n\t\t><span class='arrowTextUp' role=\"presentation\">+</span\n\t\t><span class='arrowTextDown' role=\"presentation\">-</span\n\t\t><span role=\"presentation\" class=\"dijitInline dijitIcon\" data-dojo-attach-point=\"iconNode\"></span>\n\t\t<span role=\"presentation\" data-dojo-attach-point='titleTextNode, textDirNode' class='dijitAccordionText'></span>\n\t</div>\n</div>\n"}});
-define("dijit/layout/AccordionContainer",["require","dojo/_base/array","dojo/_base/declare","dojo/_base/fx","dojo/dom","dojo/dom-attr","dojo/dom-class","dojo/dom-construct","dojo/dom-geometry","dojo/keys","dojo/_base/lang","dojo/sniff","dojo/topic","../focus","../_base/manager","dojo/ready","../_Widget","../_Container","../_TemplatedMixin","../_CssStateMixin","./StackContainer","./ContentPane","dojo/text!./templates/AccordionButton.html","../a11yclick"],function(_1,_2,_3,fx,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f,_10,_11,_12,_13,_14,_15,_16){
-var _17=_3("dijit.layout._AccordionButton",[_10,_12,_13],{templateString:_16,label:"",_setLabelAttr:{node:"titleTextNode",type:"innerHTML"},title:"",_setTitleAttr:{node:"titleTextNode",type:"attribute",attribute:"title"},iconClassAttr:"",_setIconClassAttr:{node:"iconNode",type:"class"},baseClass:"dijitAccordionTitle",getParent:function(){
-return this.parent;
-},buildRendering:function(){
-this.inherited(arguments);
-var _18=this.id.replace(" ","_");
-_5.set(this.titleTextNode,"id",_18+"_title");
-this.focusNode.setAttribute("aria-labelledby",_5.get(this.titleTextNode,"id"));
-_4.setSelectable(this.domNode,false);
-},getTitleHeight:function(){
-return _8.getMarginSize(this.domNode).h;
-},_onTitleClick:function(){
-var _19=this.getParent();
-_19.selectChild(this.contentWidget,true);
-_d.focus(this.focusNode);
-},_onTitleKeyDown:function(evt){
-return this.getParent()._onKeyDown(evt,this.contentWidget);
-},_setSelectedAttr:function(_1a){
-this._set("selected",_1a);
-this.focusNode.setAttribute("aria-expanded",_1a?"true":"false");
-this.focusNode.setAttribute("aria-selected",_1a?"true":"false");
-this.focusNode.setAttribute("tabIndex",_1a?"0":"-1");
-}});
-if(_b("dojo-bidi")){
-_17.extend({_setLabelAttr:function(_1b){
-this._set("label",_1b);
-_5.set(this.titleTextNode,"innerHTML",_1b);
-this.applyTextDir(this.titleTextNode);
-},_setTitleAttr:function(_1c){
-this._set("title",_1c);
-_5.set(this.titleTextNode,"title",_1c);
-this.applyTextDir(this.titleTextNode);
-}});
-}
-var _1d=_3("dijit.layout._AccordionInnerContainer"+(_b("dojo-bidi")?"_NoBidi":""),[_10,_13],{baseClass:"dijitAccordionInnerContainer",isLayoutContainer:true,buildRendering:function(){
-this.domNode=_7.place("<div class='"+this.baseClass+"' role='presentation'>",this.contentWidget.domNode,"after");
-var _1e=this.contentWidget,cls=_a.isString(this.buttonWidget)?_a.getObject(this.buttonWidget):this.buttonWidget;
-this.button=_1e._buttonWidget=(new cls({contentWidget:_1e,label:_1e.title,title:_1e.tooltip,dir:_1e.dir,lang:_1e.lang,textDir:_1e.textDir||this.textDir,iconClass:_1e.iconClass,id:_1e.id+"_button",parent:this.parent})).placeAt(this.domNode);
-this.containerNode=_7.place("<div class='dijitAccordionChildWrapper' role='tabpanel' style='display:none'>",this.domNode);
-this.containerNode.setAttribute("aria-labelledby",this.button.id);
-_7.place(this.contentWidget.domNode,this.containerNode);
-},postCreate:function(){
-this.inherited(arguments);
-var _1f=this.button,cw=this.contentWidget;
-this._contentWidgetWatches=[cw.watch("title",_a.hitch(this,function(_20,_21,_22){
-_1f.set("label",_22);
-})),cw.watch("tooltip",_a.hitch(this,function(_23,_24,_25){
-_1f.set("title",_25);
-})),cw.watch("iconClass",_a.hitch(this,function(_26,_27,_28){
-_1f.set("iconClass",_28);
-}))];
-},_setSelectedAttr:function(_29){
-this._set("selected",_29);
-this.button.set("selected",_29);
-if(_29){
-var cw=this.contentWidget;
-if(cw.onSelected){
-cw.onSelected();
-}
-}
-},startup:function(){
-this.contentWidget.startup();
-},destroy:function(){
-this.button.destroyRecursive();
-_2.forEach(this._contentWidgetWatches||[],function(w){
-w.unwatch();
-});
-delete this.contentWidget._buttonWidget;
-delete this.contentWidget._wrapperWidget;
-this.inherited(arguments);
-},destroyDescendants:function(_2a){
-this.contentWidget.destroyRecursive(_2a);
-}});
-if(_b("dojo-bidi")){
-_1d=_3("dijit.layout._AccordionInnerContainer",_1d,{postCreate:function(){
-this.inherited(arguments);
-var _2b=this.button;
-this._contentWidgetWatches.push(this.contentWidget.watch("textDir",function(_2c,_2d,_2e){
-_2b.set("textDir",_2e);
-}));
-}});
-}
-var _2f=_3("dijit.layout.AccordionContainer",_14,{duration:_e.defaultDuration,buttonWidget:_17,baseClass:"dijitAccordionContainer",buildRendering:function(){
-this.inherited(arguments);
-this.domNode.style.overflow="hidden";
-this.domNode.setAttribute("role","tablist");
-},startup:function(){
-if(this._started){
-return;
-}
-this.inherited(arguments);
-if(this.selectedChildWidget){
-this.selectedChildWidget._wrapperWidget.set("selected",true);
-}
-},layout:function(){
-var _30=this.selectedChildWidget;
-if(!_30){
-return;
-}
-var _31=_30._wrapperWidget.domNode,_32=_8.getMarginExtents(_31),_33=_8.getPadBorderExtents(_31),_34=_30._wrapperWidget.containerNode,_35=_8.getMarginExtents(_34),_36=_8.getPadBorderExtents(_34),_37=this._contentBox;
-var _38=0;
-_2.forEach(this.getChildren(),function(_39){
-if(_39!=_30){
-_38+=_8.getMarginSize(_39._wrapperWidget.domNode).h;
-}
-});
-this._verticalSpace=_37.h-_38-_32.h-_33.h-_35.h-_36.h-_30._buttonWidget.getTitleHeight();
-this._containerContentBox={h:this._verticalSpace,w:this._contentBox.w-_32.w-_33.w-_35.w-_36.w};
-if(_30){
-_30.resize(this._containerContentBox);
-}
-},_setupChild:function(_3a){
-_3a._wrapperWidget=_1d({contentWidget:_3a,buttonWidget:this.buttonWidget,id:_3a.id+"_wrapper",dir:_3a.dir,lang:_3a.lang,textDir:_3a.textDir||this.textDir,parent:this});
-this.inherited(arguments);
-_7.place(_3a.domNode,_3a._wrapper,"replace");
-},removeChild:function(_3b){
-if(_3b._wrapperWidget){
-_7.place(_3b.domNode,_3b._wrapperWidget.domNode,"after");
-_3b._wrapperWidget.destroy();
-delete _3b._wrapperWidget;
-}
-_6.remove(_3b.domNode,"dijitHidden");
-this.inherited(arguments);
-},getChildren:function(){
-return _2.map(this.inherited(arguments),function(_3c){
-return _3c.declaredClass=="dijit.layout._AccordionInnerContainer"?_3c.contentWidget:_3c;
-},this);
-},destroy:function(){
-if(this._animation){
-this._animation.stop();
-}
-_2.forEach(this.getChildren(),function(_3d){
-if(_3d._wrapperWidget){
-_3d._wrapperWidget.destroy();
-}else{
-_3d.destroyRecursive();
-}
-});
-this.inherited(arguments);
-},_showChild:function(_3e){
-_3e._wrapperWidget.containerNode.style.display="block";
-return this.inherited(arguments);
-},_hideChild:function(_3f){
-_3f._wrapperWidget.containerNode.style.display="none";
-this.inherited(arguments);
-},_transition:function(_40,_41,_42){
-if(_b("ie")<8){
-_42=false;
-}
-if(this._animation){
-this._animation.stop(true);
-delete this._animation;
-}
-var _43=this;
-if(_40){
-_40._wrapperWidget.set("selected",true);
-var d=this._showChild(_40);
-if(this.doLayout&&_40.resize){
-_40.resize(this._containerContentBox);
-}
-}
-if(_41){
-_41._wrapperWidget.set("selected",false);
-if(!_42){
-this._hideChild(_41);
-}
-}
-if(_42){
-var _44=_40._wrapperWidget.containerNode,_45=_41._wrapperWidget.containerNode;
-var _46=_40._wrapperWidget.containerNode,_47=_8.getMarginExtents(_46),_48=_8.getPadBorderExtents(_46),_49=_47.h+_48.h;
-_45.style.height=(_43._verticalSpace-_49)+"px";
-this._animation=new fx.Animation({node:_44,duration:this.duration,curve:[1,this._verticalSpace-_49-1],onAnimate:function(_4a){
-_4a=Math.floor(_4a);
-_44.style.height=_4a+"px";
-_45.style.height=(_43._verticalSpace-_49-_4a)+"px";
-},onEnd:function(){
-delete _43._animation;
-_44.style.height="auto";
-_41._wrapperWidget.containerNode.style.display="none";
-_45.style.height="auto";
-_43._hideChild(_41);
-}});
-this._animation.onStop=this._animation.onEnd;
-this._animation.play();
-}
-return d;
-},_onKeyDown:function(e,_4b){
-if(this.disabled||e.altKey||!(_4b||e.ctrlKey)){
-return;
-}
-var c=e.keyCode;
-if((_4b&&(c==_9.LEFT_ARROW||c==_9.UP_ARROW))||(e.ctrlKey&&c==_9.PAGE_UP)){
-this._adjacent(false)._buttonWidget._onTitleClick();
-e.stopPropagation();
-e.preventDefault();
-}else{
-if((_4b&&(c==_9.RIGHT_ARROW||c==_9.DOWN_ARROW))||(e.ctrlKey&&(c==_9.PAGE_DOWN||c==_9.TAB))){
-this._adjacent(true)._buttonWidget._onTitleClick();
-e.stopPropagation();
-e.preventDefault();
-}
-}
-}});
-if(_b("dijit-legacy-requires")){
-_f(0,function(){
-var _4c=["dijit/layout/AccordionPane"];
-_1(_4c);
-});
-}
-_2f._InnerContainer=_1d;
-_2f._Button=_17;
-return _2f;
+dojo.provide("dijit.layout.AccordionContainer");
+
+dojo.require("dojo.fx");
+
+dojo.require("dijit._Container");
+dojo.require("dijit._Templated");
+dojo.require("dijit.layout.StackContainer");
+dojo.require("dijit.layout.ContentPane");
+
+dojo.declare(
+	"dijit.layout.AccordionContainer",
+	dijit.layout.StackContainer,
+	{
+		// summary: 
+		//		Holds a set of panes where every pane's title is visible, but only one pane's content is visible at a time,
+		//		and switching between panes is visualized by sliding the other panes up/down.
+		// usage:
+		// 	<div dojoType="dijit.layout.AccordionContainer">
+		// 		<div dojoType="dijit.layout.AccordionPane" title="pane 1">
+		// 			<div dojoType="dijit.layout.ContentPane">...</div>
+		//  	</div>
+		// 		<div dojoType="dijit.layout.AccordionPane" title="pane 2">
+		//			<p>This is some text</p>
+		// 		...
+		// 	</div>
+
+		// duration: Integer
+		//		Amount of time (in ms) it takes to slide panes
+		duration: 250,
+
+		_verticalSpace: 0,
+
+		postCreate: function(){
+			this.domNode.style.overflow="hidden";
+			dijit.layout.AccordionContainer.superclass.postCreate.apply(this, arguments);
+		},
+
+		startup: function(){
+			if(this._started){ return; }
+			dijit.layout.StackContainer.prototype.startup.apply(this, arguments);
+			if(this.selectedChildWidget){
+				var style = this.selectedChildWidget.containerNode.style;
+				style.display = "";
+				style.overflow = "auto";
+				this.selectedChildWidget._setSelectedState(true);
+			}
+		},
+
+		layout: function(){
+			// summary
+			//		Set the height of the open pane based on what room remains
+			// get cumulative height of all the title bars, and figure out which pane is open
+			var totalCollapsedHeight = 0;
+			var openPane = this.selectedChildWidget;
+			dojo.forEach(this.getChildren(), function(child){
+				totalCollapsedHeight += child.getTitleHeight();
+			});
+			var mySize = this._contentBox;
+			this._verticalSpace = (mySize.h - totalCollapsedHeight);
+			if(openPane){
+				openPane.containerNode.style.height = this._verticalSpace + "px";
+/***
+TODO: this is wrong.  probably you wanted to call resize on the SplitContainer
+inside the AccordionPane??
+				if(openPane.resize){
+					openPane.resize({h: this._verticalSpace});
+				}
+***/
+			}
+		},
+
+		_setupChild: function(/*Widget*/ page){
+			// Summary: prepare the given child
+			return page;
+		},
+
+		_transition: function(/*Widget?*/newWidget, /*Widget?*/oldWidget){
+//TODO: should be able to replace this with calls to slideIn/slideOut
+			var animations = [];
+			var paneHeight = this._verticalSpace;
+			if(newWidget){
+				newWidget.setSelected(true);
+				var newContents = newWidget.containerNode;
+				newContents.style.display = "";
+
+				animations.push(dojo.animateProperty({ 
+					node: newContents, 
+					duration: this.duration,
+					properties: {
+						height: { start: "1", end: paneHeight }
+					},
+					onEnd: function(){
+						newContents.style.overflow = "auto";
+					}
+				}));
+			}
+			if(oldWidget){
+				oldWidget.setSelected(false);
+				var oldContents = oldWidget.containerNode;
+				oldContents.style.overflow = "hidden";
+				animations.push(dojo.animateProperty({ 
+					node: oldContents,
+					duration: this.duration,
+					properties: {
+						height: { start: paneHeight, end: "1" } 
+					},
+					onEnd: function(){
+						oldContents.style.display = "none";
+					}
+				}));
+			}
+
+			dojo.fx.combine(animations).play();
+		},
+
+		// note: we are treating the container as controller here
+		processKey: function(/*Event*/ evt){
+			if(this.disabled || evt.altKey || evt.shiftKey || evt.ctrlKey){
+				return 	dijit.layout.AccordionContainer.superclass._onKeyPress.apply(this, arguments);
+			}
+			var forward = true;
+			switch(evt.keyCode){				
+				case dojo.keys.LEFT_ARROW:
+				case dojo.keys.UP_ARROW:
+					forward = false;
+					// fallthrough
+				case dojo.keys.RIGHT_ARROW:
+				case dojo.keys.DOWN_ARROW:
+					// find currently focused button in children array
+					var children = this.getChildren();
+					var index = dojo.indexOf(children, evt._dijitWidget);
+					// pick next button to focus on
+					index += forward ? 1 : children.length - 1;
+					var next = children[ index % children.length ];
+					dojo.stopEvent(evt);
+					next._onTitleClick();
+			}
+		}
+	}
+);
+
+dojo.declare(
+	"dijit.layout.AccordionPane",
+	[dijit.layout.ContentPane, dijit._Templated, dijit._Contained],
+{
+	// summary
+	//		AccordionPane is a box with a title that contains another widget (often a ContentPane).
+	//		It's a widget used internally by AccordionContainer.
+
+	templatePath: dojo.moduleUrl("dijit.layout", "templates/AccordionPane.html"),
+
+	postCreate: function(){
+		dijit.layout.AccordionPane.superclass.postCreate.apply(this, arguments);
+		dojo.setSelectable(this.titleNode, false);
+		this.setSelected(this.selected);
+	},
+
+	getTitleHeight: function(){
+		// summary: returns the height of the title dom node
+		return dojo.marginBox(this.titleNode).h;	// Integer
+	},
+
+	_onTitleClick: function(){
+		// summary: callback when someone clicks my title
+		var parent = this.getParent();
+		parent.selectChild(this);
+		dijit.focus(this.focusNode);
+	},
+
+	_onKeyPress: function(/*Event*/ evt){
+		evt._dijitWidget = this;
+		return this.getParent().processKey(evt);
+	},
+	
+	_setSelectedState: function(/*Boolean*/ isSelected){
+		this.selected = isSelected;
+		(isSelected ? dojo.addClass : dojo.removeClass)(this.domNode, "dijitAccordionPane-selected");
+		this.focusNode.setAttribute("tabIndex",(isSelected)? "0":"-1");
+	},
+	
+	setSelected: function(/*Boolean*/ isSelected){
+		// summary: change the selected state on this pane
+		this._setSelectedState(isSelected);
+		if(isSelected){ this.onSelected(); }
+	},
+
+	onSelected: function(){
+		// summary: called when this pane is selected
+	}
 });

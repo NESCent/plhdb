@@ -1,7 +1,38 @@
-//>>built
-define("dojox/fx/easing",["dojo/_base/lang","dojo/_base/kernel","dojo/fx/easing"],function(_1,_2,_3){
-_2.deprecated("dojox.fx.easing","Upgraded to Core, use dojo.fx.easing instead","2.0");
-var _4=_1.getObject("dojox.fx",true);
-_4.easing=_3;
-return _3;
-});
+dojo.provide("dojox.fx.easing");
+/*
+	dojox.fx.easing is in this little file so you don't need dojox.fx to utilize this.
+	dojox.fx has a lot of fun animations, but this module is optimized for size ... 
+
+*/
+dojox.fx.easing = {
+	// summary: Collection of easing functions to use beyond the default dojo._defaultEasing
+	// 
+	// description:
+	//	Easing functions are used to manipulate the iteration through
+	//	an _Animation's _Line. _Line being the properties of an Animation,
+	//	and the easing function progresses through that Line determing
+	//	how quickly (or slowly) it should go. 
+	//	
+	//	example:
+	//		dojo.require("dojox.fx.easing");
+	//		var anim = dojo.fadeOut({
+	//			node: 'node',	
+	//			duration: 2000,
+	//			easing: dojox.fx.easing.easeIn
+	//		}).play();
+	//
+	easeIn: function(/* Decimal? */n){
+		// summary: an easing function that speeds an _Animation up closer to end
+		return Math.pow(n, 3);
+	},
+
+	easeOut: function(/* Decimal? */n){ 
+		// summary: an easing function that slows an _Animation down towards end
+		return (1 - Math.pow(1-n,3));
+	},
+
+	easeInOut: function(/* Decimal? */n){
+		// summary: an easing function that "humps" in the middle of an _Animation?
+		return ((3 * Math.pow(n, 2)) - (2 * Math.pow(n, 3)))
+	}
+};

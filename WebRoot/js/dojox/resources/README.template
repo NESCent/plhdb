@@ -5,15 +5,11 @@ Version X.XXX
 Release date: MM/DD/YYYY
 -------------------------------------------------------------------------------
 Project state:
-[Object1]:	experimental | alpha | beta | production
-[Object2]:	experimental | alpha | beta | production
--------------------------------------------------------------------------------
-[   ]	l18n support?
-[   ]	a11y support?
+prototype | expermental | beta | stable | production
 -------------------------------------------------------------------------------
 Credits
-[Object1]:	Author one (author contact info)
-[Object2]:	Author two (author contact info)
+	Author one (author contact info)
+	Author two (author contact info)
 -------------------------------------------------------------------------------
 Project description
 
@@ -25,8 +21,6 @@ List any dependencies here.
 -------------------------------------------------------------------------------
 Documentation
 
-Any notes about documentation--such as a link to a page in the Book of Dojo,
-documentation state, etc.--should go here.
 -------------------------------------------------------------------------------
 Installation instructions
 
