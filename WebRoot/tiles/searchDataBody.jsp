@@ -335,7 +335,7 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 %>
 
 <h3>Available downloads</h3>
-<c:forEach var="year" begin="2010" end="${current_year}">
+<%--<c:forEach var="year" begin="2010" end="${current_year}">
 <ul>
 <c:if test="${current_month<12 && year<current_year}">
 <li><a href="download.go?f=biography_<c:out value='${year}' />_12_31.csv">12/31/<c:out value="${year}" /></a>
@@ -344,7 +344,7 @@ request.setAttribute("current_month", Integer.valueOf(calendar.get(java.util.Cal
 <li><a href="download.go?f=biography_<c:out value='${year}' />_7_31.csv">7/31/<c:out value="${year}" /></a>
 </li></c:if>
 </ul>
-</c:forEach>
+</c:forEach>--%>
 
 <hr/>
 <img src="/images/photos/BMSR-Sifaka-F80-2001-5wks-infantBrockmanCredit-small.jpg" style="float:right;margin-left: 15px; margin-bottom:15px;" />
