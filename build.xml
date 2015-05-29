@@ -7,7 +7,7 @@
 
     <!-- Generic project properties -->
     <property name="project.fullname" value="Primary Life History Database"/>
-    <property name="project.version" value="1.1"/>
+    <property name="project.version" value="1.1.2"/>
     <property name="project.name" value="plhdb"/>
 	<property name="plhdb.report_folder" value="/home/plhdb_reports/"/>
 	
