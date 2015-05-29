@@ -71,7 +71,7 @@ public class ResetPasswordController implements Controller {
 				session.flush();
 
 				String subject = "PLHDB: Reeset password";
-				String from = "help@nescent.org";
+				String from = "plhdb@duke.edu";
 				String message = "You have asked to reset your password to the PLHDB system. "
 						+ "Your new (system-generated) password is: "
 						+ password
@@ -79,8 +79,8 @@ public class ResetPasswordController implements Controller {
 						+ "In the event that you recalled your old password in the meantime, it "
 						+ "will no longer be valid. Please login with the password given above "
 						+ "and change it at your earliest convenience. If you have trouble "
-						+ "logging in with your new password, please email help@nescent.org.\n\n"
-						+ "The NESCent IT Team. ";
+						+ "logging in with your new password, please email plhdb@duke.edu.\n\n"
+						+ "The PLHDB Team. ";
 
 				Emailer.sendEmail(from, emailAddress, subject, message,
 						Emailer.CONTENT_TYPE_PLAIN);
