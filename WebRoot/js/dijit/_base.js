@@ -1,4 +1,12 @@
-//>>built
-define("dijit/_base",["./main","./a11y","./WidgetSet","./_base/focus","./_base/manager","./_base/place","./_base/popup","./_base/scroll","./_base/sniff","./_base/typematic","./_base/wai","./_base/window"],function(_1){
-return _1._base;
-});
+dojo.provide("dijit._base");
+
+dojo.require("dijit._base.focus");
+dojo.require("dijit._base.manager");
+dojo.require("dijit._base.place");
+dojo.require("dijit._base.popup");
+dojo.require("dijit._base.scroll");
+dojo.require("dijit._base.sniff");
+dojo.require("dijit._base.bidi");
+dojo.require("dijit._base.typematic");
+dojo.require("dijit._base.wai");
+dojo.require("dijit._base.window");

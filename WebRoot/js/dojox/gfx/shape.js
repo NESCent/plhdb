@@ -1,452 +1,432 @@
-//>>built
-define("dojox/gfx/shape",["./_base","dojo/_base/lang","dojo/_base/declare","dojo/_base/kernel","dojo/_base/sniff","dojo/on","dojo/_base/array","dojo/dom-construct","dojo/_base/Color","./matrix"],function(g,_1,_2,_3,_4,on,_5,_6,_7,_8){
-var _9=g.shape={};
-_9.Shape=_2("dojox.gfx.shape.Shape",null,{constructor:function(){
-this.rawNode=null;
-this.shape=null;
-this.matrix=null;
-this.fillStyle=null;
-this.strokeStyle=null;
-this.bbox=null;
-this.parent=null;
-this.parentMatrix=null;
-if(_4("gfxRegistry")){
-var _a=_9.register(this);
-this.getUID=function(){
-return _a;
-};
-}
-},destroy:function(){
-if(_4("gfxRegistry")){
-_9.dispose(this);
-}
-if(this.rawNode&&"__gfxObject__" in this.rawNode){
-this.rawNode.__gfxObject__=null;
-}
-this.rawNode=null;
-},getNode:function(){
-return this.rawNode;
-},getShape:function(){
-return this.shape;
-},getTransform:function(){
-return this.matrix;
-},getFill:function(){
-return this.fillStyle;
-},getStroke:function(){
-return this.strokeStyle;
-},getParent:function(){
-return this.parent;
-},getBoundingBox:function(){
-return this.bbox;
-},getTransformedBoundingBox:function(){
-var b=this.getBoundingBox();
-if(!b){
-return null;
-}
-var m=this._getRealMatrix(),gm=_8;
-return [gm.multiplyPoint(m,b.x,b.y),gm.multiplyPoint(m,b.x+b.width,b.y),gm.multiplyPoint(m,b.x+b.width,b.y+b.height),gm.multiplyPoint(m,b.x,b.y+b.height)];
-},getEventSource:function(){
-return this.rawNode;
-},setClip:function(_b){
-this.clip=_b;
-},getClip:function(){
-return this.clip;
-},setShape:function(_c){
-this.shape=g.makeParameters(this.shape,_c);
-this.bbox=null;
-return this;
-},setFill:function(_d){
-if(!_d){
-this.fillStyle=null;
-return this;
-}
-var f=null;
-if(typeof (_d)=="object"&&"type" in _d){
-switch(_d.type){
-case "linear":
-f=g.makeParameters(g.defaultLinearGradient,_d);
-break;
-case "radial":
-f=g.makeParameters(g.defaultRadialGradient,_d);
-break;
-case "pattern":
-f=g.makeParameters(g.defaultPattern,_d);
-break;
-}
-}else{
-f=g.normalizeColor(_d);
-}
-this.fillStyle=f;
-return this;
-},setStroke:function(_e){
-if(!_e){
-this.strokeStyle=null;
-return this;
-}
-if(typeof _e=="string"||_1.isArray(_e)||_e instanceof _7){
-_e={color:_e};
-}
-var s=this.strokeStyle=g.makeParameters(g.defaultStroke,_e);
-s.color=g.normalizeColor(s.color);
-return this;
-},setTransform:function(_f){
-this.matrix=_8.clone(_f?_8.normalize(_f):_8.identity);
-return this._applyTransform();
-},_applyTransform:function(){
-return this;
-},moveToFront:function(){
-var p=this.getParent();
-if(p){
-p._moveChildToFront(this);
-this._moveToFront();
-}
-return this;
-},moveToBack:function(){
-var p=this.getParent();
-if(p){
-p._moveChildToBack(this);
-this._moveToBack();
-}
-return this;
-},_moveToFront:function(){
-},_moveToBack:function(){
-},applyRightTransform:function(_10){
-return _10?this.setTransform([this.matrix,_10]):this;
-},applyLeftTransform:function(_11){
-return _11?this.setTransform([_11,this.matrix]):this;
-},applyTransform:function(_12){
-return _12?this.setTransform([this.matrix,_12]):this;
-},removeShape:function(_13){
-if(this.parent){
-this.parent.remove(this,_13);
-}
-return this;
-},_setParent:function(_14,_15){
-this.parent=_14;
-return this._updateParentMatrix(_15);
-},_updateParentMatrix:function(_16){
-this.parentMatrix=_16?_8.clone(_16):null;
-return this._applyTransform();
-},_getRealMatrix:function(){
-var m=this.matrix;
-var p=this.parent;
-while(p){
-if(p.matrix){
-m=_8.multiply(p.matrix,m);
-}
-p=p.parent;
-}
-return m;
-}});
-_9._eventsProcessing={on:function(_17,_18){
-return on(this.getEventSource(),_17,_9.fixCallback(this,g.fixTarget,_18));
-},connect:function(_19,_1a,_1b){
-if(_19.substring(0,2)=="on"){
-_19=_19.substring(2);
-}
-return this.on(_19,_1b?_1.hitch(_1a,_1b):_1a);
-},disconnect:function(_1c){
-return _1c.remove();
-}};
-_9.fixCallback=function(_1d,_1e,_1f,_20){
-if(!_20){
-_20=_1f;
-_1f=null;
-}
-if(_1.isString(_20)){
-_1f=_1f||_3.global;
-if(!_1f[_20]){
-throw (["dojox.gfx.shape.fixCallback: scope[\"",_20,"\"] is null (scope=\"",_1f,"\")"].join(""));
-}
-return function(e){
-return _1e(e,_1d)?_1f[_20].apply(_1f,arguments||[]):undefined;
-};
-}
-return !_1f?function(e){
-return _1e(e,_1d)?_20.apply(_1f,arguments):undefined;
-}:function(e){
-return _1e(e,_1d)?_20.apply(_1f,arguments||[]):undefined;
-};
-};
-_1.extend(_9.Shape,_9._eventsProcessing);
-_9.Container={_init:function(){
-this.children=[];
-this._batch=0;
-},openBatch:function(){
-return this;
-},closeBatch:function(){
-return this;
-},add:function(_21){
-var _22=_21.getParent();
-if(_22){
-_22.remove(_21,true);
-}
-this.children.push(_21);
-return _21._setParent(this,this._getRealMatrix());
-},remove:function(_23,_24){
-for(var i=0;i<this.children.length;++i){
-if(this.children[i]==_23){
-if(_24){
-}else{
-_23.parent=null;
-_23.parentMatrix=null;
-}
-this.children.splice(i,1);
-break;
-}
-}
-return this;
-},clear:function(_25){
-var _26;
-for(var i=0;i<this.children.length;++i){
-_26=this.children[i];
-_26.parent=null;
-_26.parentMatrix=null;
-if(_25){
-_26.destroy();
-}
-}
-this.children=[];
-return this;
-},getBoundingBox:function(){
-if(this.children){
-var _27=null;
-_5.forEach(this.children,function(_28){
-var bb=_28.getBoundingBox();
-if(bb){
-var ct=_28.getTransform();
-if(ct){
-bb=_8.multiplyRectangle(ct,bb);
-}
-if(_27){
-_27.x=Math.min(_27.x,bb.x);
-_27.y=Math.min(_27.y,bb.y);
-_27.endX=Math.max(_27.endX,bb.x+bb.width);
-_27.endY=Math.max(_27.endY,bb.y+bb.height);
-}else{
-_27={x:bb.x,y:bb.y,endX:bb.x+bb.width,endY:bb.y+bb.height};
-}
-}
+dojo.provide("dojox.gfx.shape");
+
+dojo.require("dojox.gfx._base");
+
+dojo.declare("dojox.gfx.Shape", null, {
+	// summary: a Shape object, which knows how to apply 
+	// graphical attributes and transformations
+	
+	constructor: function(){
+		// rawNode: Node: underlying node
+		this.rawNode = null;
+		
+		// shape: Object: an abstract shape object
+		//	(see dojox.gfx.defaultPath,
+		//	dojox.gfx.defaultPolyline,
+		//	dojox.gfx.defaultRect,
+		//	dojox.gfx.defaultEllipse,
+		//	dojox.gfx.defaultCircle,
+		//	dojox.gfx.defaultLine,
+		//	or dojox.gfx.defaultImage)
+		this.shape = null;
+		
+		// matrix: dojox.gfx.matrix.Matrix: a transformation matrix
+		this.matrix = null;
+		
+		// fillStyle: Object: a fill object 
+		//	(see dojox.gfx.defaultLinearGradient, 
+		//	dojox.gfx.defaultRadialGradient, 
+		//	dojox.gfx.defaultPattern, 
+		//	or dojo.Color)
+		this.fillStyle = null;
+		
+		// strokeStyle: Object: a stroke object 
+		//	(see dojox.gfx.defaultStroke) 
+		this.strokeStyle = null;
+		
+		// bbox: dojox.gfx.Rectangle: a bounding box of this shape
+		//	(see dojox.gfx.defaultRect)
+		this.bbox = null;
+		
+		// virtual group structure
+		
+		// parent: Object: a parent or null
+		//	(see dojox.gfx.Surface,
+		//	dojox.gfx.shape.VirtualGroup,
+		//	or dojox.gfx.Group)
+		this.parent = null;
+		
+		// parentMatrix: dojox.gfx.matrix.Matrix
+		//	a transformation matrix inherited from the parent
+		this.parentMatrix = null;
+	},
+	
+	// trivial getters
+	
+	getNode: function(){
+		// summary: returns the current DOM Node or null
+		return this.rawNode; // Node
+	},
+	getShape: function(){
+		// summary: returns the current shape object or null
+		//	(see dojox.gfx.defaultPath,
+		//	dojox.gfx.defaultPolyline,
+		//	dojox.gfx.defaultRect,
+		//	dojox.gfx.defaultEllipse,
+		//	dojox.gfx.defaultCircle,
+		//	dojox.gfx.defaultLine,
+		//	or dojox.gfx.defaultImage)
+		return this.shape; // Object
+	},
+	getTransform: function(){
+		// summary: returns the current transformation matrix or null
+		return this.matrix;	// dojox.gfx.matrix.Matrix
+	},
+	getFill: function(){
+		// summary: returns the current fill object or null
+		//	(see dojox.gfx.defaultLinearGradient, 
+		//	dojox.gfx.defaultRadialGradient, 
+		//	dojox.gfx.defaultPattern, 
+		//	or dojo.Color)
+		return this.fillStyle;	// Object
+	},
+	getStroke: function(){
+		// summary: returns the current stroke object or null
+		//	(see dojox.gfx.defaultStroke) 
+		return this.strokeStyle;	// Object
+	},
+	getParent: function(){
+		// summary: returns the parent or null
+		//	(see dojox.gfx.Surface,
+		//	dojox.gfx.shape.VirtualGroup,
+		//	or dojox.gfx.Group)
+		return this.parent;	// Object
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box or null
+		//	(see dojox.gfx.defaultRect)
+		return this.bbox;	// dojox.gfx.Rectangle
+	},
+	getTransformedBoundingBox: function(){
+		// summary: returns an array of four points or null
+		//	four points represent four corners of the untransformed bounding box
+		var b = this.getBoundingBox();
+		if(!b){
+			return null;	// null
+		}
+		var m = this._getRealMatrix();
+		var r = [];
+		var g = dojox.gfx.matrix;
+		r.push(g.multiplyPoint(m, b.x, b.y));
+		r.push(g.multiplyPoint(m, b.x + b.width, b.y));
+		r.push(g.multiplyPoint(m, b.x + b.width, b.y + b.height));
+		r.push(g.multiplyPoint(m, b.x, b.y + b.height));
+		return r;	// Array
+	},
+	getEventSource: function(){
+		// summary: returns a Node, which is used as 
+		//	a source of events for this shape
+		return this.rawNode;	// Node
+	},
+	
+	// empty settings
+	
+	setShape: function(shape){
+		// summary: sets a shape object
+		//	(the default implementation simply ignores it)
+		// shape: Object: a shape object
+		//	(see dojox.gfx.defaultPath,
+		//	dojox.gfx.defaultPolyline,
+		//	dojox.gfx.defaultRect,
+		//	dojox.gfx.defaultEllipse,
+		//	dojox.gfx.defaultCircle,
+		//	dojox.gfx.defaultLine,
+		//	or dojox.gfx.defaultImage)
+		return this;	// self
+	},
+	setFill: function(fill){
+		// summary: sets a fill object
+		//	(the default implementation simply ignores it)
+		// fill: Object: a fill object
+		//	(see dojox.gfx.defaultLinearGradient, 
+		//	dojox.gfx.defaultRadialGradient, 
+		//	dojox.gfx.defaultPattern, 
+		//	or dojo.Color)
+		return this;	// self
+	},
+	setStroke: function(stroke){
+		// summary: sets a stroke object
+		//	(the default implementation simply ignores it)
+		// stroke: Object: a stroke object
+		//	(see dojox.gfx.defaultStroke) 
+		return this;	// self
+	},
+	
+	// z-index
+	
+	moveToFront: function(){
+		// summary: moves a shape to front of its parent's list of shapes
+		//	(the default implementation does nothing)
+		return this;	// self
+	},
+	moveToBack: function(){
+		// summary: moves a shape to back of its parent's list of shapes
+		//	(the default implementation does nothing)
+		return this;
+	},
+
+	setTransform: function(matrix){
+		// summary: sets a transformation matrix
+		// matrix: dojox.gfx.matrix.Matrix: a matrix or a matrix-like object
+		//	(see an argument of dojox.gfx.matrix.Matrix 
+		//	constructor for a list of acceptable arguments)
+		this.matrix = dojox.gfx.matrix.clone(matrix ? dojox.gfx.matrix.normalize(matrix) : dojox.gfx.identity, true);
+		return this._applyTransform();	// self
+	},
+	
+	// apply left & right transformation
+	
+	applyRightTransform: function(matrix){
+		// summary: multiplies the existing matrix with an argument on right side
+		//	(this.matrix * matrix)
+		// matrix: dojox.gfx.matrix.Matrix: a matrix or a matrix-like object
+		//	(see an argument of dojox.gfx.matrix.Matrix 
+		//	constructor for a list of acceptable arguments)
+		return matrix ? this.setTransform([this.matrix, matrix]) : this;	// self
+	},
+	applyLeftTransform: function(matrix){
+		// summary: multiplies the existing matrix with an argument on left side
+		//	(matrix * this.matrix)
+		// matrix: dojox.gfx.matrix.Matrix: a matrix or a matrix-like object
+		//	(see an argument of dojox.gfx.matrix.Matrix 
+		//	constructor for a list of acceptable arguments)
+		return matrix ? this.setTransform([matrix, this.matrix]) : this;	// self
+	},
+
+	applyTransform: function(matrix){
+		// summary: a shortcut for dojox.gfx.Shape.applyRightTransform
+		// matrix: dojox.gfx.matrix.Matrix: a matrix or a matrix-like object
+		//	(see an argument of dojox.gfx.matrix.Matrix 
+		//	constructor for a list of acceptable arguments)
+		return matrix ? this.setTransform([this.matrix, matrix]) : this;	// self
+	},
+	
+	// virtual group methods
+	
+	removeShape: function(silently){
+		// summary: removes the shape from its parent's list of shapes
+		// silently: Boolean?: if true, do not redraw a picture yet
+		if(this.parent){
+			this.parent.remove(this, silently);
+		}
+		return this;	// self
+	},
+	_setParent: function(parent, matrix){
+		// summary: sets a parent
+		// parent: Object: a parent or null
+		//	(see dojox.gfx.Surface,
+		//	dojox.gfx.shape.VirtualGroup,
+		//	or dojox.gfx.Group)
+		// matrix: dojox.gfx.matrix.Matrix:
+		//	a 2D matrix or a matrix-like object
+		this.parent = parent;
+		return this._updateParentMatrix(matrix);	// self
+	},
+	_updateParentMatrix: function(matrix){
+		// summary: updates the parent matrix with new matrix
+		// matrix: dojox.gfx.matrix.Matrix:
+		//	a 2D matrix or a matrix-like object
+		this.parentMatrix = matrix ? dojox.gfx.matrix.clone(matrix) : null;
+		return this._applyTransform();	// self
+	},
+	_getRealMatrix: function(){
+		// summary: returns the cumulative ("real") transformation matrix
+		//	by combining the shape's matrix with its parent's matrix
+		return this.parentMatrix ? new dojox.gfx.matrix.Matrix2D([this.parentMatrix, this.matrix]) : this.matrix;	// dojox.gfx.Matrix2D
+	}
 });
-if(_27){
-_27.width=_27.endX-_27.x;
-_27.height=_27.endY-_27.y;
-}
-return _27;
-}
-return null;
-},_moveChildToFront:function(_29){
-for(var i=0;i<this.children.length;++i){
-if(this.children[i]==_29){
-this.children.splice(i,1);
-this.children.push(_29);
-break;
-}
-}
-return this;
-},_moveChildToBack:function(_2a){
-for(var i=0;i<this.children.length;++i){
-if(this.children[i]==_2a){
-this.children.splice(i,1);
-this.children.unshift(_2a);
-break;
-}
-}
-return this;
-}};
-_9.Surface=_2("dojox.gfx.shape.Surface",null,{constructor:function(){
-this.rawNode=null;
-this._parent=null;
-this._nodes=[];
-this._events=[];
-},destroy:function(){
-_5.forEach(this._nodes,_6.destroy);
-this._nodes=[];
-_5.forEach(this._events,function(h){
-if(h){
-h.remove();
-}
+dojo.extend(dojox.gfx.Shape, dojox.gfx._eventsProcessing);
+
+dojo.declare("dojox.gfx.shape.VirtualGroup", dojox.gfx.Shape, {
+	// summary: a virtual group of shapes, which can be used 
+	//	as a foundation for renderer-specific groups, or as a way 
+	//	to logically group shapes (e.g, to propagate matricies)
+	
+	constructor: function() {
+		// children: Array: a list of children
+		this.children = [];
+	},
+	
+	// group management
+	
+	add: function(shape){
+		// summary: adds a shape to the list
+		// shape: dojox.gfx.Shape: a shape
+		var oldParent = shape.getParent();
+		if(oldParent){
+			oldParent.remove(shape, true);
+		}
+		this.children.push(shape);
+		return shape._setParent(this, this._getRealMatrix());	// self
+	},
+	remove: function(shape, silently){
+		// summary: removes a shape from the list
+		// silently: Boolean?: if true, do not redraw a picture yet
+		for(var i = 0; i < this.children.length; ++i){
+			if(this.children[i] == shape){
+				if(silently){
+					// skip for now
+				}else{
+					shape._setParent(null, null);
+				}
+				this.children.splice(i, 1);
+				break;
+			}
+		}
+		return this;	// self
+	},
+	clear: function(){
+		// summary: removes all shapes from a group/surface
+		this.children = [];
+		return this;
+	},
+	
+	// apply transformation
+	
+	_applyTransform: function(){
+		// summary: applies a transformation matrix to a group
+		var matrix = this._getRealMatrix();
+		for(var i = 0; i < this.children.length; ++i){
+			this.children[i]._updateParentMatrix(matrix);
+		}
+		return this;	// self
+	}
 });
-this._events=[];
-this.rawNode=null;
-if(_4("ie")){
-while(this._parent.lastChild){
-_6.destroy(this._parent.lastChild);
-}
-}else{
-this._parent.innerHTML="";
-}
-this._parent=null;
-},getEventSource:function(){
-return this.rawNode;
-},_getRealMatrix:function(){
-return null;
-},isLoaded:true,onLoad:function(_2b){
-},whenLoaded:function(_2c,_2d){
-var f=_1.hitch(_2c,_2d);
-if(this.isLoaded){
-f(this);
-}else{
-on.once(this,"load",function(_2e){
-f(_2e);
+
+dojo.declare("dojox.gfx.shape.Rect", dojox.gfx.Shape, {
+	// summary: a generic rectangle
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.shape = dojo.clone(dojox.gfx.defaultRect);
+		this.attach(rawNode);
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box (its shape in this case)
+		return this.shape;	// dojox.gfx.Rectangle
+	}
 });
-}
-}});
-_1.extend(_9.Surface,_9._eventsProcessing);
-_9.Rect=_2("dojox.gfx.shape.Rect",_9.Shape,{constructor:function(_2f){
-this.shape=g.getDefault("Rect");
-this.rawNode=_2f;
-},getBoundingBox:function(){
-return this.shape;
-}});
-_9.Ellipse=_2("dojox.gfx.shape.Ellipse",_9.Shape,{constructor:function(_30){
-this.shape=g.getDefault("Ellipse");
-this.rawNode=_30;
-},getBoundingBox:function(){
-if(!this.bbox){
-var _31=this.shape;
-this.bbox={x:_31.cx-_31.rx,y:_31.cy-_31.ry,width:2*_31.rx,height:2*_31.ry};
-}
-return this.bbox;
-}});
-_9.Circle=_2("dojox.gfx.shape.Circle",_9.Shape,{constructor:function(_32){
-this.shape=g.getDefault("Circle");
-this.rawNode=_32;
-},getBoundingBox:function(){
-if(!this.bbox){
-var _33=this.shape;
-this.bbox={x:_33.cx-_33.r,y:_33.cy-_33.r,width:2*_33.r,height:2*_33.r};
-}
-return this.bbox;
-}});
-_9.Line=_2("dojox.gfx.shape.Line",_9.Shape,{constructor:function(_34){
-this.shape=g.getDefault("Line");
-this.rawNode=_34;
-},getBoundingBox:function(){
-if(!this.bbox){
-var _35=this.shape;
-this.bbox={x:Math.min(_35.x1,_35.x2),y:Math.min(_35.y1,_35.y2),width:Math.abs(_35.x2-_35.x1),height:Math.abs(_35.y2-_35.y1)};
-}
-return this.bbox;
-}});
-_9.Polyline=_2("dojox.gfx.shape.Polyline",_9.Shape,{constructor:function(_36){
-this.shape=g.getDefault("Polyline");
-this.rawNode=_36;
-},setShape:function(_37,_38){
-if(_37&&_37 instanceof Array){
-this.inherited(arguments,[{points:_37}]);
-if(_38&&this.shape.points.length){
-this.shape.points.push(this.shape.points[0]);
-}
-}else{
-this.inherited(arguments,[_37]);
-}
-return this;
-},_normalizePoints:function(){
-var p=this.shape.points,l=p&&p.length;
-if(l&&typeof p[0]=="number"){
-var _39=[];
-for(var i=0;i<l;i+=2){
-_39.push({x:p[i],y:p[i+1]});
-}
-this.shape.points=_39;
-}
-},getBoundingBox:function(){
-if(!this.bbox&&this.shape.points.length){
-var p=this.shape.points;
-var l=p.length;
-var t=p[0];
-var _3a={l:t.x,t:t.y,r:t.x,b:t.y};
-for(var i=1;i<l;++i){
-t=p[i];
-if(_3a.l>t.x){
-_3a.l=t.x;
-}
-if(_3a.r<t.x){
-_3a.r=t.x;
-}
-if(_3a.t>t.y){
-_3a.t=t.y;
-}
-if(_3a.b<t.y){
-_3a.b=t.y;
-}
-}
-this.bbox={x:_3a.l,y:_3a.t,width:_3a.r-_3a.l,height:_3a.b-_3a.t};
-}
-return this.bbox;
-}});
-_9.Image=_2("dojox.gfx.shape.Image",_9.Shape,{constructor:function(_3b){
-this.shape=g.getDefault("Image");
-this.rawNode=_3b;
-},getBoundingBox:function(){
-return this.shape;
-},setStroke:function(){
-return this;
-},setFill:function(){
-return this;
-}});
-_9.Text=_2(_9.Shape,{constructor:function(_3c){
-this.fontStyle=null;
-this.shape=g.getDefault("Text");
-this.rawNode=_3c;
-},getFont:function(){
-return this.fontStyle;
-},setFont:function(_3d){
-this.fontStyle=typeof _3d=="string"?g.splitFontString(_3d):g.makeParameters(g.defaultFont,_3d);
-this._setFont();
-return this;
-},getBoundingBox:function(){
-var _3e=null,s=this.getShape();
-if(s.text){
-_3e=g._base._computeTextBoundingBox(this);
-}
-return _3e;
-}});
-_9.Creator={createShape:function(_3f){
-switch(_3f.type){
-case g.defaultPath.type:
-return this.createPath(_3f);
-case g.defaultRect.type:
-return this.createRect(_3f);
-case g.defaultCircle.type:
-return this.createCircle(_3f);
-case g.defaultEllipse.type:
-return this.createEllipse(_3f);
-case g.defaultLine.type:
-return this.createLine(_3f);
-case g.defaultPolyline.type:
-return this.createPolyline(_3f);
-case g.defaultImage.type:
-return this.createImage(_3f);
-case g.defaultText.type:
-return this.createText(_3f);
-case g.defaultTextPath.type:
-return this.createTextPath(_3f);
-}
-return null;
-},createGroup:function(){
-return this.createObject(g.Group);
-},createRect:function(_40){
-return this.createObject(g.Rect,_40);
-},createEllipse:function(_41){
-return this.createObject(g.Ellipse,_41);
-},createCircle:function(_42){
-return this.createObject(g.Circle,_42);
-},createLine:function(_43){
-return this.createObject(g.Line,_43);
-},createPolyline:function(_44){
-return this.createObject(g.Polyline,_44);
-},createImage:function(_45){
-return this.createObject(g.Image,_45);
-},createText:function(_46){
-return this.createObject(g.Text,_46);
-},createPath:function(_47){
-return this.createObject(g.Path,_47);
-},createTextPath:function(_48){
-return this.createObject(g.TextPath,{}).setText(_48);
-},createObject:function(_49,_4a){
-return null;
-}};
-return _9;
+
+dojo.declare("dojox.gfx.shape.Ellipse", dojox.gfx.Shape, {
+	// summary: a generic ellipse
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.shape = dojo.clone(dojox.gfx.defaultEllipse);
+		this.attach(rawNode);
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box
+		if(!this.bbox){
+			var shape = this.shape;
+			this.bbox = {x: shape.cx - shape.rx, y: shape.cy - shape.ry, 
+				width: 2 * shape.rx, height: 2 * shape.ry};
+		}
+		return this.bbox;	// dojox.gfx.Rectangle
+	}
+});
+
+dojo.declare("dojox.gfx.shape.Circle", dojox.gfx.Shape, {
+	// summary: a generic circle
+	//	(this is a helper object, which is defined for convenience)
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.shape = dojo.clone(dojox.gfx.defaultCircle);
+		this.attach(rawNode);
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box
+		if(!this.bbox){
+			var shape = this.shape;
+			this.bbox = {x: shape.cx - shape.r, y: shape.cy - shape.r, 
+				width: 2 * shape.r, height: 2 * shape.r};
+		}
+		return this.bbox;	// dojox.gfx.Rectangle
+	}
+});
+
+dojo.declare("dojox.gfx.shape.Line", dojox.gfx.Shape, {
+	// summary: a generic line
+	//	(this is a helper object, which is defined for convenience)
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.shape = dojo.clone(dojox.gfx.defaultLine);
+		this.attach(rawNode);
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box
+		if(!this.bbox){
+			var shape = this.shape;
+			this.bbox = {
+				x:		Math.min(shape.x1, shape.x2),
+				y:		Math.min(shape.y1, shape.y2),
+				width:	Math.abs(shape.x2 - shape.x1),
+				height:	Math.abs(shape.y2 - shape.y1)
+			};
+		}
+		return this.bbox;	// dojox.gfx.Rectangle
+	}
+});
+
+dojo.declare("dojox.gfx.shape.Polyline", dojox.gfx.Shape, {
+	// summary: a generic polyline/polygon
+	//	(this is a helper object, which is defined for convenience)
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.shape = dojo.clone(dojox.gfx.defaultPolyline);
+		this.attach(rawNode);
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box
+		if(!this.bbox && this.shape.points.length){
+			var p = this.shape.points;
+			var l = p.length;
+			var t = p[0];
+			var bbox = {l: t.x, t: t.y, r: t.x, b: t.y};
+			for(var i = 1; i < l; ++i){
+				t = p[i];
+				if(bbox.l > t.x) bbox.l = t.x;
+				if(bbox.r < t.x) bbox.r = t.x;
+				if(bbox.t > t.y) bbox.t = t.y;
+				if(bbox.b < t.y) bbox.b = t.y;
+			}
+			this.bbox = {
+				x:		bbox.l, 
+				y:		bbox.t, 
+				width:	bbox.r - bbox.l, 
+				height:	bbox.b - bbox.t
+			};
+		}
+		return this.bbox;	// dojox.gfx.Rectangle
+	}
+});
+
+dojo.declare("dojox.gfx.shape.Image", dojox.gfx.Shape, {
+	// summary: a generic image
+	//	(this is a helper object, which is defined for convenience)
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.shape = dojo.clone(dojox.gfx.defaultImage);
+		this.attach(rawNode);
+	},
+	getBoundingBox: function(){
+		// summary: returns the bounding box (its shape in this case)
+		return this.shape;	// dojox.gfx.Rectangle
+	}
+});
+
+dojo.declare("dojox.gfx.shape.Text", dojox.gfx.Shape, {
+	// summary: a generic text
+	constructor: function(rawNode) {
+		// rawNode: Node: a DOM Node
+		this.fontStyle = null;
+		this.shape = dojo.clone(dojox.gfx.defaultText);
+		this.attach(rawNode);
+	},
+	setFont: function(newFont){
+		// summary: sets a font for text
+		// newFont: Object: a font object (see dojox.gfx.defaultFont) or a font string
+		this.fontStyle = typeof newFont == "string" ? dojox.gfx.splitFontString(newFont) :
+			dojox.gfx.makeParameters(dojox.gfx.defaultFont, newFont);
+		this._setFont();
+		return this;	// self
+	}
 });

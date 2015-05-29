@@ -1,3 +1,3 @@
-//>>built
-define("dojox/wire",["./wire/_base"],function(){
-});
+dojo.provide("dojox.wire");
+dojo.require("dojox.wire._base");
+

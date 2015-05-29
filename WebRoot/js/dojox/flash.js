@@ -1,3 +1,2 @@
-//>>built
-define("dojox/flash",["./flash/_base"],function(){
-});
+dojo.provide("dojox.flash");
+dojo.require("dojox.flash._common");

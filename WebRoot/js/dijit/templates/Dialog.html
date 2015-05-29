@@ -1,12 +1,10 @@
-<div class="dijitDialog" role="dialog" aria-labelledby="${id}_title">
-	<div data-dojo-attach-point="titleBar" class="dijitDialogTitleBar">
-		<span data-dojo-attach-point="titleNode" class="dijitDialogTitle" id="${id}_title"
-				role="heading" level="1"></span>
-		<span data-dojo-attach-point="closeButtonNode" class="dijitDialogCloseIcon" data-dojo-attach-event="ondijitclick: onCancel" title="${buttonCancel}" role="button" tabindex="-1">
-			<span data-dojo-attach-point="closeText" class="closeText" title="${buttonCancel}">x</span>
+<div class="dijitDialog">
+		<div dojoAttachPoint="titleBar" class="dijitDialogTitleBar" tabindex="0" waiRole="dialog" title="${title}">
+		<span dojoAttachPoint="titleNode" class="dijitDialogTitle">${title}</span>
+		<span dojoAttachPoint="closeButtonNode" class="dijitDialogCloseIcon" dojoAttachEvent="onclick: hide">
+			<span dojoAttachPoint="closeText" class="closeText">x</span>
 		</span>
 	</div>
-	<div data-dojo-attach-point="containerNode" class="dijitDialogPaneContent"></div>
-	${!actionBarTemplate}
+		<div dojoAttachPoint="containerNode" class="dijitDialogPaneContent"></div>
+	<span dojoAttachPoint="tabEnd" dojoAttachEvent="onfocus:_cycleFocus" tabindex="0"></span>
 </div>
-

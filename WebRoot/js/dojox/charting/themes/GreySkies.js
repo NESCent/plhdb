@@ -1,5 +1,7 @@
-//>>built
-define("dojox/charting/themes/GreySkies",["../SimpleTheme","./common"],function(_1,_2){
-_2.GreySkies=new _1();
-return _2.GreySkies;
-});
+dojo.provide("dojox.charting.themes.GreySkies");
+dojo.require("dojox.charting.Theme");
+
+(function(){
+	var dxc=dojox.charting;
+	dxc.themes.GreySkies=new dxc.Theme(dxc.Theme._def);
+})();

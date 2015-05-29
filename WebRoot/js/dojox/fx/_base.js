@@ -1,111 +1,268 @@
-//>>built
-define("dojox/fx/_base",["dojo/_base/array","dojo/_base/lang","dojo/_base/fx","dojo/fx","dojo/dom","dojo/dom-style","dojo/dom-geometry","dojo/_base/connect","dojo/_base/html"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
-var _a=_2.getObject("dojox.fx",true);
-_2.mixin(_a,{anim:_3.anim,animateProperty:_3.animateProperty,fadeTo:_3._fade,fadeIn:_3.fadeIn,fadeOut:_3.fadeOut,combine:_4.combine,chain:_4.chain,slideTo:_4.slideTo,wipeIn:_4.wipeIn,wipeOut:_4.wipeOut});
-_a.sizeTo=function(_b){
-var _c=_b.node=_5.byId(_b.node),_d="absolute";
-var _e=_b.method||"chain";
-if(!_b.duration){
-_b.duration=500;
-}
-if(_e=="chain"){
-_b.duration=Math.floor(_b.duration/2);
-}
-var _f,_10,_11,_12,_13,_14=null;
-var _15=(function(n){
-return function(){
-var cs=_6.getComputedStyle(n),pos=cs.position,w=cs.width,h=cs.height;
-_f=(pos==_d?n.offsetTop:parseInt(cs.top)||0);
-_11=(pos==_d?n.offsetLeft:parseInt(cs.left)||0);
-_13=(w=="auto"?0:parseInt(w));
-_14=(h=="auto"?0:parseInt(h));
-_12=_11-Math.floor((_b.width-_13)/2);
-_10=_f-Math.floor((_b.height-_14)/2);
-if(pos!=_d&&pos!="relative"){
-var ret=_6.coords(n,true);
-_f=ret.y;
-_11=ret.x;
-n.style.position=_d;
-n.style.top=_f+"px";
-n.style.left=_11+"px";
-}
+dojo.provide("dojox.fx._base");
+dojo.experimental("dojox.fx");
+
+dojo.require("dojo.fx"); 
+
+// convenience functions/maps
+// so you can dojox.fx[animationMethod](args) without needing to accomodate 
+// for the dojo.fx animation cases.
+dojox.fx.chain = dojo.fx.chain;
+dojox.fx.combine = dojo.fx.combine;
+dojox.fx.wipeIn = dojo.fx.wipeIn;
+dojox.fx.wipeOut = dojo.fx.wipeOut;
+dojox.fx.slideTo = dojo.fx.slideTo;
+
+/* dojox.fx _Animations: */
+dojox.fx.sizeTo = function(/* Object */args){
+	// summary:
+	//		Returns an animation that will size "node" 
+	//		defined in args Object about it's center to
+	//		a width and height defined by (args.width, args.height), 
+	//		supporting an optional method: chain||combine mixin
+	//		(defaults to chain).	
+	//		
+	//		- works best on absolutely or relatively positioned
+	//		elements? 
+	//	
+	// example:
+	//
+	//	dojo.fx.sizeTo({ node:'myNode',
+	//		duration: 1000,
+	//		width: 400,
+	//		height: 200,
+	//		method: "chain"
+	//	}).play();
+	//
+	//
+	var node = (args.node = dojo.byId(args.node));
+	var compute = dojo.getComputedStyle;
+
+	var method = args.method || "chain"; 
+	if (method=="chain"){ args.duration = (args.duration/2); } 
+	
+	var top, newTop, left, newLeft, width, height = null;
+
+	var init = (function(){
+		var innerNode = node;
+		return function(){
+			var pos = compute(innerNode).position;
+			top = (pos == 'absolute' ? node.offsetTop : parseInt(compute(node).top) || 0);
+			left = (pos == 'absolute' ? node.offsetLeft : parseInt(compute(node).left) || 0);
+			width = parseInt(dojo.style(node,'width'));
+			height = parseInt(dojo.style(node,'height'));
+
+			newLeft = left - ((args.width - width)/2); 
+			newTop = top - ((args.height - height)/2); 
+
+			if(pos != 'absolute' && pos != 'relative'){
+				var ret = dojo.coords(innerNode, true);
+				top = ret.y;
+				left = ret.x;
+				innerNode.style.position="absolute";
+				innerNode.style.top=top+"px";
+				innerNode.style.left=left+"px";
+			}
+		}
+	})();
+	init(); // hmmm, do we need to init() or just the once beforeBegin?
+
+	var anim1 = dojo.animateProperty(dojo.mixin({
+		properties: {
+			height: { start: height, end: args.height || 0, unit:"px" },
+			top: { start: top, end: newTop }
+		}
+	}, args));
+	var anim2 = dojo.animateProperty(dojo.mixin({
+		properties: {
+			width: { start: width, end: args.width || 0, unit:"px" },
+			left: { start: left, end: newLeft }
+		}
+	}, args));
+
+	// FIXME: 
+	// dojo.fx[args.method]([anim1,anim2]);
+	var anim = dojo.fx[((args.method == "combine") ? "combine" : "chain")]([anim1,anim2]);
+	dojo.connect(anim, "beforeBegin", anim, init);
+	return anim; // dojo._Animation
 };
-})(_c);
-var _16=_3.animateProperty(_2.mixin({properties:{height:function(){
-_15();
-return {end:_b.height||0,start:_14};
-},top:function(){
-return {start:_f,end:_10};
-}}},_b));
-var _17=_3.animateProperty(_2.mixin({properties:{width:function(){
-return {start:_13,end:_b.width||0};
-},left:function(){
-return {start:_11,end:_12};
-}}},_b));
-var _18=_4[(_b.method=="combine"?"combine":"chain")]([_16,_17]);
-return _18;
+
+
+/* dojox.fx CSS Class _Animations: */
+dojox.fx.addClass = function(/* Object */args){
+	// summary:
+	//		returns an animation that will animate
+	//		the properieds of a node to the properties
+	//		defined in a standard CSS .class definition.
+	//		(calculating the differences itself)
+	//
+	//		standard _Animation object rules apply. 
+	//
+	// additonal mixins:
+	//
+	//		args.cssClass: String - class string (to be added onEnd)
+	//		
+	var node = (args.node = dojo.byId(args.node)); 
+
+	var pushClass = (function(){
+		// summary: onEnd we want to add the class to the node 
+		//	(as dojo.addClass naturally would) in case our 
+		//	class parsing misses anything the browser would 
+		// 	otherwise interpret. this may cause some flicker,
+		//	and will only apply the class so children can inherit 
+		//	after the animation is done (potentially more flicker)
+		var innerNode = node; // FIXME: why do we do this like this?
+		return function(){
+			dojo.addClass(innerNode, args.cssClass); 
+			innerNode.style.cssText = _beforeStyle; 
+		}
+	})();
+
+	// _getCalculatedStleChanges is the core of our style/class animations
+	var mixedProperties = dojox.fx._getCalculatedStyleChanges(args,true);
+	var _beforeStyle = node.style.cssText; 
+	var _anim = dojo.animateProperty(dojo.mixin({
+		properties: mixedProperties
+	},args));
+	dojo.connect(_anim,"onEnd",_anim,pushClass); 
+	return _anim; 
+
 };
-_a.slideBy=function(_19){
-var _1a=_19.node=_5.byId(_19.node),top,_1b;
-var _1c=(function(n){
-return function(){
-var cs=_6.getComputedStyle(n);
-var pos=cs.position;
-top=(pos=="absolute"?n.offsetTop:parseInt(cs.top)||0);
-_1b=(pos=="absolute"?n.offsetLeft:parseInt(cs.left)||0);
-if(pos!="absolute"&&pos!="relative"){
-var ret=_7.coords(n,true);
-top=ret.y;
-_1b=ret.x;
-n.style.position="absolute";
-n.style.top=top+"px";
-n.style.left=_1b+"px";
-}
+
+dojox.fx.removeClass = function(/* Object */args){
+	// summary:
+	//	returns an animation that will animate the properieds of a 
+	// 	node (args.node) to the properties calculated after removing 
+	//	a standard CSS className from a that node.
+	//	
+	//	calls dojo.removeClass(args.cssClass) onEnd of animation		
+	//
+	//	standard dojo._Animation object rules apply. 
+	//
+	// additonal mixins:
+	//
+	//	args.cssClass: String - class string (to be removed from node)
+	//		
+	var node = (args.node = dojo.byId(args.node)); 
+
+	var pullClass = (function(){
+		// summary: onEnd we want to remove the class from the node 
+		//	(as dojo.removeClass naturally would) in case our class
+		//	parsing misses anything the browser would otherwise 
+		//	interpret. this may cause some flicker, and will only 
+		//	apply the class so children can inherit after the
+		//	animation is done (potentially more flicker)
+		//
+		var innerNode = node;
+		return function(){
+			dojo.removeClass(innerNode, args.cssClass); 
+			innerNode.style.cssText = _beforeStyle; 
+		}
+	})();
+
+	var mixedProperties = dojox.fx._getCalculatedStyleChanges(args,false);
+	var _beforeStyle = node.style.cssText; 
+	var _anim = dojo.animateProperty(dojo.mixin({
+		properties: mixedProperties
+	},args));
+	dojo.connect(_anim,"onEnd",_anim,pullClass); 
+	return _anim; // dojo._Animation
 };
-})(_1a);
-_1c();
-var _1d=_3.animateProperty(_2.mixin({properties:{top:top+(_19.top||0),left:_1b+(_19.left||0)}},_19));
-_8.connect(_1d,"beforeBegin",_1d,_1c);
-return _1d;
+
+dojox.fx.toggleClass = function(/*HTMLElement*/node, /*String*/classStr, /*Boolean?*/condition){
+        //      summary:
+	//		creates an animation that will animate the effect of 
+	//		toggling a class on or off of a node.
+        //              Adds a class to node if not present, or removes if present.
+        //              Pass a boolean condition if you want to explicitly add or remove.
+        //      condition:
+        //              If passed, true means to add the class, false means to remove.
+        if(typeof condition == "undefined"){
+                condition = !dojo.hasClass(node, classStr);
+        }
+        return dojox.fx[(condition ? "addClass" : "removeClass")](node, classStr); // dojo._Animation
 };
-_a.crossFade=function(_1e){
-var _1f=_1e.nodes[0]=_5.byId(_1e.nodes[0]),op1=_9.style(_1f,"opacity"),_20=_1e.nodes[1]=_5.byId(_1e.nodes[1]),op2=_9.style(_20,"opacity");
-var _21=_4.combine([_3[(op1==0?"fadeIn":"fadeOut")](_2.mixin({node:_1f},_1e)),_3[(op1==0?"fadeOut":"fadeIn")](_2.mixin({node:_20},_1e))]);
-return _21;
+
+dojox.fx._allowedProperties = [
+	// summary:
+	//	this is our pseudo map of properties we will check for.
+	//	it should be much more intuitive. a way to normalize and
+	//	"predict" intent, or even something more clever ... 
+	//	open to suggestions.
+
+	// no-brainers:
+	"width",
+	"height",
+	// only if position = absolute || relative?
+	"left", "top", "right", "bottom", 
+	// these need to be filtered through dojo.colors?
+	// "background", // normalize to:
+	/* "backgroundImage", */
+	"backgroundPosition", // FIXME: to be effective, this needs "#px #px"?
+	"backgroundColor",
+
+	"color",
+	//
+	// "border", // the normalize on this one will be _hideous_ 
+	//	(color/style/width)
+	//	(left,top,right,bottom for each of _those_)
+	//
+	// "padding", // normalize to: 
+	"paddingLeft", "paddingRight", "paddingTop", "paddingBottom",
+	// "margin", // normalize to:
+	"marginLeft", "marginTop", "marginRight", "marginBottom",
+
+	// unit import/delicate?:
+	"lineHeight",
+	"letterSpacing",
+	"fontSize"
+];
+
+dojox.fx._getStyleSnapshot = function(/* Object */cache){
+	// summary: 
+	//	uses a dojo.getComputedStyle(node) cache reference and
+	// 	iterates through the 'documented/supported animate-able'
+	// 	properties. 
+	//
+	// returns:  Array
+	//	an array of raw, calculcated values (no keys), to be normalized/compared
+	//	elsewhere	
+	return dojo.map(dojox.fx._allowedProperties,function(style){
+		return cache[style]; // String
+	}); // Array
 };
-_a.highlight=function(_22){
-var _23=_22.node=_5.byId(_22.node);
-_22.duration=_22.duration||400;
-var _24=_22.color||"#ffff99",_25=_9.style(_23,"backgroundColor");
-if(_25=="rgba(0, 0, 0, 0)"){
-_25="transparent";
-}
-var _26=_3.animateProperty(_2.mixin({properties:{backgroundColor:{start:_24,end:_25}}},_22));
-if(_25=="transparent"){
-_8.connect(_26,"onEnd",_26,function(){
-_23.style.backgroundColor=_25;
-});
-}
-return _26;
+
+dojox.fx._getCalculatedStyleChanges = function(/* Object */args, /*Boolean*/addClass){
+	// summary:
+	//	calculate and normalize(?) the differences between two states
+	//	of a node (args.node) by either quickly adding or removing 
+	//	a class (and if that causes poor flicker later, we can attempt
+	//	to create a cloned node offscreen and do other weird calculations
+	//	
+	// args:
+	// 	we are expecting args.node (DomNode) and 
+	//	args.cssClass (class String)
+	// 
+	// addClass: 
+	// 	true to calculate what adding a class would do, 
+	// 	false to calculate what removing the class would do
+
+	var node = (args.node = dojo.byId(args.node)); 
+	var compute = dojo.getComputedStyle(node);
+
+	// take our snapShots
+	var _before = dojox.fx._getStyleSnapshot(compute);
+	dojo[(addClass ? "addClass" : "removeClass")](node,args.cssClass); 
+	var _after = dojox.fx._getStyleSnapshot(compute);
+	dojo[(addClass ? "removeClass" : "addClass")](node,args.cssClass); 
+
+	var calculated = {};
+	var i = 0;
+	dojo.forEach(dojox.fx._allowedProperties,function(prop){
+		if(_before[i] != _after[i]){
+			// FIXME: the static unit: px is not good, either. need to parse unit from computed style?
+			calculated[prop] = { end: parseInt(_after[i]), unit: 'px' }; 
+		} 
+		i++;
+	});
+	return calculated; 
 };
-_a.wipeTo=function(_27){
-_27.node=_5.byId(_27.node);
-var _28=_27.node,s=_28.style;
-var dir=(_27.width?"width":"height"),_29=_27[dir],_2a={};
-_2a[dir]={start:function(){
-s.overflow="hidden";
-if(s.visibility=="hidden"||s.display=="none"){
-s[dir]="1px";
-s.display="";
-s.visibility="";
-return 1;
-}else{
-var now=_9.style(_28,dir);
-return Math.max(now,1);
-}
-},end:_29};
-var _2b=_3.animateProperty(_2.mixin({properties:_2a},_27));
-return _2b;
-};
-return _a;
-});

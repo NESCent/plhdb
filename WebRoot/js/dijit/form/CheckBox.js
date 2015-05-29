@@ -1,35 +1,116 @@
-//>>built
-require({cache:{"url:dijit/form/templates/CheckBox.html":"<div class=\"dijit dijitReset dijitInline\" role=\"presentation\"\n\t><input\n\t \t${!nameAttrSetting} type=\"${type}\" role=\"${type}\" aria-checked=\"false\" ${checkedAttrSetting}\n\t\tclass=\"dijitReset dijitCheckBoxInput\"\n\t\tdata-dojo-attach-point=\"focusNode\"\n\t \tdata-dojo-attach-event=\"ondijitclick:_onClick\"\n/></div>\n"}});
-define("dijit/form/CheckBox",["require","dojo/_base/declare","dojo/dom-attr","dojo/has","dojo/query","dojo/ready","./ToggleButton","./_CheckBoxMixin","dojo/text!./templates/CheckBox.html","dojo/NodeList-dom","../a11yclick"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9){
-if(_4("dijit-legacy-requires")){
-_6(0,function(){
-var _a=["dijit/form/RadioButton"];
-_1(_a);
-});
-}
-return _2("dijit.form.CheckBox",[_7,_8],{templateString:_9,baseClass:"dijitCheckBox",_setValueAttr:function(_b,_c){
-if(typeof _b=="string"){
-this.inherited(arguments);
-_b=true;
-}
-if(this._created){
-this.set("checked",_b,_c);
-}
-},_getValueAttr:function(){
-return this.checked&&this._get("value");
-},_setIconClassAttr:null,_setNameAttr:"focusNode",postMixInProperties:function(){
-this.inherited(arguments);
-this.checkedAttrSetting="";
-},_fillContent:function(){
-},_onFocus:function(){
-if(this.id){
-_5("label[for='"+this.id+"']").addClass("dijitFocusedLabel");
-}
-this.inherited(arguments);
-},_onBlur:function(){
-if(this.id){
-_5("label[for='"+this.id+"']").removeClass("dijitFocusedLabel");
-}
-this.inherited(arguments);
-}});
-});
+dojo.provide("dijit.form.CheckBox");
+
+dojo.require("dijit.form.Button");
+
+dojo.declare(
+	"dijit.form.CheckBox",
+	dijit.form.ToggleButton,
+	{
+		// summary:
+		// 		Same as an HTML checkbox, but with fancy styling.
+		//
+		// description:
+		// User interacts with real html inputs.
+		// On onclick (which occurs by mouse click, space-bar, or
+		// using the arrow keys to switch the selected radio button),
+		// we update the state of the checkbox/radio.
+		//
+		// There are two modes:
+		//   1. High contrast mode
+		//   2. Normal mode
+		// In case 1, the regular html inputs are shown and used by the user.
+		// In case 2, the regular html inputs are invisible but still used by
+		// the user. They are turned quasi-invisible and overlay the background-image.
+
+		templatePath: dojo.moduleUrl("dijit.form", "templates/CheckBox.html"),
+
+		baseClass: "dijitCheckBox",
+
+		//	Value of "type" attribute for <input>
+		_type: "checkbox",
+
+		// value: Value
+		//	equivalent to value field on normal checkbox (if checked, the value is passed as
+		//	the value when form is submitted)
+		value: "on",
+
+		postCreate: function(){
+			dojo.setSelectable(this.inputNode, false);
+			this.setChecked(this.checked);
+			dijit.form.ToggleButton.prototype.postCreate.apply(this, arguments);
+		},
+
+		setChecked: function(/*Boolean*/ checked){
+			this.checked = checked;
+			if(dojo.isIE){
+				if(checked){ this.inputNode.setAttribute('checked', 'checked'); }
+				else{ this.inputNode.removeAttribute('checked'); }
+			}else{ this.inputNode.checked = checked; }
+			dijit.form.ToggleButton.prototype.setChecked.apply(this, arguments);
+		},
+
+		setValue: function(/*String*/ value){
+			if(value == null){ value = ""; }
+			this.inputNode.value = value;
+			dijit.form.CheckBox.superclass.setValue.call(this,value);
+		}
+	}
+);
+
+dojo.declare(
+	"dijit.form.RadioButton",
+	dijit.form.CheckBox,
+	{
+		// summary:
+		// 		Same as an HTML radio, but with fancy styling.
+		//
+		// description:
+		// Implementation details
+		//
+		// Specialization:
+		// We keep track of dijit radio groups so that we can update the state
+		// of all the siblings (the "context") in a group based on input
+		// events. We don't rely on browser radio grouping.
+
+		_type: "radio",
+		baseClass: "dijitRadio",
+
+		// This shared object keeps track of all widgets, grouped by name
+		_groups: {},
+
+		postCreate: function(){
+			// add this widget to _groups
+			(this._groups[this.name] = this._groups[this.name] || []).push(this);
+
+			dijit.form.CheckBox.prototype.postCreate.apply(this, arguments);
+		},
+
+		uninitialize: function(){
+			// remove this widget from _groups
+			dojo.forEach(this._groups[this.name], function(widget, i, arr){
+				if(widget === this){
+					arr.splice(i, 1);
+					return;
+				}
+			}, this);
+		},
+
+		setChecked: function(/*Boolean*/ checked){
+			// If I am being checked then have to deselect currently checked radio button
+			if(checked){
+				dojo.forEach(this._groups[this.name], function(widget){
+					if(widget != this && widget.checked){
+						widget.setChecked(false);
+					}
+				}, this);
+			}
+			dijit.form.CheckBox.prototype.setChecked.apply(this, arguments);			
+		},
+
+		onClick: function(/*Event*/ e){
+			if(!this.checked){
+				this.setChecked(true);
+			}
+		}
+	}
+);

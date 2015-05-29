@@ -1,33 +1,57 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+dojo.provide("dojo.rpc.JsonService");
+dojo.require("dojo.rpc.RpcService");
 
-//>>built
-define("dojo/rpc/JsonService",["../_base/declare","../_base/Deferred","../_base/json","../_base/lang","../_base/xhr","./RpcService"],function(_1,_2,_3,_4,_5,_6){
-return _1("dojo.rpc.JsonService",_6,{bustCache:false,contentType:"application/json-rpc",lastSubmissionId:0,callRemote:function(_7,_8){
-var _9=new _2();
-this.bind(_7,_8,_9);
-return _9;
-},bind:function(_a,_b,_c,_d){
-var _e=_5.post({url:_d||this.serviceUrl,postData:this.createRequest(_a,_b),contentType:this.contentType,timeout:this.timeout,handleAs:"json-comment-optional"});
-_e.addCallbacks(this.resultCallback(_c),this.errorCallback(_c));
-},createRequest:function(_f,_10){
-var req={"params":_10,"method":_f,"id":++this.lastSubmissionId};
-return _3.toJson(req);
-},parseResults:function(obj){
-if(_4.isObject(obj)){
-if("result" in obj){
-return obj.result;
-}
-if("Result" in obj){
-return obj.Result;
-}
-if("ResultSet" in obj){
-return obj.ResultSet;
-}
-}
-return obj;
-}});
-});
+dojo.declare("dojo.rpc.JsonService", dojo.rpc.RpcService, {
+		bustCache: false,
+		contentType: "application/json-rpc",
+		lastSubmissionId: 0,
+
+		callRemote: function(method, params){
+			// summary:
+			// 		call an arbitrary remote method without requiring it to be
+			// 		predefined with SMD
+			var deferred = new dojo.Deferred();
+			this.bind(method, params, deferred);
+			return deferred;
+		},
+
+		bind: function(method, parameters, deferredRequestHandler, url){
+			//summary:
+			//		JSON-RPC bind method. Takes remote method, parameters,
+			//		deferred, and a url, calls createRequest to make a JSON-RPC
+			//		envelope and passes that off with bind.
+			var def = dojo.rawXhrPost({
+				url: url||this.serviceUrl,
+				postData: this.createRequest(method, parameters),
+				contentType: this.contentType,
+				timeout: this.timeout, 
+				handleAs: "json"
+			});
+			def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
+		},
+
+		createRequest: function(method, params){
+			// summary:
+			//	create a JSON-RPC envelope for the request
+			var req = { "params": params, "method": method, "id": ++this.lastSubmissionId };
+			var data = dojo.toJson(req);
+			return data;
+		},
+
+		parseResults: function(obj){
+			//summary:
+			//		parse the result envelope and pass the results back to to
+			//		the callback function
+			if(obj==null){ return; }
+			if(obj["Result"]!=null){ 
+				return obj["Result"]; 
+			}else if(obj["result"]!=null){ 
+				return obj["result"]; 
+			}else if(obj["ResultSet"]){
+				return obj["ResultSet"];
+			}else{
+				return obj;
+			}
+		}
+	}
+);

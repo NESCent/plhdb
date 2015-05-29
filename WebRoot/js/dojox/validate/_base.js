@@ -1,58 +1,189 @@
-//>>built
-define("dojox/validate/_base",["dojo/_base/lang","dojo/regexp","dojo/number","./regexp"],function(_1,_2,_3,_4){
-var _5=_1.getObject("dojox.validate",true);
-_5.isText=function(_6,_7){
-_7=(typeof _7=="object")?_7:{};
-if(/^\s*$/.test(_6)){
-return false;
+dojo.provide("dojox.validate._base");
+
+dojo.require("dojo.regexp");		// dojo core expressions
+dojo.require("dojox.validate.regexp"); 	// additional expressions
+
+dojox.validate.isText = function(/*String*/value, /*Object?*/flags){
+	// summary:
+	//	Checks if a string has non whitespace characters. 
+	//	Parameters allow you to constrain the length.
+	//
+	// value: A string
+	// flags: {length: Number, minlength: Number, maxlength: Number}
+	//    flags.length  If set, checks if there are exactly flags.length number of characters.
+	//    flags.minlength  If set, checks if there are at least flags.minlength number of characters.
+	//    flags.maxlength  If set, checks if there are at most flags.maxlength number of characters.
+	
+	flags = (typeof flags == "object") ? flags : {};
+	
+	// test for text
+	if(/^\s*$/.test(value)){ return false; } // Boolean
+	
+	// length tests
+	if(typeof flags.length == "number" && flags.length != value.length){ return false; } // Boolean
+	if(typeof flags.minlength == "number" && flags.minlength > value.length){ return false; } // Boolean
+	if(typeof flags.maxlength == "number" && flags.maxlength < value.length){ return false; } // Boolean
+	
+	return true; // Boolean
+
 }
-if(typeof _7.length=="number"&&_7.length!=_6.length){
-return false;
+
+dojox.validate._isInRangeCache = {};
+dojox.validate.isInRange = function(/*String*/value, /*Object?*/flags){
+	// summary:
+	//	Validates whether a string denoting an integer, 
+	//	real number, or monetary value is between a max and min. 
+	//
+	// value: A string
+	// flags: {max:Number, min:Number, decimal:String}
+	//    flags.max  A number, which the value must be less than or equal to for the validation to be true.
+	//    flags.min  A number, which the value must be greater than or equal to for the validation to be true.
+	//    flags.decimal  The character used for the decimal point.  Default is ".".
+	
+	if(isNaN(value)){
+		return false; // Boolean
+	}
+	
+	// assign default values to missing paramters
+	flags = (typeof flags == "object") ? flags : {};
+	var max = (typeof flags.max == "number") ? flags.max : Infinity;
+	var min = (typeof flags.min == "number") ? flags.min : -Infinity;
+	var dec = (typeof flags.decimal == "string") ? flags.decimal : ".";
+	
+	var cache = dojox.validate._isInRangeCache;
+	var cacheIdx = value+"max"+max+"min"+min+"dec"+dec;
+	if(typeof cache[cacheIdx] != "undefined"){
+		return cache[cacheIdx];
+	}
+	
+	// splice out anything not part of a number
+	var pattern = "[^" + dec + "\\deE+-]";
+	value = value.replace(RegExp(pattern, "g"), "");
+	
+	// trim ends of things like e, E, or the decimal character
+	value = value.replace(/^([+-]?)(\D*)/, "$1");
+	value = value.replace(/(\D*)$/, "");
+	
+	// replace decimal with ".". The minus sign '-' could be the decimal!
+	pattern = "(\\d)[" + dec + "](\\d)";
+	value = value.replace(RegExp(pattern, "g"), "$1.$2");
+	
+	value = Number(value);
+	if ( value < min || value > max ) { cache[cacheIdx] = false; return false; } // Boolean
+
+	cache[cacheIdx] = true; return true; // Boolean
 }
-if(typeof _7.minlength=="number"&&_7.minlength>_6.length){
-return false;
+
+dojox.validate.isNumberFormat = function(/*String*/value, /*Object?*/flags){
+	// summary:
+	//	Validates any sort of number based format
+	//
+	// description:
+	//	Use it for phone numbers, social security numbers, zip-codes, etc.
+	//	The value can be validated against one format or one of multiple formats.
+	//
+	//  Format
+	//    #        Stands for a digit, 0-9.
+	//    ?        Stands for an optional digit, 0-9 or nothing.
+	//    All other characters must appear literally in the expression.
+	//
+	//  Example   
+	//    "(###) ###-####"       ->   (510) 542-9742
+	//    "(###) ###-#### x#???" ->   (510) 542-9742 x153
+	//    "###-##-####"          ->   506-82-1089       i.e. social security number
+	//    "#####-####"           ->   98225-1649        i.e. zip code
+	//
+	// value: A string
+	// flags: {format:String}
+	//    flags.format  A string or an Array of strings for multiple formats.
+
+	var re = new RegExp("^" + dojox.regexp.numberFormat(flags) + "$", "i");
+	return re.test(value); // Boolean
 }
-if(typeof _7.maxlength=="number"&&_7.maxlength<_6.length){
-return false;
+
+dojox.validate.isValidLuhn = function(/*String*/value){
+	//summary: Compares value against the Luhn algorithm to verify its integrity
+	var sum, parity, curDigit;
+	if(typeof value!='string'){
+		value = String(value);
+	}
+	value = value.replace(/[- ]/g,''); //ignore dashes and whitespaces
+	parity = value.length%2;
+	sum=0;
+	for(var i=0;i<value.length;i++){
+		curDigit = parseInt(value.charAt(i));
+		if(i%2==parity){
+			curDigit*=2;
+		}
+		if(curDigit>9){
+			curDigit-=9;
+		}
+		sum+=curDigit;
+	}
+	return !(sum%10); //Boolean
 }
-return true;
-};
-_5._isInRangeCache={};
-_5.isInRange=function(_8,_9){
-_8=_3.parse(_8,_9);
-if(isNaN(_8)){
-return false;
-}
-_9=(typeof _9=="object")?_9:{};
-var _a=(typeof _9.max=="number")?_9.max:Infinity,_b=(typeof _9.min=="number")?_9.min:-Infinity,_c=(typeof _9.decimal=="string")?_9.decimal:".",_d=_5._isInRangeCache,_e=_8+"max"+_a+"min"+_b+"dec"+_c;
-if(typeof _d[_e]!="undefined"){
-return _d[_e];
-}
-_d[_e]=!(_8<_b||_8>_a);
-return _d[_e];
-};
-_5.isNumberFormat=function(_f,_10){
-var re=new RegExp("^"+_4.numberFormat(_10)+"$","i");
-return re.test(_f);
-};
-_5.isValidLuhn=function(_11){
-var sum=0,_12,_13;
-if(!_1.isString(_11)){
-_11=String(_11);
-}
-_11=_11.replace(/[- ]/g,"");
-_12=_11.length%2;
-for(var i=0;i<_11.length;i++){
-_13=parseInt(_11.charAt(i));
-if(i%2==_12){
-_13*=2;
-}
-if(_13>9){
-_13-=9;
-}
-sum+=_13;
-}
-return !(sum%10);
-};
-return _5;
-});
+
+/**
+	Procedural API Description
+
+		The main aim is to make input validation expressible in a simple format.
+		You define profiles which declare the required and optional fields and any constraints they might have.
+		The results are provided as an object that makes it easy to handle missing and invalid input.
+
+	Usage
+
+		var results = dojo.validate.check(form, profile);
+
+	Profile Object
+
+		var profile = {
+			// filters change the field value and are applied before validation.
+			trim: ["tx1", "tx2"],
+			uppercase: ["tx9"],
+			lowercase: ["tx5", "tx6", "tx7"],
+			ucfirst: ["tx10"],
+			digit: ["tx11"],
+
+			// required input fields that are blank will be reported missing.
+			// required radio button groups and drop-down lists with no selection will be reported missing.
+			// checkbox groups and selectboxes can be required to have more than one value selected.
+			// List required fields by name and use this notation to require more than one value: {checkboxgroup: 2}, {selectboxname: 3}.
+			required: ["tx7", "tx8", "pw1", "ta1", "rb1", "rb2", "cb3", "s1", {"doubledip":2}, {"tripledip":3}],
+
+			// dependant/conditional fields are required if the target field is present and not blank.
+			// At present only textbox, password, and textarea fields are supported.
+			dependencies:	{
+				cc_exp: "cc_no",	
+				cc_type: "cc_no",	
+			},
+
+			// Fields can be validated using any boolean valued function.  
+			// Use arrays to specify parameters in addition to the field value.
+			constraints: {
+				field_name1: myValidationFunction,
+				field_name2: dojo.validate.isInteger,
+				field_name3: [myValidationFunction, additional parameters],
+				field_name4: [dojo.validate.isValidDate, "YYYY.MM.DD"],
+				field_name5: [dojo.validate.isEmailAddress, false, true],
+			},
+
+			// Confirm is a sort of conditional validation.
+			// It associates each field in its property list with another field whose value should be equal.
+			// If the values are not equal, the field in the property list is reported as Invalid. Unless the target field is blank.
+			confirm: {
+				email_confirm: "email",	
+				pw2: "pw1",	
+			}
+		};
+
+	Results Object
+
+		isSuccessful(): Returns true if there were no invalid or missing fields, else it returns false.
+		hasMissing():  Returns true if the results contain any missing fields.
+		getMissing():  Returns a list of required fields that have values missing.
+		isMissing(field):  Returns true if the field is required and the value is missing.
+		hasInvalid():  Returns true if the results contain fields with invalid data.
+		getInvalid():  Returns a list of fields that have invalid values.
+		isInvalid(field):  Returns true if the field has an invalid value.
+
+*/

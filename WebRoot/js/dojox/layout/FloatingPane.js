@@ -1,183 +1,239 @@
-//>>built
-require({cache:{"url:dojox/layout/resources/FloatingPane.html":"<div class=\"dojoxFloatingPane\" id=\"${id}\">\n\t<div tabindex=\"0\" role=\"button\" class=\"dojoxFloatingPaneTitle\" dojoAttachPoint=\"focusNode\">\n\t\t<span dojoAttachPoint=\"closeNode\" dojoAttachEvent=\"onclick: close\" class=\"dojoxFloatingCloseIcon\"></span>\n\t\t<span dojoAttachPoint=\"maxNode\" dojoAttachEvent=\"onclick: maximize\" class=\"dojoxFloatingMaximizeIcon\">&thinsp;</span>\n\t\t<span dojoAttachPoint=\"restoreNode\" dojoAttachEvent=\"onclick: _restore\" class=\"dojoxFloatingRestoreIcon\">&thinsp;</span>\t\n\t\t<span dojoAttachPoint=\"dockNode\" dojoAttachEvent=\"onclick: minimize\" class=\"dojoxFloatingMinimizeIcon\">&thinsp;</span>\n\t\t<span dojoAttachPoint=\"titleNode\" class=\"dijitInline dijitTitleNode\"></span>\n\t</div>\n\t<div dojoAttachPoint=\"canvas\" class=\"dojoxFloatingPaneCanvas\">\n\t\t<div dojoAttachPoint=\"containerNode\" role=\"region\" tabindex=\"-1\" class=\"${contentClass}\">\n\t\t</div>\n\t\t<span dojoAttachPoint=\"resizeHandle\" class=\"dojoxFloatingResizeHandle\"></span>\n\t</div>\n</div>\n"}});
-define("dojox/layout/FloatingPane",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/window","dojo/_base/declare","dojo/_base/fx","dojo/_base/connect","dojo/_base/array","dojo/_base/sniff","dojo/window","dojo/dom","dojo/dom-class","dojo/dom-geometry","dojo/dom-construct","dijit/_TemplatedMixin","dijit/_Widget","dijit/BackgroundIframe","dojo/dnd/Moveable","./ContentPane","./ResizeHandle","dojo/text!./resources/FloatingPane.html","./Dock"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a,_b,_c,_d,_e,_f,_10,_11,_12,_13,_14,_15){
-_1.experimental("dojox.layout.FloatingPane");
-var _16=_4("dojox.layout.FloatingPane",[_12,_e],{closable:true,dockable:true,resizable:false,maxable:false,resizeAxis:"xy",title:"",dockTo:"",duration:400,contentClass:"dojoxFloatingPaneContent",_showAnim:null,_hideAnim:null,_dockNode:null,_restoreState:{},_allFPs:[],_startZ:100,templateString:_14,attributeMap:_2.delegate(_f.prototype.attributeMap,{title:{type:"innerHTML",node:"titleNode"}}),postCreate:function(){
-this.inherited(arguments);
-new _11(this.domNode,{handle:this.focusNode});
-if(!this.dockable){
-this.dockNode.style.display="none";
-}
-if(!this.closable){
-this.closeNode.style.display="none";
-}
-if(!this.maxable){
-this.maxNode.style.display="none";
-this.restoreNode.style.display="none";
-}
-if(!this.resizable){
-this.resizeHandle.style.display="none";
-}else{
-this.domNode.style.width=_c.getMarginBox(this.domNode).w+"px";
-}
-this._allFPs.push(this);
-this.domNode.style.position="absolute";
-this.bgIframe=new _10(this.domNode);
-this._naturalState=_c.position(this.domNode);
-},startup:function(){
-if(this._started){
-return;
-}
-this.inherited(arguments);
-if(this.resizable){
-if(_8("ie")){
-this.canvas.style.overflow="auto";
-}else{
-this.containerNode.style.overflow="auto";
-}
-this._resizeHandle=new _13({targetId:this.id,resizeAxis:this.resizeAxis},this.resizeHandle);
-}
-if(this.dockable){
-var _17=this.dockTo;
-if(this.dockTo){
-this.dockTo=dijit.byId(this.dockTo);
-}else{
-this.dockTo=dijit.byId("dojoxGlobalFloatingDock");
-}
-if(!this.dockTo){
-var _18,_19;
-if(_17){
-_18=_17;
-_19=_a.byId(_17);
-}else{
-_19=_d.create("div",null,_3.body());
-_b.add(_19,"dojoxFloatingDockDefault");
-_18="dojoxGlobalFloatingDock";
-}
-this.dockTo=new _15({id:_18,autoPosition:"south"},_19);
-this.dockTo.startup();
-}
-if((this.domNode.style.display=="none")||(this.domNode.style.visibility=="hidden")){
-this.minimize();
-}
-}
-this.connect(this.focusNode,"onmousedown","bringToTop");
-this.connect(this.domNode,"onmousedown","bringToTop");
-this.resize(_c.position(this.domNode));
-this._started=true;
-},setTitle:function(_1a){
-_1.deprecated("pane.setTitle","Use pane.set('title', someTitle)","2.0");
-this.set("title",_1a);
-},close:function(){
-if(!this.closable){
-return;
-}
-_6.unsubscribe(this._listener);
-this.hide(_2.hitch(this,function(){
-this.destroyRecursive();
-}));
-},hide:function(_1b){
-_5.fadeOut({node:this.domNode,duration:this.duration,onEnd:_2.hitch(this,function(){
-this.domNode.style.display="none";
-this.domNode.style.visibility="hidden";
-if(this.dockTo&&this.dockable){
-this.dockTo._positionDock(null);
-}
-if(_1b){
-_1b();
-}
-})}).play();
-},show:function(_1c){
-var _1d=_5.fadeIn({node:this.domNode,duration:this.duration,beforeBegin:_2.hitch(this,function(){
-this.domNode.style.display="";
-this.domNode.style.visibility="visible";
-if(this.dockTo&&this.dockable){
-this.dockTo._positionDock(null);
-}
-if(typeof _1c=="function"){
-_1c();
-}
-this._isDocked=false;
-if(this._dockNode){
-this._dockNode.destroy();
-this._dockNode=null;
-}
-})}).play();
-var _1e=_c.getContentBox(this.domNode);
-this.resize(_2.mixin(_c.position(this.domNode),{w:_1e.w,h:_1e.h}));
-this._onShow();
-},minimize:function(){
-if(!this._isDocked){
-this.hide(_2.hitch(this,"_dock"));
-}
-},maximize:function(){
-if(this._maximized){
-return;
-}
-this._naturalState=_c.position(this.domNode);
-if(this._isDocked){
-this.show();
-setTimeout(_2.hitch(this,"maximize"),this.duration);
-}
-_b.add(this.focusNode,"floatingPaneMaximized");
-this.resize(_9.getBox());
-this._maximized=true;
-},_restore:function(){
-if(this._maximized){
-this.resize(this._naturalState);
-_b.remove(this.focusNode,"floatingPaneMaximized");
-this._maximized=false;
-}
-},_dock:function(){
-if(!this._isDocked&&this.dockable){
-this._dockNode=this.dockTo.addNode(this);
-this._isDocked=true;
-}
-},resize:function(dim){
-dim=dim||this._naturalState;
-this._naturalState=dim;
-var dns=this.domNode.style;
-if("t" in dim){
-dns.top=dim.t+"px";
-}else{
-if("y" in dim){
-dns.top=dim.y+"px";
-}
-}
-if("l" in dim){
-dns.left=dim.l+"px";
-}else{
-if("x" in dim){
-dns.left=dim.x+"px";
-}
-}
-dns.width=dim.w+"px";
-dns.height=dim.h+"px";
-var _1f={l:0,t:0,w:dim.w,h:(dim.h-this.focusNode.offsetHeight)};
-_c.setMarginBox(this.canvas,_1f);
-this._checkIfSingleChild();
-if(this._singleChild&&this._singleChild.resize){
-this._singleChild.resize(_1f);
-}
-},bringToTop:function(){
-var _20=_7.filter(this._allFPs,function(i){
-return i!==this;
-},this);
-_20.sort(function(a,b){
-return a.domNode.style.zIndex-b.domNode.style.zIndex;
+dojo.provide("dojox.layout.FloatingPane");
+dojo.experimental("dojox.layout.FloatingPane"); 
+
+dojo.require("dijit.layout.ContentPane");
+dojo.require("dijit._Templated"); 
+dojo.require("dijit._Widget"); 
+dojo.require("dojo.dnd.move");
+dojo.require("dojox.layout.ResizeHandle"); 
+
+dojo.declare("dojox.layout.FloatingPane", [dijit.layout.ContentPane, dijit._Templated], {
+	// summary:
+	//
+	// Makes a dijit.ContentPane float and draggable by it's title [similar to TitlePane]
+	// and over-rides onClick to onDblClick for wipeIn/Out of containerNode
+	// provides minimize(dock) / show() and hide() methods, and resize [almost] 
+
+	// closable: Boolean
+	//	allow closure of this Node
+	closable: true,
+
+	// dockable: Boolean
+	//	allow minimizing of pane true/false
+	dockable: false, 
+
+	// resizable: Boolean
+	//	allow resizing of pane true/false
+	resizable: false,
+
+	// resizeAxis: String
+	//	x | xy | y to limit pane's sizing direction
+	resizeAxis: "xy",
+
+	// title: String
+	//	title to put in titlebar
+	title: "",
+
+	// dockTo: DomNode || null
+	//	if null, will create private layout.Dock that scrolls with viewport
+	//	on bottom span of viewport.	
+	dockTo: null,
+
+	// duration: Integer
+	//	time is MS to spend toggling in/out node
+	duration: 400,
+
+	// animation holders for toggle
+	_showAnim: null,
+	_hideAnim: null, 
+
+	// iconSrc: String
+	//	[not implemented yet] will be either icon in titlepane to left
+	//	of Title, and/or icon show when docked in a fisheye-like dock
+	//	or maybe dockIcon would be better?
+	iconSrc: null,
+
+	contentClass: "dojoxFloatingPaneContent",
+	templateString: null,
+	templatePath: dojo.moduleUrl("dojox.layout","resources/FloatingPane.html"),
+
+	postCreate: function(){
+		// summary: 
+		this.setTitle(this.title);
+		dojox.layout.FloatingPane.superclass.postCreate.apply(this,arguments);
+		var move = new dojo.dnd.Moveable(this.domNode,{ handle: this.focusNode });
+
+		if(!this.dockable){ this.dockNode.style.display = "none"; } 
+		if(!this.closable){ this.closeNode.style.display = "none"; } 
+		if(!this.resizable){
+			this.resizeHandle.style.display = "none"; 	
+		}else{
+			var foo = dojo.marginBox(this.domNode); 
+			//this.domNode.style.height = foo.h+"px";
+			this.domNode.style.width = foo.w+"px"; 
+		}
+	},
+	
+	startup: function(){
+	
+		dojox.layout.FloatingPane.superclass.startup.call(this); 
+
+		dojo.style(this.domNode,"border","1px solid #dedede"); 
+		dojo.style(this.domNode,"overflow","hidden"); 
+		//dojo.style(this.dom
+
+		if (this.resizable) {
+			this.containerNode.style.overflow = "auto";
+			var tmp = new dojox.layout.ResizeHandle({ 
+				//targetContainer: this.containerNode, 
+				targetId: this.id, 
+				resizeAxis: this.resizeAxis 
+			},this.resizeHandle);
+		}
+
+		if(this.dockable){ 
+			// FIXME: argh.
+			tmpName = this.dockTo; 
+
+			if(this.dockTo){ this.dockTo = dijit.byId(this.dockTo); }
+			else{ this.dockTo = dijit.byId('dojoxGlobalFloatingDock'); }
+
+			if(!this.dockTo){
+				// we need to make our dock node, and position it against
+				// .dojoxDockDefault .. this is a lot. either dockto="node"
+				// and fail if node doesn't exist or make the global one
+				// once, and use it on empty OR invalid dockTo="" node?
+				if(tmpName){ 
+					var tmpId = tmpName;
+					var tmpNode = dojo.byId(tmpName); 
+				}else{
+					var tmpNode = document.createElement('div');
+					dojo.body().appendChild(tmpNode);
+					dojo.addClass(tmpNode,"dojoxFloatingDockDefault");
+					var tmpId = 'dojoxGlobalFloatingDock';
+				}
+				this.dockTo = new dojox.layout.Dock({ id: tmpId },tmpNode);
+				this.dockTo.startup(); 
+			}
+		} 
+	},
+
+	setTitle: function(/* String */ title) {
+		this.titleNode.innerHTML = title; 
+	},	
+
+	zIndexes: function() {
+		// summary: keep track of our own zIndex for bringToTop like behavior [not yet]
+		dojo.style(this.domNode,"zIndex","997"); 
+	},
+
+	// extend 		
+	close: function() {
+		if (!this.closable) { return; }
+		this.hide(dojo.hitch(this,"destroy")); 
+	},
+
+	hide: function(/* Function */ callback) {
+		dojo.fadeOut({node:this.domNode, duration:this.duration,
+			onEnd: dojo.hitch(this,function() { 
+				this.domNode.style.display = "none";
+				this.domNode.style.visibility = "hidden"; 
+				if (typeof callback == "function") { callback(); }
+				})
+			}).play();
+	},
+
+	show: function(callback) {
+		var anim = dojo.fadeIn({node:this.domNode, duration:this.duration,
+			beforeBegin: dojo.hitch(this,function() {
+				this.domNode.style.display = ""; 
+				this.domNode.style.visibility = "visible";
+				if (typeof callback == "function") { callback(); }
+				this._isDocked = false; 
+				})
+			}).play();
+	},
+
+	minimize: function() {
+		if (!this._isDocked) {
+		this.hide(dojo.hitch(this,"_dock"));
+		} 
+	},
+
+	_dock: function() {
+		if (!this._isDocked) {
+			this.dockTo.addNode(this);
+			this._isDocked = true;
+		}
+	}
+	
 });
-_20.push(this);
-_7.forEach(_20,function(w,x){
-w.domNode.style.zIndex=this._startZ+(x*2);
-_b.remove(w.domNode,"dojoxFloatingPaneFg");
-},this);
-_b.add(this.domNode,"dojoxFloatingPaneFg");
-},destroy:function(){
-this._allFPs.splice(_7.indexOf(this._allFPs,this),1);
-if(this._resizeHandle){
-this._resizeHandle.destroy();
-}
-this.inherited(arguments);
-}});
-return _16;
+
+dojo.declare("dojox.layout.Dock", [dijit._Widget,dijit._Templated], {
+	// summary:
+	//	a widget that attaches to a node and keeps track of incoming / outgoing FloatingPanes
+	// 	and handles layout
+
+	templateString: '<div class="dojoxDock"><ul dojoAttachPoint="containerNode" class="dojoxDockList"></ul></div>',
+
+	// private _docked: array of panes currently in our dock
+	_docked: [],
+	
+	addNode: function(refNode) {
+		// summary: FIXME: memory leak? 
+		var div = document.createElement('li');
+		this.containerNode.appendChild(div);
+		var node = new dojox.layout._DockNode({ title: refNode.title, paneRef: refNode },div);
+		node.startup();
+	},
+
+	startup: function() {
+		// summary: attaches some event listeners 
+		if (this.id == "dojoxGlobalFloatingDock" || this.isFixedDock) {
+			// attach window.onScroll, and a position like in presentation/dialog
+			dojo.connect(window,'onresize',this,"_positionDock");
+			dojo.connect(window,'onscroll',this,"_positionDock");
+		}
+		dojox.layout.Dock.superclass.startup.call(this); 
+	},
+	
+	_positionDock: function(e) {
+		// summary: 
+		//	[b0rken atm] keeps the dock [in the event of a globalFloatingDock]
+		//	positioned at the bottom of the viewport. (math is off)
+		
+		var viewport = dijit.getViewport();
+		var s = this.domNode.style;
+		console.debug(viewport); 
+		s.width = viewport.w + "px";
+		s.top = (viewport.h + viewport.t) - 50 + "px"
+	}
+
+
+});
+
+dojo.declare("dojox.layout._DockNode", [dijit._Widget,dijit._Templated], {
+	// summary:
+	//	dojox.layout._DockNode is a private widget used to keep track of
+	//	which pane is docked.
+
+	// title: String
+	// 	shown in dock icon. should read parent iconSrc?	
+	title: "",
+
+	// paneRef: Widget
+	//	reference to the FloatingPane we reprasent in any given dock
+	paneRef: null,
+
+	templateString: '<li dojoAttachEvent="ondblclick: restore" class="dojoxDockNode">'+
+			'<span dojoAttachPoint="restoreNode" class="dojoxDockRestoreButton" dojoAttachEvent="onclick: restore"></span>'+
+			'<span class="dojoxDockTitleNode" dojoAttachPoint="titleNode">${title}</span>'+
+			'</li>',
+
+	restore: function() {
+		// summary: remove this dock item from parent dock, and call show() on reffed floatingpane
+		this.paneRef.show();
+		this.destroy();
+	}
+
 });

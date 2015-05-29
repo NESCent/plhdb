@@ -1,10 +1,10 @@
 -------------------------------------------------------------------------------
 DojoX Wire
 -------------------------------------------------------------------------------
-Version 1.0
+Version 0.9
 Release date: 05/29/2007
 -------------------------------------------------------------------------------
-Project state: production
+Project state: beta
 -------------------------------------------------------------------------------
 Project authors
 	Jared Jurkiewicz (jared.jurkiewicz@gmail.com)
@@ -25,8 +25,7 @@ patterns in the client.
 Dependencies:
 
 DojoX Wire has dependencies on core dojo, the dijit widget system (for classes 
-in the dojox.wire.ml package), dojox.data, dojox.xml, and the D.O.H. unit test 
-framework.
+in the dojox.wire.ml package), dojox.data, and the D.O.H. unit test framework.
 -------------------------------------------------------------------------------
 Documentation:
 

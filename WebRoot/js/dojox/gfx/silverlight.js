@@ -1,592 +1,900 @@
-//>>built
-define("dojox/gfx/silverlight",["dojo/_base/kernel","dojo/_base/lang","dojo/_base/declare","dojo/_base/Color","dojo/on","dojo/_base/array","dojo/dom-geometry","dojo/dom","dojo/_base/sniff","./_base","./shape","./path","./registry"],function(_1,_2,_3,_4,on,_5,_6,_7,_8,g,gs,_9){
-var sl=g.silverlight={};
-_1.experimental("dojox.gfx.silverlight");
-var _a={solid:"none",shortdash:[4,1],shortdot:[1,1],shortdashdot:[4,1,1,1],shortdashdotdot:[4,1,1,1,1,1],dot:[1,3],dash:[4,3],longdash:[8,3],dashdot:[4,3,1,3],longdashdot:[8,3,1,3],longdashdotdot:[8,3,1,3,1,3]},_b={normal:400,bold:700},_c={butt:"Flat",round:"Round",square:"Square"},_d={bevel:"Bevel",round:"Round"},_e={serif:"Times New Roman",times:"Times New Roman","sans-serif":"Arial",helvetica:"Arial",monotone:"Courier New",courier:"Courier New"};
-function _f(_10){
-var c=g.normalizeColor(_10),t=c.toHex(),a=Math.round(c.a*255);
-a=(a<0?0:a>255?255:a).toString(16);
-return "#"+(a.length<2?"0"+a:a)+t.slice(1);
+dojo.provide("dojox.gfx.silverlight");
+
+dojo.require("dojox.gfx._base");
+dojo.require("dojox.gfx.shape");
+dojo.require("dojox.gfx.path");
+
+dojo.experimental("dojox.gfx.silverlight");
+
+dojox.gfx.silverlight.dasharray = {
+	solid:				"none",
+	shortdash:			[4, 1],
+	shortdot:			[1, 1],
+	shortdashdot:		[4, 1, 1, 1],
+	shortdashdotdot:	[4, 1, 1, 1, 1, 1],
+	dot:				[1, 3],
+	dash:				[4, 3],
+	longdash:			[8, 3],
+	dashdot:			[4, 3, 1, 3],
+	longdashdot:		[8, 3, 1, 3],
+	longdashdotdot:		[8, 3, 1, 3, 1, 3]
 };
-sl.Shape=_3("dojox.gfx.silverlight.Shape",gs.Shape,{destroy:function(){
-if(_8("gfxRegistry")){
-gs.dispose(this);
-}
-this.rawNode=null;
-},setFill:function(_11){
-var p=this.rawNode.getHost().content,r=this.rawNode,f;
-if(!_11){
-this.fillStyle=null;
-this._setFillAttr(null);
-return this;
-}
-if(typeof (_11)=="object"&&"type" in _11){
-switch(_11.type){
-case "linear":
-this.fillStyle=f=g.makeParameters(g.defaultLinearGradient,_11);
-var lgb=p.createFromXaml("<LinearGradientBrush/>");
-lgb.mappingMode="Absolute";
-lgb.startPoint=f.x1+","+f.y1;
-lgb.endPoint=f.x2+","+f.y2;
-_5.forEach(f.colors,function(c){
-var t=p.createFromXaml("<GradientStop/>");
-t.offset=c.offset;
-t.color=_f(c.color);
-lgb.gradientStops.add(t);
+
+dojox.gfx.silverlight.fontweight = {
+	normal: 400,
+	bold:   700
+};
+
+dojox.gfx.silverlight.caps  = {butt: "Flat", round: "Round", square: "Square"};
+dojox.gfx.silverlight.joins = {bevel: "Bevel", round: "Round"};
+
+dojox.gfx.silverlight.fonts = {
+	serif: "Times New Roman",
+	times: "Times New Roman",
+	"sans-serif": "Arial",
+	helvetica: "Arial",
+	monotone: "Courier New",
+	courier: "Courier New"
+};
+
+dojox.gfx.silverlight.hexColor = function(/*String|Array|dojo.Color*/ color){
+	// summary: converts a color object to a Silverlight hex color string (#aarrggbb)
+	var c = dojox.gfx.normalizeColor(color),
+		t = c.toHex(), a = Math.round(c.a * 255);
+	a = (a < 0 ? 0 : a > 255 ? 255 : a).toString(16);
+	return "#" + (a.length < 2 ? "0" + a : a) + t.slice(1);	// String
+};
+
+dojo.extend(dojox.gfx.Shape, {
+	// summary: Silverlight-specific implementation of dojox.gfx.Shape methods
+	
+	setFill: function(fill){
+		// summary: sets a fill object (Silverlight)
+		// fill: Object: a fill object
+		//	(see dojox.gfx.defaultLinearGradient, 
+		//	dojox.gfx.defaultRadialGradient, 
+		//	dojox.gfx.defaultPattern, 
+		//	or dojo.Color)
+
+		var p = this.rawNode.getHost().content, r = this.rawNode, f;
+		if(!fill){
+			// don't fill
+			this.fillStyle = null;
+			this._setFillAttr(null);
+			return this;	// self
+		}
+		if(typeof(fill) == "object" && "type" in fill){
+			// gradient
+			switch(fill.type){
+				case "linear":
+					this.fillStyle = f = dojox.gfx.makeParameters(dojox.gfx.defaultLinearGradient, fill);
+					var lgb = p.createFromXaml("<LinearGradientBrush/>");
+					lgb.mappingMode = "Absolute";
+					lgb.startPoint = f.x1 + "," + f.y1;
+					lgb.endPoint = f.x2 + "," + f.y2;
+					dojo.forEach(f.colors, function(c){
+						var t = p.createFromXaml("<GradientStop/>");
+						t.offset = c.offset;
+						t.color = dojox.gfx.silverlight.hexColor(c.color);
+						lgb.gradientStops.add(t);
+					});
+					this._setFillAttr(lgb);
+					break;
+				case "radial":
+					this.fillStyle = f = dojox.gfx.makeParameters(dojox.gfx.defaultRadialGradient, fill);
+					var rgb = p.createFromXaml("<RadialGradientBrush/>"), w = r.width, h = r.height,
+						l = this.rawNode["Canvas.Left"], t = this.rawNode["Canvas.Top"];
+					rgb.center = (f.cx - l) / w + "," + (f.cy - t) / h;
+					rgb.radiusX = f.r / w;
+					rgb.radiusY = f.r / h;
+					dojo.forEach(f.colors, function(c){
+						var t = p.createFromXaml("<GradientStop/>");
+						t.offset = c.offset;
+						t.color = dojox.gfx.silverlight.hexColor(c.color);
+						rgb.gradientStops.add(t);
+					});
+					this._setFillAttr(rgb);
+					break;
+				case "pattern":
+					// don't fill: Silverlight doesn't define TileBrush for some reason
+					this.fillStyle = null;
+					this._setFillAttr(null);
+					break;
+			}
+			return this;	// self
+		}
+		// color object
+		this.fillStyle = f = dojox.gfx.normalizeColor(fill);
+		var scb = p.createFromXaml("<SolidColorBrush/>");
+		scb.color = f.toHex();
+		scb.opacity = f.a;
+		this._setFillAttr(scb);
+		return this;	// self
+	},
+	_setFillAttr: function(f){
+		this.rawNode.fill = f;
+	},
+
+	setStroke: function(stroke){
+		// summary: sets a stroke object (Silverlight)
+		// stroke: Object: a stroke object
+		//	(see dojox.gfx.defaultStroke) 
+	
+		var p = this.rawNode.getHost().content, r = this.rawNode;
+		if(!stroke){
+			// don't stroke
+			this.strokeStyle = null;
+			r.stroke = null;
+			return this;
+		}
+		// normalize the stroke
+		if(typeof stroke == "string"){
+			stroke = {color: stroke};
+		}
+		var s = this.strokeStyle = dojox.gfx.makeParameters(dojox.gfx.defaultStroke, stroke);
+		s.color = dojox.gfx.normalizeColor(s.color);
+		// generate attributes
+		if(s){
+			var scb = p.createFromXaml("<SolidColorBrush/>");
+			scb.color = s.color.toHex();
+			scb.opacity = s.color.a;
+			r.stroke = scb;
+			r.strokeThickness = s.width;
+			r.strokeStartLineCap = r.strokeEndLineCap = r.strokeDashCap = 
+				dojox.gfx.silverlight.caps[s.cap];
+			if(typeof s.join == "number"){
+				r.strokeLineJoin = "Miter";
+				r.strokeMiterLimit = s.join;
+			}else{
+				r.strokeLineJoin = dojox.gfx.silverlight.joins[s.join];
+			}
+			var da = s.style.toLowerCase();
+			if(da in dojox.gfx.silverlight.dasharray){ da = dojox.gfx.silverlight.dasharray[da]; }
+			if(da instanceof Array){
+				da = dojo.clone(da);
+				/*
+				for(var i = 0; i < da.length; ++i){
+					da[i] *= s.width;
+				}
+				*/
+				if(s.cap != "butt"){
+					for(var i = 0; i < da.length; i += 2){
+						//da[i] -= s.width;
+						--da[i]
+						if(da[i] < 1){ da[i] = 1; }
+					}
+					for(var i = 1; i < da.length; i += 2){
+						//da[i] += s.width;
+						++da[i];
+					}
+				}
+				r.strokeDashArray = da.join(",");
+			}else{
+				r.strokeDashArray = null;
+			}
+		}
+		return this;	// self
+	},
+	
+	_getParentSurface: function(){
+		var surface = this.parent;
+		for(; surface && !(surface instanceof dojox.gfx.Surface); surface = surface.parent);
+		return surface;
+	},
+	
+	_applyTransform: function() {
+		var tm = this.matrix, r = this.rawNode;
+		if(tm){
+			var p = this.rawNode.getHost().content,
+				m = p.createFromXaml("<MatrixTransform/>"),
+				mm = p.createFromXaml("<Matrix/>");
+			mm.m11 = tm.xx;
+			mm.m21 = tm.xy;
+			mm.m12 = tm.yx;
+			mm.m22 = tm.yy;
+			mm.offsetX = tm.dx;
+			mm.offsetY = tm.dy;
+			m.matrix = mm;
+			r.renderTransform = m;
+		}else{
+			r.renderTransform = null;
+		}
+		return this;
+	},
+
+	setRawNode: function(rawNode){
+		// summary:
+		//	assigns and clears the underlying node that will represent this
+		//	shape. Once set, transforms, gradients, etc, can be applied.
+		//	(no fill & stroke by default)
+		rawNode.fill = null;
+		rawNode.stroke = null;
+		this.rawNode = rawNode;
+	},
+
+	moveToFront: function(){
+		// summary: moves a shape to front of its parent's list of shapes (Silverlight)
+		var c = this.parent.rawNode.children, r = this.rawNode;
+		c.remove(r);
+		c.add(r);
+		return this;	// self
+	},
+	moveToBack: function(){
+		// summary: moves a shape to back of its parent's list of shapes (Silverlight)
+		var c = this.parent.rawNode.children, r = this.rawNode;
+		c.remove(r);
+		c.insert(0, r);
+		return this;	// self
+	},
+	
+	setShape: function(newShape){
+		// summary: sets a shape object (Silverlight)
+		// newShape: Object: a shape object
+		//	(see dojox.gfx.defaultPath,
+		//	dojox.gfx.defaultPolyline,
+		//	dojox.gfx.defaultRect,
+		//	dojox.gfx.defaultEllipse,
+		//	dojox.gfx.defaultCircle,
+		//	dojox.gfx.defaultLine,
+		//	or dojox.gfx.defaultImage)
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		return this;	// self
+	},
+	
+	attachFill: function(rawNode){
+		// summary: deduces a fill style from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// Object
+	},
+	
+	attachStroke: function(rawNode){
+		// summary: deduces a stroke style from a Node.
+		// rawNode: Node: an SVG node
+		return null;	// Object
+	},
+
+	attachTransform: function(rawNode){
+		// summary: deduces a transformation matrix from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.matrix.Matrix
+	},
+	
+	attachShape: function(rawNode){
+		// summary: builds a shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Shape
+	},
+
+	attach: function(rawNode){
+		// summary: reconstructs all shape parameters from a Node.
+		// rawNode: Node: an Silverlight node
+		if(rawNode) {
+			this.rawNode = rawNode;
+			this.fillStyle = this.attachFill(rawNode);
+			this.strokeStyle = this.attachStroke(rawNode);
+			this.matrix = this.attachTransform(rawNode);
+			this.shape = this.attachShape(rawNode);
+		}
+	},
+	
+	_getRealMatrix: function(){
+		var m = this.matrix, p = this.parent, mm = dojox.gfx.matrix.multiply;
+		while(p){
+			if(p.matrix){
+				m = mm(p.matrix, m);
+			}
+			p = p.parent;
+		}
+		return m;
+	}
 });
-this._setFillAttr(lgb);
-break;
-case "radial":
-this.fillStyle=f=g.makeParameters(g.defaultRadialGradient,_11);
-var rgb=p.createFromXaml("<RadialGradientBrush/>"),c=g.matrix.multiplyPoint(g.matrix.invert(this._getAdjustedMatrix()),f.cx,f.cy),pt=c.x+","+c.y;
-rgb.mappingMode="Absolute";
-rgb.gradientOrigin=pt;
-rgb.center=pt;
-rgb.radiusX=rgb.radiusY=f.r;
-_5.forEach(f.colors,function(c){
-var t=p.createFromXaml("<GradientStop/>");
-t.offset=c.offset;
-t.color=_f(c.color);
-rgb.gradientStops.add(t);
+
+dojo.declare("dojox.gfx.Group", dojox.gfx.Shape, {
+	// summary: a group shape (Silverlight), which can be used 
+	//	to logically group shapes (e.g, to propagate matricies)
+	
+	setRawNode: function(rawNode){
+		// summary: sets a raw Silverlight node to be used by this shape
+		// rawNode: Node: an Silverlight node
+		this.rawNode = rawNode;
+	}
 });
-this._setFillAttr(rgb);
-break;
-case "pattern":
-this.fillStyle=null;
-this._setFillAttr(null);
-break;
-}
-return this;
-}
-this.fillStyle=f=g.normalizeColor(_11);
-var scb=p.createFromXaml("<SolidColorBrush/>");
-scb.color=f.toHex();
-scb.opacity=f.a;
-this._setFillAttr(scb);
-return this;
-},_setFillAttr:function(f){
-this.rawNode.fill=f;
-},setStroke:function(_12){
-var p=this.rawNode.getHost().content,r=this.rawNode;
-if(!_12){
-this.strokeStyle=null;
-r.stroke=null;
-return this;
-}
-if(typeof _12=="string"||_2.isArray(_12)||_12 instanceof _4){
-_12={color:_12};
-}
-var s=this.strokeStyle=g.makeParameters(g.defaultStroke,_12);
-s.color=g.normalizeColor(s.color);
-if(s){
-var scb=p.createFromXaml("<SolidColorBrush/>");
-scb.color=s.color.toHex();
-scb.opacity=s.color.a;
-r.stroke=scb;
-r.strokeThickness=s.width;
-r.strokeStartLineCap=r.strokeEndLineCap=r.strokeDashCap=_c[s.cap];
-if(typeof s.join=="number"){
-r.strokeLineJoin="Miter";
-r.strokeMiterLimit=s.join;
-}else{
-r.strokeLineJoin=_d[s.join];
-}
-var da=s.style.toLowerCase();
-if(da in _a){
-da=_a[da];
-}
-if(da instanceof Array){
-da=_2.clone(da);
-var i;
-if(s.cap!="butt"){
-for(i=0;i<da.length;i+=2){
---da[i];
-if(da[i]<1){
-da[i]=1;
-}
-}
-for(i=1;i<da.length;i+=2){
-++da[i];
-}
-}
-r.strokeDashArray=da.join(",");
-}else{
-r.strokeDashArray=null;
-}
-}
-return this;
-},_getParentSurface:function(){
-var _13=this.parent;
-for(;_13&&!(_13 instanceof g.Surface);_13=_13.parent){
-}
-return _13;
-},_applyTransform:function(){
-var tm=this._getAdjustedMatrix(),r=this.rawNode;
-if(tm){
-var p=this.rawNode.getHost().content,mt=p.createFromXaml("<MatrixTransform/>"),mm=p.createFromXaml("<Matrix/>");
-mm.m11=tm.xx;
-mm.m21=tm.xy;
-mm.m12=tm.yx;
-mm.m22=tm.yy;
-mm.offsetX=tm.dx;
-mm.offsetY=tm.dy;
-mt.matrix=mm;
-r.renderTransform=mt;
-}else{
-r.renderTransform=null;
-}
-return this;
-},setRawNode:function(_14){
-_14.fill=null;
-_14.stroke=null;
-this.rawNode=_14;
-this.rawNode.tag=this.getUID();
-},_moveToFront:function(){
-var c=this.parent.rawNode.children,r=this.rawNode;
-c.remove(r);
-c.add(r);
-return this;
-},_moveToBack:function(){
-var c=this.parent.rawNode.children,r=this.rawNode;
-c.remove(r);
-c.insert(0,r);
-return this;
-},_getAdjustedMatrix:function(){
-return this.matrix;
-},setClip:function(_15){
-this.inherited(arguments);
-var r=this.rawNode;
-if(_15){
-var _16=_15?"width" in _15?"rect":"cx" in _15?"ellipse":"points" in _15?"polyline":"d" in _15?"path":null:null;
-if(_15&&!_16){
-return this;
-}
-var _17=this.getBoundingBox()||{x:0,y:0,width:0,height:0};
-var _18="1,0,0,1,"+(-_17.x)+","+(-_17.y);
-switch(_16){
-case "rect":
-r.clip=r.getHost().content.createFromXaml("<RectangleGeometry/>");
-r.clip.rect=_15.x+","+_15.y+","+_15.width+","+_15.height;
-r.clip.transform=_18;
-break;
-case "ellipse":
-r.clip=r.getHost().content.createFromXaml("<EllipseGeometry/>");
-r.clip.center=_15.cx+","+_15.cy;
-r.clip.radiusX=_15.rx;
-r.clip.radiusY=_15.ry;
-r.clip.transform="1,0,0,1,"+(-_17.x)+","+(-_17.y);
-break;
-case "polyline":
-if(_15.points.length>2){
-var _19,_1a=r.getHost().content.createFromXaml("<PathGeometry/>"),_1b=r.getHost().content.createFromXaml("<PathFigure/>");
-_1b.StartPoint=_15.points[0]+","+_15.points[1];
-for(var i=2;i<=_15.points.length-2;i=i+2){
-_19=r.getHost().content.createFromXaml("<LineSegment/>");
-_19.Point=_15.points[i]+","+_15.points[i+1];
-_1b.segments.add(_19);
-}
-_1a.figures.add(_1b);
-_1a.transform="1,0,0,1,"+(-_17.x)+","+(-_17.y);
-r.clip=_1a;
-}
-break;
-case "path":
-break;
-}
-}else{
-r.clip=null;
-}
-return this;
-}});
-sl.Group=_3("dojox.gfx.silverlight.Group",sl.Shape,{constructor:function(){
-gs.Container._init.call(this);
-},setRawNode:function(_1c){
-this.rawNode=_1c;
-this.rawNode.tag=this.getUID();
-},destroy:function(){
-this.clear(true);
-sl.Shape.prototype.destroy.apply(this,arguments);
-}});
-sl.Group.nodeType="Canvas";
-sl.Rect=_3("dojox.gfx.silverlight.Rect",[sl.Shape,gs.Rect],{setShape:function(_1d){
-this.shape=g.makeParameters(this.shape,_1d);
-this.bbox=null;
-var r=this.rawNode,n=this.shape;
-r.width=n.width;
-r.height=n.height;
-r.radiusX=r.radiusY=n.r;
-return this._applyTransform();
-},_getAdjustedMatrix:function(){
-var _1e=this.matrix,s=this.shape,_1f={dx:s.x,dy:s.y};
-return new g.Matrix2D(_1e?[_1e,_1f]:_1f);
-}});
-sl.Rect.nodeType="Rectangle";
-sl.Ellipse=_3("dojox.gfx.silverlight.Ellipse",[sl.Shape,gs.Ellipse],{setShape:function(_20){
-this.shape=g.makeParameters(this.shape,_20);
-this.bbox=null;
-var r=this.rawNode,n=this.shape;
-r.width=2*n.rx;
-r.height=2*n.ry;
-return this._applyTransform();
-},_getAdjustedMatrix:function(){
-var _21=this.matrix,s=this.shape,_22={dx:s.cx-s.rx,dy:s.cy-s.ry};
-return new g.Matrix2D(_21?[_21,_22]:_22);
-}});
-sl.Ellipse.nodeType="Ellipse";
-sl.Circle=_3("dojox.gfx.silverlight.Circle",[sl.Shape,gs.Circle],{setShape:function(_23){
-this.shape=g.makeParameters(this.shape,_23);
-this.bbox=null;
-var r=this.rawNode,n=this.shape;
-r.width=r.height=2*n.r;
-return this._applyTransform();
-},_getAdjustedMatrix:function(){
-var _24=this.matrix,s=this.shape,_25={dx:s.cx-s.r,dy:s.cy-s.r};
-return new g.Matrix2D(_24?[_24,_25]:_25);
-}});
-sl.Circle.nodeType="Ellipse";
-sl.Line=_3("dojox.gfx.silverlight.Line",[sl.Shape,gs.Line],{setShape:function(_26){
-this.shape=g.makeParameters(this.shape,_26);
-this.bbox=null;
-var r=this.rawNode,n=this.shape;
-r.x1=n.x1;
-r.y1=n.y1;
-r.x2=n.x2;
-r.y2=n.y2;
-return this;
-}});
-sl.Line.nodeType="Line";
-sl.Polyline=_3("dojox.gfx.silverlight.Polyline",[sl.Shape,gs.Polyline],{setShape:function(_27,_28){
-if(_27&&_27 instanceof Array){
-this.shape=g.makeParameters(this.shape,{points:_27});
-if(_28&&this.shape.points.length){
-this.shape.points.push(this.shape.points[0]);
-}
-}else{
-this.shape=g.makeParameters(this.shape,_27);
-}
-this.bbox=null;
-this._normalizePoints();
-var p=this.shape.points,rp=[];
-for(var i=0;i<p.length;++i){
-rp.push(p[i].x,p[i].y);
-}
-this.rawNode.points=rp.join(",");
-return this;
-}});
-sl.Polyline.nodeType="Polyline";
-sl.Image=_3("dojox.gfx.silverlight.Image",[sl.Shape,gs.Image],{setShape:function(_29){
-this.shape=g.makeParameters(this.shape,_29);
-this.bbox=null;
-var r=this.rawNode,n=this.shape;
-r.width=n.width;
-r.height=n.height;
-r.source=n.src;
-return this._applyTransform();
-},_getAdjustedMatrix:function(){
-var _2a=this.matrix,s=this.shape,_2b={dx:s.x,dy:s.y};
-return new g.Matrix2D(_2a?[_2a,_2b]:_2b);
-},setRawNode:function(_2c){
-this.rawNode=_2c;
-this.rawNode.tag=this.getUID();
-}});
-sl.Image.nodeType="Image";
-sl.Text=_3("dojox.gfx.silverlight.Text",[sl.Shape,gs.Text],{setShape:function(_2d){
-this.shape=g.makeParameters(this.shape,_2d);
-this.bbox=null;
-var r=this.rawNode,s=this.shape;
-r.text=""+s.text;
-r.textDecorations=s.decoration==="underline"?"Underline":"None";
-r["Canvas.Left"]=-10000;
-r["Canvas.Top"]=-10000;
-if(!this._delay){
-this._delay=window.setTimeout(_2.hitch(this,"_delayAlignment"),10);
-}
-return this;
-},_delayAlignment:function(){
-var r=this.rawNode,s=this.shape,w,h;
-try{
-w=r.actualWidth;
-h=r.actualHeight;
-}
-catch(e){
-return;
-}
-var x=s.x,y=s.y-h*0.75;
-switch(s.align){
-case "middle":
-x-=w/2;
-break;
-case "end":
-x-=w;
-break;
-}
-this._delta={dx:x,dy:y};
-r["Canvas.Left"]=0;
-r["Canvas.Top"]=0;
-this._applyTransform();
-delete this._delay;
-},_getAdjustedMatrix:function(){
-var _2e=this.matrix,_2f=this._delta,x;
-if(_2e){
-x=_2f?[_2e,_2f]:_2e;
-}else{
-x=_2f?_2f:{};
-}
-return new g.Matrix2D(x);
-},setStroke:function(){
-return this;
-},_setFillAttr:function(f){
-this.rawNode.foreground=f;
-},setRawNode:function(_30){
-this.rawNode=_30;
-this.rawNode.tag=this.getUID();
-},getTextWidth:function(){
-return this.rawNode.actualWidth;
-},getBoundingBox:function(){
-var _31=null,_32=this.getShape().text,r=this.rawNode,w=0,h=0;
-if(!g._base._isRendered(this)){
-return {x:0,y:0,width:0,height:0};
-}
-if(_32){
-try{
-w=r.actualWidth;
-h=r.actualHeight;
-}
-catch(e){
-return null;
-}
-var loc=g._base._computeTextLocation(this.getShape(),w,h,true);
-_31={x:loc.x,y:loc.y,width:w,height:h};
-}
-return _31;
-}});
-sl.Text.nodeType="TextBlock";
-sl.Path=_3("dojox.gfx.silverlight.Path",[sl.Shape,_9.Path],{_updateWithSegment:function(_33){
-this.inherited(arguments);
-var p=this.shape.path;
-if(typeof (p)=="string"){
-this.rawNode.data=p?p:null;
-}
-},setShape:function(_34){
-this.inherited(arguments);
-var p=this.shape.path;
-this.rawNode.data=p?p:null;
-return this;
-}});
-sl.Path.nodeType="Path";
-sl.TextPath=_3("dojox.gfx.silverlight.TextPath",[sl.Shape,_9.TextPath],{_updateWithSegment:function(_35){
-},setShape:function(_36){
-},_setText:function(){
-}});
-sl.TextPath.nodeType="text";
-var _37={},_38=new Function;
-sl.Surface=_3("dojox.gfx.silverlight.Surface",gs.Surface,{constructor:function(){
-gs.Container._init.call(this);
-},destroy:function(){
-this.clear(true);
-window[this._onLoadName]=_38;
-delete _37[this._nodeName];
-this.inherited(arguments);
-},setDimensions:function(_39,_3a){
-this.width=g.normalizedLength(_39);
-this.height=g.normalizedLength(_3a);
-var p=this.rawNode&&this.rawNode.getHost();
-if(p){
-p.width=_39;
-p.height=_3a;
-}
-return this;
-},getDimensions:function(){
-var p=this.rawNode&&this.rawNode.getHost();
-var t=p?{width:p.content.actualWidth,height:p.content.actualHeight}:null;
-if(t.width<=0){
-t.width=this.width;
-}
-if(t.height<=0){
-t.height=this.height;
-}
-return t;
-}});
-sl.createSurface=function(_3b,_3c,_3d){
-if(!_3c&&!_3d){
-var pos=_6.position(_3b);
-_3c=_3c||pos.w;
-_3d=_3d||pos.h;
-}
-if(typeof _3c=="number"){
-_3c=_3c+"px";
-}
-if(typeof _3d=="number"){
-_3d=_3d+"px";
-}
-var s=new sl.Surface();
-_3b=_7.byId(_3b);
-s._parent=_3b;
-s._nodeName=g._base._getUniqueId();
-var t=_3b.ownerDocument.createElement("script");
-t.type="text/xaml";
-t.id=g._base._getUniqueId();
-t.text="<?xml version='1.0'?><Canvas xmlns='http://schemas.microsoft.com/client/2007' Name='"+s._nodeName+"'/>";
-_3b.parentNode.insertBefore(t,_3b);
-s._nodes.push(t);
-var obj,_3e=g._base._getUniqueId(),_3f="__"+g._base._getUniqueId()+"_onLoad";
-s._onLoadName=_3f;
-window[_3f]=function(_40){
-if(!s.rawNode){
-s.rawNode=_7.byId(_3e,_3b.ownerDocument).content.root;
-_37[s._nodeName]=_3b;
-s.onLoad(s);
-}
-};
-if(_8("safari")){
-obj="<embed type='application/x-silverlight' id='"+_3e+"' width='"+_3c+"' height='"+_3d+" background='transparent'"+" source='#"+t.id+"'"+" windowless='true'"+" maxFramerate='60'"+" onLoad='"+_3f+"'"+" onError='__dojoSilverlightError'"+" /><iframe style='visibility:hidden;height:0;width:0'/>";
-}else{
-obj="<object type='application/x-silverlight' data='data:application/x-silverlight,' id='"+_3e+"' width='"+_3c+"' height='"+_3d+"'>"+"<param name='background' value='transparent' />"+"<param name='source' value='#"+t.id+"' />"+"<param name='windowless' value='true' />"+"<param name='maxFramerate' value='60' />"+"<param name='onLoad' value='"+_3f+"' />"+"<param name='onError' value='__dojoSilverlightError' />"+"</object>";
-}
-_3b.innerHTML=obj;
-var _41=_7.byId(_3e,_3b.ownerDocument);
-if(_41.content&&_41.content.root){
-s.rawNode=_41.content.root;
-_37[s._nodeName]=_3b;
-}else{
-s.rawNode=null;
-s.isLoaded=false;
-}
-s._nodes.push(_41);
-s.width=g.normalizedLength(_3c);
-s.height=g.normalizedLength(_3d);
-return s;
-};
-__dojoSilverlightError=function(_42,err){
-var t="Silverlight Error:\n"+"Code: "+err.ErrorCode+"\n"+"Type: "+err.ErrorType+"\n"+"Message: "+err.ErrorMessage+"\n";
-switch(err.ErrorType){
-case "ParserError":
-t+="XamlFile: "+err.xamlFile+"\n"+"Line: "+err.lineNumber+"\n"+"Position: "+err.charPosition+"\n";
-break;
-case "RuntimeError":
-t+="MethodName: "+err.methodName+"\n";
-if(err.lineNumber!=0){
-t+="Line: "+err.lineNumber+"\n"+"Position: "+err.charPosition+"\n";
-}
-break;
-}
-};
-var _43={_setFont:function(){
-var f=this.fontStyle,r=this.rawNode,t=f.family.toLowerCase();
-r.fontStyle=f.style=="italic"?"Italic":"Normal";
-r.fontWeight=f.weight in _b?_b[f.weight]:f.weight;
-r.fontSize=g.normalizedLength(f.size);
-r.fontFamily=t in _e?_e[t]:f.family;
-if(!this._delay){
-this._delay=window.setTimeout(_2.hitch(this,"_delayAlignment"),10);
-}
-}};
-var C=gs.Container,_44={add:function(_45){
-if(this!=_45.getParent()){
-C.add.apply(this,arguments);
-this.rawNode.children.add(_45.rawNode);
-}
-return this;
-},remove:function(_46,_47){
-if(this==_46.getParent()){
-var _48=_46.rawNode.getParent();
-if(_48){
-_48.children.remove(_46.rawNode);
-}
-C.remove.apply(this,arguments);
-}
-return this;
-},clear:function(){
-this.rawNode.children.clear();
-return C.clear.apply(this,arguments);
-},getBoundingBox:C.getBoundingBox,_moveChildToFront:C._moveChildToFront,_moveChildToBack:C._moveChildToBack};
-var _49={createObject:function(_4a,_4b){
-if(!this.rawNode){
-return null;
-}
-var _4c=new _4a();
-var _4d=this.rawNode.getHost().content.createFromXaml("<"+_4a.nodeType+"/>");
-_4c.setRawNode(_4d);
-_4c.setShape(_4b);
-this.add(_4c);
-return _4c;
-}};
-_2.extend(sl.Text,_43);
-_2.extend(sl.Group,_44);
-_2.extend(sl.Group,gs.Creator);
-_2.extend(sl.Group,_49);
-_2.extend(sl.Surface,_44);
-_2.extend(sl.Surface,gs.Creator);
-_2.extend(sl.Surface,_49);
-function _4e(s,a){
-var ev={target:s,currentTarget:s,preventDefault:function(){
-},stopPropagation:function(){
-}};
-try{
-if(a.source){
-ev.target=a.source;
-var _4f=ev.target.tag;
-ev.gfxTarget=gs.byId(_4f);
-}
-}
-catch(e){
-}
-if(a){
-try{
-ev.ctrlKey=a.ctrl;
-ev.shiftKey=a.shift;
-var p=a.getPosition(null);
-ev.x=ev.offsetX=ev.layerX=p.x;
-ev.y=ev.offsetY=ev.layerY=p.y;
-var _50=_37[s.getHost().content.root.name];
-var t=_6.position(_50);
-ev.clientX=t.x+p.x;
-ev.clientY=t.y+p.y;
-}
-catch(e){
-}
-}
-return ev;
-};
-function _51(s,a){
-var ev={keyCode:a.platformKeyCode,ctrlKey:a.ctrl,shiftKey:a.shift};
-try{
-if(a.source){
-ev.target=a.source;
-ev.gfxTarget=gs.byId(ev.target.tag);
-}
-}
-catch(e){
-}
-return ev;
-};
-var _52={onclick:{name:"MouseLeftButtonUp",fix:_4e},onmouseenter:{name:"MouseEnter",fix:_4e},onmouseleave:{name:"MouseLeave",fix:_4e},onmouseover:{name:"MouseEnter",fix:_4e},onmouseout:{name:"MouseLeave",fix:_4e},onmousedown:{name:"MouseLeftButtonDown",fix:_4e},onmouseup:{name:"MouseLeftButtonUp",fix:_4e},onmousemove:{name:"MouseMove",fix:_4e},onkeydown:{name:"KeyDown",fix:_51},onkeyup:{name:"KeyUp",fix:_51}};
-var _53={connect:function(_54,_55,_56){
-return this.on(_54,_56?_2.hitch(_55,_56):_55);
-},on:function(_57,_58){
-if(typeof _57==="string"){
-if(_57.indexOf("mouse")===0){
-_57="on"+_57;
-}
-var _59,n=_57 in _52?_52[_57]:{name:_57,fix:function(){
-return {};
-}};
-_59=this.getEventSource().addEventListener(n.name,function(s,a){
-_58(n.fix(s,a));
+dojox.gfx.Group.nodeType = "Canvas";
+
+dojo.declare("dojox.gfx.Rect", dojox.gfx.shape.Rect, {
+	// summary: a rectangle shape (Silverlight)
+
+	attachShape: function(rawNode){
+		// summary: builds a rectangle shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Rect
+	},
+	setShape: function(newShape){
+		// summary: sets a rectangle shape object (Silverlight)
+		// newShape: Object: a rectangle shape object
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		this.bbox = null;
+		var r = this.rawNode, n = this.shape;
+		r["Canvas.Left"] = n.x;
+		r["Canvas.Top"]  = n.y;
+		r.width   = n.width;
+		r.height  = n.height;
+		r.radiusX = r.radiusY = n.r;
+		return this;	// self
+	}
 });
-return {name:n.name,token:_59,remove:_2.hitch(this,function(){
-this.getEventSource().removeEventListener(n.name,_59);
-})};
-}else{
-return on(this,_57,_58);
-}
-},disconnect:function(_5a){
-return _5a.remove();
-}};
-_2.extend(sl.Shape,_53);
-_2.extend(sl.Surface,_53);
-g.equalSources=function(a,b){
-return a&&b&&a.equals(b);
-};
-return sl;
+dojox.gfx.Rect.nodeType = "Rectangle";
+
+dojo.declare("dojox.gfx.Ellipse", dojox.gfx.shape.Ellipse, {
+	// summary: an ellipse shape (Silverlight)
+
+	attachShape: function(rawNode){
+		// summary: builds a rectangle shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Ellipse
+	},
+	setShape: function(newShape){
+		// summary: sets an ellipse shape object (Silverlight)
+		// newShape: Object: an ellipse shape object
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		this.bbox = null;
+		var r = this.rawNode, n = this.shape;
+		r["Canvas.Left"] = n.cx - n.rx;
+		r["Canvas.Top"]  = n.cy - n.ry;
+		r.width  = 2 * n.rx;
+		r.height = 2 * n.ry;
+		return this;	// self
+	}
 });
+dojox.gfx.Ellipse.nodeType = "Ellipse";
+
+dojo.declare("dojox.gfx.Circle", dojox.gfx.shape.Circle, {
+	// summary: a circle shape (Silverlight)
+
+	attachShape: function(rawNode){
+		// summary: builds a circle shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Circle
+	},
+	setShape: function(newShape){
+		// summary: sets a circle shape object (Silverlight)
+		// newShape: Object: a circle shape object
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		this.bbox = null;
+		var r = this.rawNode, n = this.shape;
+		r["Canvas.Left"] = n.cx - n.r;
+		r["Canvas.Top"]  = n.cy - n.r;
+		r.width = r.height = 2 * n.r;
+		return this;	// self
+	}
+});
+dojox.gfx.Circle.nodeType = "Ellipse";
+
+dojo.declare("dojox.gfx.Line", dojox.gfx.shape.Line, {
+	// summary: a line shape (Silverlight)
+
+	attachShape: function(rawNode){
+		// summary: builds a line shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Line
+	},
+	setShape: function(newShape){
+		// summary: sets a line shape object (Silverlight)
+		// newShape: Object: a line shape object
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		this.bbox = null;
+		var r = this.rawNode, n = this.shape;
+		r.x1 = n.x1; r.y1 = n.y1; r.x2 = n.x2; r.y2 = n.y2;
+		return this;	// self
+	}
+});
+dojox.gfx.Line.nodeType = "Line";
+
+dojo.declare("dojox.gfx.Polyline", dojox.gfx.shape.Polyline, {
+	// summary: a polyline/polygon shape (Silverlight)
+	
+	attachShape: function(rawNode){
+		// summary: builds a polyline shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Polyline
+	},
+	setShape: function(points, closed){
+		// summary: sets a polyline/polygon shape object (Silverlight)
+		// points: Object: a polyline/polygon shape object
+		if(points && points instanceof Array){
+			// branch
+			// points: Array: an array of points
+			this.shape = dojox.gfx.makeParameters(this.shape, {points: points});
+			if(closed && this.shape.points.length){ 
+				this.shape.points.push(this.shape.points[0]);
+			}
+		}else{
+			this.shape = dojox.gfx.makeParameters(this.shape, points);
+		}
+		this.box = null;
+		var p = this.shape.points, rp = [];
+		for(var i = 0; i < p.length; ++i){
+			if(typeof p[i] == "number"){
+				rp.push(p[i], p[++i]);
+			}else{
+				rp.push(p[i].x, p[i].y);
+			}
+		}
+		this.rawNode.points = rp.join(",");
+		return this;	// self
+	}
+});
+dojox.gfx.Polyline.nodeType = "Polyline";
+
+dojo.declare("dojox.gfx.Image", dojox.gfx.shape.Image, {
+	// summary: an image (Silverlight)
+
+	attachShape: function(rawNode){
+		// summary: builds an image shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Image
+	},
+	setShape: function(newShape){
+		// summary: sets an image shape object (Silverlight)
+		// newShape: Object: an image shape object
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		this.bbox = null;
+		var r = this.rawNode, n = this.shape;
+		r["Canvas.Left"] = n.x;
+		r["Canvas.Top"]  = n.y;
+		r.width  = n.width;
+		r.height = n.height;
+		r.source = n.src;
+		return this;	// self
+	},
+	setStroke: function(){
+		// summary: ignore setting a stroke style
+		return this;	// self
+	},
+	setFill: function(){
+		// summary: ignore setting a fill style
+		return this;	// self
+	},
+	setRawNode: function(rawNode){
+		// summary:
+		//	assigns and clears the underlying node that will represent this
+		//	shape. Once set, transforms, gradients, etc, can be applied.
+		//	(no fill & stroke by default)
+		this.rawNode = rawNode;
+	},
+	attachStroke: function(rawNode){
+		// summary: ignore attaching a stroke style
+		return null;
+	},
+	attachFill: function(rawNode){
+		// summary: ignore attaching a fill style
+		return null;
+	}
+});
+dojox.gfx.Image.nodeType = "Image";
+
+dojo.declare("dojox.gfx.Text", dojox.gfx.shape.Text, {
+	// summary: an anchored text (Silverlight)
+
+	attachShape: function(rawNode){
+		// summary: builds a text shape from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// dojox.gfx.Text
+	},
+	setShape: function(newShape){
+		// summary: sets a text shape object (Silverlight)
+		// newShape: Object: a text shape object
+		this.shape = dojox.gfx.makeParameters(this.shape, newShape);
+		this.bbox = null;
+		var r = this.rawNode, s = this.shape;
+		r.text = s.text;
+		r.textDecorations = s.decoration == "underline" ? "Underline" : "None";
+		r["Canvas.Left"] = -10000;
+		r["Canvas.Top"]  = -10000;
+		window.setTimeout(dojo.hitch(this, "_delayAlignment"), 0);
+		return this;	// self
+	},
+	_delayAlignment: function(){
+		// handle alignment
+		var r = this.rawNode, s = this.shape,
+			w = r.actualWidth, h = r.actualHeight, x = s.x, y = s.y - h * 0.75;
+		switch(s.align){
+			case "middle":
+				x -= w / 2;
+				break;
+			case "end":
+				x -= w;
+				break;
+		}
+		var a = this.matrix ? dojox.gfx.matrix.multiplyPoint(this.matrix, x, y) : {x: x, y: y};
+		r["Canvas.Left"] = a.x;
+		r["Canvas.Top"]  = a.y;
+	},
+	setStroke: function(){
+		// summary: ignore setting a stroke style
+		return this;	// self
+	},
+	_setFillAttr: function(f){
+		this.rawNode.foreground = f;
+	},
+	setRawNode: function(rawNode){
+		// summary:
+		//	assigns and clears the underlying node that will represent this
+		//	shape. Once set, transforms, gradients, etc, can be applied.
+		//	(no fill & stroke by default)
+		this.rawNode = rawNode;
+	},
+	_applyTransform: function() {
+		var tm = this.matrix, r = this.rawNode;
+		if(tm){
+			// the next line is pure magic :-(
+			tm = dojox.gfx.matrix.normalize([1/100, tm, 100]);
+			var p = this.rawNode.getHost().content,
+				m = p.createFromXaml("<MatrixTransform/>"),
+				mm = p.createFromXaml("<Matrix/>");
+			mm.m11 = tm.xx;
+			mm.m21 = tm.xy;
+			mm.m12 = tm.yx;
+			mm.m22 = tm.yy;
+			mm.offsetX = tm.dx;
+			mm.offsetY = tm.dy;
+			m.matrix = mm;
+			r.renderTransform = m;
+		}else{
+			r.renderTransform = null;
+		}
+		return this;
+	},
+	attach: function(rawNode){
+		// summary: reconstructs all shape parameters from a Node.
+		// rawNode: Node: an Silverlight node
+		dojox.gfx.Shape.prototype.attach.call(this, rawNode);
+		if(rawNode) {
+			this.fontStyle = this.attachFont(rawNode);
+		}
+	},
+	getTextWidth: function(){ 
+		// summary: get the text width in pixels 
+		return this.rawNode.actualWidth; 
+	} 
+});
+dojox.gfx.Text.nodeType = "TextBlock";
+
+dojo.declare("dojox.gfx.Path", dojox.gfx.path.Path, {
+	// summary: a path shape (Silverlight)
+
+	_updateWithSegment: function(segment){
+		// summary: updates the bounding box of path with new segment
+		// segment: Object: a segment
+		dojox.gfx.Path.superclass._updateWithSegment.apply(this, arguments);
+		var p = this.shape.path;
+		if(typeof(p) == "string"){
+			this.rawNode.data = p ? p : null;
+		}
+	},
+	setShape: function(newShape){
+		// summary: forms a path using a shape (Silverlight)
+		// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
+		dojox.gfx.Path.superclass.setShape.apply(this, arguments);
+		var p = this.shape.path;
+		this.rawNode.data = p ? p : null;
+		return this;	// self
+	}
+});
+dojox.gfx.Path.nodeType = "Path";
+
+dojo.declare("dojox.gfx.TextPath", dojox.gfx.path.TextPath, {
+	// summary: a textpath shape (Silverlight)
+
+	_updateWithSegment: function(segment){
+		// summary: updates the bounding box of path with new segment
+		// segment: Object: a segment
+	},
+	setShape: function(newShape){
+		// summary: forms a path using a shape (Silverlight)
+		// newShape: Object: an SVG path string or a path object (see dojox.gfx.defaultPath)
+	},
+	_setText: function(){
+	},
+	attachText: function(rawNode){
+		// summary: builds a textpath shape from a Node.
+		// rawNode: Node: an SVG node
+		return null;	// dojox.gfx.TextPath
+	},
+	attach: function(rawNode){
+		// summary: reconstructs all shape parameters from a Node.
+		// rawNode: Node: an SVG node
+		dojox.gfx.Shape.prototype.attach.call(this, rawNode);
+		if(rawNode) {
+			this.fontStyle = this.attachFont(rawNode);
+			this.text = this.attachText(rawNode);
+		}
+	}
+});
+dojox.gfx.TextPath.nodeType = "text";
+
+
+dojox.gfx.silverlight._font = {
+	_setFont: function(){
+		// summary: sets a font object (Silverlight)
+		var f = this.fontStyle, r = this.rawNode,
+			fw = dojox.gfx.silverlight.fontweight,
+			fo = dojox.gfx.silverlight.fonts, t = f.family.toLowerCase();
+		r.fontStyle = f.style == "italic" ? "Italic" : "Normal";
+		r.fontWeight = f.weight in fw ? fw[f.weight] : f.weight;
+		r.fontSize = dojox.gfx.normalizedLength(f.size);
+		r.fontFamily = t in fo ? fo[t] : f.family;
+	},
+	attachFont: function(rawNode){
+		// summary: deduces a font style from a Node.
+		// rawNode: Node: an Silverlight node
+		return null;	// Object
+	}
+};
+
+dojo.extend(dojox.gfx.Text, dojox.gfx.silverlight._font);
+dojo.extend(dojox.gfx.TextPath, dojox.gfx.silverlight._font);
+
+delete dojox.gfx.silverlight._font;
+
+dojox.gfx.silverlight._creators = {
+	// summary: Silverlight shape creators
+	createPath: function(path){
+		// summary: creates an Silverlight path shape
+		// path: Object: a path object (see dojox.gfx.defaultPath)
+		return this.createObject(dojox.gfx.Path, path);	// dojox.gfx.Path
+	},
+	createRect: function(rect){
+		// summary: creates an Silverlight rectangle shape
+		// rect: Object: a path object (see dojox.gfx.defaultRect)
+		return this.createObject(dojox.gfx.Rect, rect);	// dojox.gfx.Rect
+	},
+	createCircle: function(circle){
+		// summary: creates an Silverlight circle shape
+		// circle: Object: a circle object (see dojox.gfx.defaultCircle)
+		return this.createObject(dojox.gfx.Circle, circle);	// dojox.gfx.Circle
+	},
+	createEllipse: function(ellipse){
+		// summary: creates an Silverlight ellipse shape
+		// ellipse: Object: an ellipse object (see dojox.gfx.defaultEllipse)
+		return this.createObject(dojox.gfx.Ellipse, ellipse);	// dojox.gfx.Ellipse
+	},
+	createLine: function(line){
+		// summary: creates an Silverlight line shape
+		// line: Object: a line object (see dojox.gfx.defaultLine)
+		return this.createObject(dojox.gfx.Line, line);	// dojox.gfx.Line
+	},
+	createPolyline: function(points){
+		// summary: creates an Silverlight polyline/polygon shape
+		// points: Object: a points object (see dojox.gfx.defaultPolyline)
+		//	or an Array of points
+		return this.createObject(dojox.gfx.Polyline, points);	// dojox.gfx.Polyline
+	},
+	createImage: function(image){
+		// summary: creates an Silverlight image shape
+		// image: Object: an image object (see dojox.gfx.defaultImage)
+		return this.createObject(dojox.gfx.Image, image);	// dojox.gfx.Image
+	},
+	createText: function(text){
+		// summary: creates an Silverlight text shape
+		// text: Object: a text object (see dojox.gfx.defaultText)
+		return this.createObject(dojox.gfx.Text, text);	// dojox.gfx.Text
+	},
+	createTextPath: function(text){
+		// summary: creates an Silverlight text shape
+		// text: Object: a textpath object (see dojox.gfx.defaultTextPath)
+		return this.createObject(dojox.gfx.TextPath, {}).setText(text);	// dojox.gfx.TextPath
+	},
+	createGroup: function(){
+		// summary: creates an Silverlight group shape
+		return this.createObject(dojox.gfx.Group);	// dojox.gfx.Group
+	},
+	createObject: function(shapeType, rawShape){
+		// summary: creates an instance of the passed shapeType class
+		// shapeType: Function: a class constructor to create an instance of
+		// rawShape: Object: properties to be passed in to the classes "setShape" method
+		if(!this.rawNode){ return null; }
+		var shape = new shapeType();
+		var node = this.rawNode.getHost().content.createFromXaml("<" + shapeType.nodeType + "/>");
+		shape.setRawNode(node);
+		shape.setShape(rawShape);
+		this.add(shape);
+		return shape;	// dojox.gfx.Shape
+	},
+	createShape: dojox.gfx._createShape,
+	// group control
+	add: function(shape){
+		// summary: adds a shape to a group/surface
+		// shape: dojox.gfx.Shape: an Silverlight shape object
+		var oldParent = shape.getParent();
+		if(oldParent){
+			oldParent.remove(shape, true);
+		}
+		shape._setParent(this, null);
+		this.rawNode.children.add(shape.rawNode);
+		return this;	// self
+	},
+	remove: function(shape, silently){
+		// summary: remove a shape from a group/surface
+		// shape: dojox.gfx.Shape: an Silverlight shape object
+		// silently: Boolean?: if true, regenerate a picture
+		var parent = shape.rawNode.getParent();
+		if(parent){
+			parent.children.remove(shape.rawNode);
+		}
+		shape._setParent(null, null);
+		return this;	// self
+	},
+	clear: function(){
+		// summary: removes all shapes from a group/surface
+		this.rawNode.children.clear();
+		return this;	// self
+	}
+};
+
+dojox.gfx.attachNode = function(node){
+	// summary: creates a shape from a Node
+	// node: Node: an Silverlight node
+	return null;	// for now
+	if(!node) return null;
+	var s = null;
+	switch(node.tagName.toLowerCase()){
+		case dojox.gfx.Rect.nodeType:
+			s = new dojox.gfx.Rect();
+			break;
+		case dojox.gfx.Ellipse.nodeType:
+			s = new dojox.gfx.Ellipse();
+			break;
+		case dojox.gfx.Polyline.nodeType:
+			s = new dojox.gfx.Polyline();
+			break;
+		case dojox.gfx.Path.nodeType:
+			s = new dojox.gfx.Path();
+			break;
+		case dojox.gfx.Circle.nodeType:
+			s = new dojox.gfx.Circle();
+			break;
+		case dojox.gfx.Line.nodeType:
+			s = new dojox.gfx.Line();
+			break;
+		case dojox.gfx.Image.nodeType:
+			s = new dojox.gfx.Image();
+			break;
+		case dojox.gfx.Text.nodeType:
+			var t = node.getElementsByTagName("textPath");
+			if(t && t.length){
+				s = new dojox.gfx.TextPath();
+			}else{
+				s = new dojox.gfx.Text();
+			}
+			break;
+		default:
+			console.debug("FATAL ERROR! tagName = " + node.tagName);
+			return null;
+	}
+	s.attach(node);
+	return s;	// dojox.gfx.Shape
+};
+
+dojo.extend(dojox.gfx.Surface, {
+	// summary: a surface object to be used for drawings (Silverlight)
+
+	setDimensions: function(width, height){
+		// summary: sets the width and height of the rawNode
+		// width: String: width of surface, e.g., "100px"
+		// height: String: height of surface, e.g., "100px"
+		var p = this.rawNode && this.rawNode.getHost();
+		if(p){
+			p.width = width;
+			p.height = height;
+		}
+		return this;	// self
+	},
+	getDimensions: function(){
+		// summary: returns an object with properties "width" and "height"
+		var p = this.rawNode && this.rawNode.getHost();
+		return p ? {width: p.content.actualWidth, height: p.content.actualHeight} : null;	// Object
+	}
+});
+
+dojox.gfx.createSurface = function(parentNode, width, height){
+	// summary: creates a surface (Silverlight)
+	// parentNode: Node: a parent node
+	// width: String: width of surface, e.g., "100px"
+	// height: String: height of surface, e.g., "100px"
+
+	var s = new dojox.gfx.Surface();
+	parentNode = dojo.byId(parentNode);
+	// create an empty canvas
+	var t = parentNode.ownerDocument.createElement("script");
+	t.type = "text/xaml";
+	t.id = dojox.gfx._base._getUniqueId();
+	t.text = "<Canvas xmlns='http://schemas.microsoft.com/client/2007'/>";
+	document.body.appendChild(t);
+	// create a plugin
+	var pluginName = dojox.gfx._base._getUniqueId();
+	Silverlight.createObject(
+		"#" + t.id,	// none
+		parentNode,
+		pluginName,
+		{										// Plugin properties.
+			width:	String(width),				// Width of rectangular region of plugin in pixels.
+			height:	String(height),				// Height of rectangular region of plugin in pixels.
+			inplaceInstallPrompt:	"false",	// Determines whether to display in-place install prompt if invalid version detected.
+			//background:		"white",		// Background color of plugin.
+			//isWindowless:	"false",			// Determines whether to display plugin in Windowless mode.
+			background:		"transparent",		// Background color of plugin.
+			isWindowless:	"true",				// Determines whether to display plugin in Windowless mode.
+			framerate:		"24",				// MaxFrameRate property value.
+			version:		"1.0"				// Silverlight version.
+		},
+		{},
+		null,
+		null
+	);
+	s.rawNode = dojo.byId(pluginName).content.root;
+	return s;	// dojox.gfx.Surface
+};
+
+dojox.gfx.attachSurface = function(node){
+	// summary: creates a surface from a Node
+	// node: Node: an Silverlight node
+	return null;	// dojox.gfx.Surface
+};
+
+dojo.extend(dojox.gfx.Group, dojox.gfx.silverlight._creators);
+dojo.extend(dojox.gfx.Surface, dojox.gfx.silverlight._creators);
+
+
+(function(){
+	var mouseFix = function(s, a){
+		var ev = {target: s};
+		if(a){
+			var p = a.getPosition(null);
+			ev.x = p.x;
+			ev.y = p.y;
+			ev.ctrlKey = a.ctrl;
+			ev.shiftKey = a.shift;
+		}
+		return ev;
+	};
+	var keyFix = function(s, a){
+		var ev = {
+			keyCode:  a.platformKeyCode,
+			ctrlKey:  a.ctrl,
+			shiftKey: a.shift
+		};
+		return ev;
+	};
+	var eventNames = {
+		onclick:		{name: "MouseLeftButtonUp", fix: mouseFix},
+		onmouseover:	{name: "MouseEnter", fix: mouseFix},
+		onmouseout:		{name: "MouseLeave", fix: mouseFix},
+		onmousedown:	{name: "MouseLeftButtonDown", fix: mouseFix},
+		onmouseup:		{name: "MouseLeftButtonUp", fix: mouseFix},
+		onmousemove:	{name: "MouseMove", fix: mouseFix},
+		onkeydown:		{name: "KeyDown", fix: keyFix},
+		onkeyup:		{name: "KeyUp", fix: keyFix}
+	};
+	var eventsProcessing = {
+		connect: function(name, object, method){
+			var token, n = name in eventNames ? eventNames[name] : 
+				{name: name, fix: function(){ return {}; }};
+			if(arguments.length > 2){
+				token = this.getEventSource().addEventListener(n.name, 
+					function(e){ dojo.hitch(object, method)(n.fix(e)); });
+			}else{
+				token = this.getEventSource().addEventListener(n.name, 
+					function(e){ object(n.fix(e)); });
+			}
+			return {name: n.name, token: token};
+		},
+		disconnect: function(token){
+			this.getEventSource().removeEventListener(token.name, token.token);
+		}
+	};
+	dojo.extend(dojox.gfx.Shape, eventsProcessing);
+	dojo.extend(dojox.gfx.Surface, eventsProcessing);
+})();
+
+

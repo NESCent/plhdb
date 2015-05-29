@@ -1,113 +1,187 @@
-/*
-	Copyright (c) 2004-2011, The Dojo Foundation All Rights Reserved.
-	Available via Academic Free License >= 2.1 OR the modified BSD license.
-	see: http://dojotoolkit.org/license for details
-*/
+dojo.provide("dojo.io.script");
 
-//>>built
-define("dojo/io/script",["../_base/connect","../_base/kernel","../_base/lang","../sniff","../_base/window","../_base/xhr","../dom","../dom-construct","../request/script","../aspect"],function(_1,_2,_3,_4,_5,_6,_7,_8,_9,_a){
-_2.deprecated("dojo/io/script","Use dojo/request/script.","2.0");
-var _b={get:function(_c){
-var _d;
-var _e=this._makeScriptDeferred(_c,function(_f){
-_d&&_d.cancel();
-});
-var _10=_e.ioArgs;
-_6._ioAddQueryToUrl(_10);
-_6._ioNotifyStart(_e);
-_d=_9.get(_10.url,{timeout:_c.timeout,jsonp:_10.jsonp,checkString:_c.checkString,ioArgs:_10,frameDoc:_c.frameDoc,canAttach:function(_11){
-_10.requestId=_11.id;
-_10.scriptId=_11.scriptId;
-_10.canDelete=_11.canDelete;
-return _b._canAttach(_10);
-}},true);
-_a.around(_d,"isValid",function(_12){
-return function(_13){
-_b._validCheck(_e);
-return _12.call(this,_13);
-};
-});
-_d.then(function(){
-_e.resolve(_e);
-}).otherwise(function(_14){
-_e.ioArgs.error=_14;
-_e.reject(_14);
-});
-return _e;
-},attach:_9._attach,remove:_9._remove,_makeScriptDeferred:function(_15,_16){
-var dfd=_6._ioSetArgs(_15,_16||this._deferredCancel,this._deferredOk,this._deferredError);
-var _17=dfd.ioArgs;
-_17.id=_2._scopeName+"IoScript"+(this._counter++);
-_17.canDelete=false;
-_17.jsonp=_15.callbackParamName||_15.jsonp;
-if(_17.jsonp){
-_17.query=_17.query||"";
-if(_17.query.length>0){
-_17.query+="&";
+dojo.io.script = {
+	get: function(/*Object*/args){
+		//summary: sends a get request using a dynamically created script tag.
+		//See dojo._ioArgs() in _base/xhr.js for a list of commonly accepted 
+		//properties on the args argument. Additional properties
+		//that apply to all of the dojo.xhr* methods:
+		//callbackParamName:
+		//		String. The URL parameter name that indicates the JSONP callback string.
+		//		For instance, when using Yahoo JSONP calls it is normally, 
+		//		callbackParamName: "callback". For AOL JSONP calls it is normally 
+		//		callbackParamName: "c".
+		//checkString: 
+		//		String. A string of JavaScript that when evaluated like so: 
+		//		"typeof(" + checkString + ") != 'undefined'"
+		//		being true means that the script fetched has been loaded. 
+		//		Do not use this if doing a JSONP type of call (use callbackParamName instead).
+		//"handleAs" is NOT applicable to dojo.io.script.get() calls, since it is
+		//implied by the usage of "callbackParamName" (response will be a JSONP call
+		//returning JSON) or "checkString" (response is pure JavaScript defined in
+		//the body of the script that was attached).
+
+		var dfd = this._makeScriptDeferred(args);
+		var ioArgs = dfd.ioArgs;
+		dojo._ioAddQueryToUrl(ioArgs);
+
+		this.attach(ioArgs.id, ioArgs.url);
+		dojo._ioWatch(dfd, this._validCheck, this._ioCheck, this._resHandle);
+		return dfd;
+	},
+
+	attach: function(/*String*/id, /*String*/url){
+		//Attaches the script element to the DOM.
+		//Use this method if you just want to attach a script to the
+		//DOM and do not care when or if it loads.
+		var element = dojo.doc.createElement("script");
+		element.type = "text/javascript";
+		element.src = url;
+		element.id = id;
+		dojo.doc.getElementsByTagName("head")[0].appendChild(element);
+	},
+
+	remove: function(/*String*/id){
+		//summary: removes the script element with the given id.
+		dojo._destroyElement(dojo.byId(id));
+		
+		//Remove the jsonp callback on dojo.io.script, if it exists.
+		if(this["jsonp_" + id]){
+			delete this["jsonp_" + id];
+		}
+	},
+
+	_makeScriptDeferred: function(/*Object*/args){
+		//summary: sets up the Deferred object for script request.
+		var dfd = dojo._ioSetArgs(args, this._deferredCancel, this._deferredOk, this._deferredError);
+
+		var ioArgs = dfd.ioArgs;
+		ioArgs.id = "dojoIoScript" + (this._counter++);
+		ioArgs.canDelete = false;
+
+		//Special setup for jsonp case
+		if(args.callbackParamName){
+			//Add the jsonp parameter.
+			ioArgs.query = ioArgs.query || "";
+			if(ioArgs.query.length > 0){
+				ioArgs.query += "&";
+			}
+			ioArgs.query += args.callbackParamName + "=dojo.io.script.jsonp_" + ioArgs.id + "._jsonpCallback";
+
+			//Setup the Deferred to have the jsonp callback.
+			ioArgs.canDelete = true;
+			dfd._jsonpCallback = this._jsonpCallback;
+			this["jsonp_" + ioArgs.id] = dfd;
+		}
+		return dfd;
+	},
+	
+	_deferredCancel: function(/*Deferred*/dfd){
+		//summary: canceller function for dojo._ioSetArgs call.
+
+		//DO NOT use "this" and expect it to be dojo.io.script.
+		dfd.canceled = true;
+		if(dfd.ioArgs.canDelete){
+			dojo.io.script._deadScripts.push(dfd.ioArgs.id);
+		}
+	},
+
+	_deferredOk: function(/*Deferred*/dfd){
+		//summary: okHandler function for dojo._ioSetArgs call.
+
+		//DO NOT use "this" and expect it to be dojo.io.script.
+
+		//Add script to list of things that can be removed.		
+		if(dfd.ioArgs.canDelete){
+			dojo.io.script._deadScripts.push(dfd.ioArgs.id);
+		}
+
+		if(dfd.ioArgs.json){
+			//Make sure to *not* remove the json property from the
+			//Deferred, so that the Deferred can still function correctly
+			//after the response is received.
+			return dfd.ioArgs.json;
+		}else{
+			//FIXME: cannot return the dfd here, otherwise that stops
+			//the callback chain in Deferred. So return the ioArgs instead.
+			//This doesn't feel right.
+			return dfd.ioArgs;
+		}
+	},
+	
+	_deferredError: function(/*Error*/error, /*Deferred*/dfd){
+		//summary: errHandler function for dojo._ioSetArgs call.
+
+		if(dfd.ioArgs.canDelete){
+			//DO NOT use "this" and expect it to be dojo.io.script.
+			if(error.dojoType == "timeout"){
+				//For timeouts, remove the script element immediately to
+				//avoid a response from it coming back later and causing trouble.
+				dojo.io.script.remove(dfd.ioArgs.id);
+			}else{
+				dojo.io.script._deadScripts.push(dfd.ioArgs.id);
+			}
+		}
+		console.debug("dojo.io.script error", error);
+		return error;
+	},
+
+	_deadScripts: [],
+	_counter: 1,
+
+	_validCheck: function(/*Deferred*/dfd){
+		//summary: inflight check function to see if dfd is still valid.
+
+		//Do script cleanup here. We wait for one inflight pass
+		//to make sure we don't get any weird things by trying to remove a script
+		//tag that is part of the call chain (IE 6 has been known to
+		//crash in that case).
+		var _self = dojo.io.script;
+		var deadScripts = _self._deadScripts;
+		if(deadScripts && deadScripts.length > 0){
+			for(var i = 0; i < deadScripts.length; i++){
+				//Remove the script tag
+				_self.remove(deadScripts[i]);
+			}
+			dojo.io.script._deadScripts = [];
+		}
+
+		return true;
+	},
+
+	_ioCheck: function(/*Deferred*/dfd){
+		//summary: inflight check function to see if IO finished.
+
+		//Check for finished jsonp
+		if(dfd.ioArgs.json){
+			return true;
+		}
+
+		//Check for finished "checkString" case.
+		var checkString = dfd.ioArgs.args.checkString;
+		if(checkString && eval("typeof(" + checkString + ") != 'undefined'")){
+			return true;
+		}
+
+		return false;
+	},
+
+	_resHandle: function(/*Deferred*/dfd){
+		//summary: inflight function to handle a completed response.
+		if(dojo.io.script._ioCheck(dfd)){
+			dfd.callback(dfd);
+		}else{
+			//This path should never happen since the only way we can get
+			//to _resHandle is if _ioCheck is true.
+			dfd.errback(new Error("inconceivable dojo.io.script._resHandle error"));
+		}
+	},
+
+	_jsonpCallback: function(/*JSON Object*/json){
+		//summary: generic handler for jsonp callback. A pointer
+		//to this function is used for all jsonp callbacks.
+		//NOTE: the "this" in this function will be the Deferred
+		//object that represents the script request.
+		this.ioArgs.json = json;
+	}
 }
-_17.query+=_17.jsonp+"="+(_15.frameDoc?"parent.":"")+_2._scopeName+".io.script.jsonp_"+_17.id+"._jsonpCallback";
-_17.frameDoc=_15.frameDoc;
-_17.canDelete=true;
-dfd._jsonpCallback=this._jsonpCallback;
-this["jsonp_"+_17.id]=dfd;
-}
-dfd.addBoth(function(_18){
-if(_17.canDelete){
-if(_18 instanceof Error){
-_b["jsonp_"+_17.id]._jsonpCallback=function(){
-delete _b["jsonp_"+_17.id];
-if(_17.requestId){
-_2.global[_9._callbacksProperty][_17.requestId]();
-}
-};
-}else{
-_b._addDeadScript(_17);
-}
-}
-});
-return dfd;
-},_deferredCancel:function(dfd){
-dfd.canceled=true;
-},_deferredOk:function(dfd){
-var _19=dfd.ioArgs;
-return _19.json||_19.scriptLoaded||_19;
-},_deferredError:function(_1a,dfd){
-return _1a;
-},_deadScripts:[],_counter:1,_addDeadScript:function(_1b){
-_b._deadScripts.push({id:_1b.id,frameDoc:_1b.frameDoc});
-_1b.frameDoc=null;
-},_validCheck:function(dfd){
-var _1c=_b._deadScripts;
-if(_1c&&_1c.length>0){
-for(var i=0;i<_1c.length;i++){
-_b.remove(_1c[i].id,_1c[i].frameDoc);
-delete _b["jsonp_"+_1c[i].id];
-_1c[i].frameDoc=null;
-}
-_b._deadScripts=[];
-}
-return true;
-},_ioCheck:function(dfd){
-var _1d=dfd.ioArgs;
-if(_1d.json||(_1d.scriptLoaded&&!_1d.args.checkString)){
-return true;
-}
-var _1e=_1d.args.checkString;
-return _1e&&eval("typeof("+_1e+") != 'undefined'");
-},_resHandle:function(dfd){
-if(_b._ioCheck(dfd)){
-dfd.callback(dfd);
-}else{
-dfd.errback(new Error("inconceivable dojo.io.script._resHandle error"));
-}
-},_canAttach:function(){
-return true;
-},_jsonpCallback:function(_1f){
-this.ioArgs.json=_1f;
-if(this.ioArgs.requestId){
-_2.global[_9._callbacksProperty][this.ioArgs.requestId](_1f);
-}
-}};
-_3.setObject("dojo.io.script",_b);
-return _b;
-});
