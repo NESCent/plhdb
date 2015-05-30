@@ -116,7 +116,7 @@ public class SecurityServlet extends DispatcherServlet {
 				super.doService(request, response);
 			}else if (uri.indexOf("MOU") > -1)
                             // FIXME: needs to be config parameter!
-				response.sendRedirect("http://www.nescent.org/wg/plhd/images/d/d7/Final_Internal_MOU.pdf");
+				response.sendRedirect("https://docs.google.com/file/d/0B90egqjmH23uaFlLRWpsXzhFVWM/");
 			else if (uri.indexOf("Acknowledgments") > -1)
                             // FIXME: needs to be a config parameter!
 				response.sendRedirect("https://docs.google.com/document/pub?id=1rjUon48QburrO-xHd_2qxiC9wMQwZf4fZQ9RdbalYtU");
