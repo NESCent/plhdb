@@ -45,7 +45,7 @@ our <a href="http://demo.plhdb.org">demo site</a>, which includes an example dat
 <h3>Related web resources</h3>
 <ul>
 <li><a href="http://demo.plhdb.org">Demo site</a></li>
-<li><a href="https://www.nescent.org/wg_plhd">Project wiki site of the working group</a></li>
+<li><a href="http://plhd.wikispaces.com">Project wiki of the working group (private)</a></li>
 <li><a href="http://www.nescent.org/science/awards_summary.php?id=19">NESCent award page of the working group</a></li>
 <li>Source code <a href="http://github.com/NESCent/plhdb">on GitHub</a></li>
 <li><a href="http://www.nescent.org">National Evolutionary Synthesis Center</a> (NESCent)</li>
