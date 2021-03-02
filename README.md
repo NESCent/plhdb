@@ -81,6 +81,7 @@ If you use this code or parts of it, please cite the following publication:
 > Strier, K. B., Altmann, J., Brockman, D. K., Bronikowski, A. M., Cords, M., Fedigan, L. M., Lapp, H., Liu, X., Morris, W. F., Pusey, A. E., Stoinski, T. S., and Alberts, S. C. "The Primate Life History Database: A Unique Shared Ecological Data Resource". Methods in Ecology and Evolution 1, no. 2 (2010): 199–211.
 > http://dx.doi.org/10.1111/j.2041-210X.2010.00023.x
 
+Note that the currently online version of the Primate Life Histories Database [at the URL reported in this paper](http://plhdb.org) is no longer based off of this codebase. To learn about the code for the online site or how to access its data, please contact the corresponding author of the above paper.
 
 License
 -------
